@@ -1,6 +1,6 @@
 export const formatDate = (
   date: Date | undefined,
-  options: Intl.DateTimeFormatOptions = {}
+  options: Intl.DateTimeFormatOptions = {},
 ) => {
   if (!date) return "";
   return date.toLocaleDateString("en-US", {

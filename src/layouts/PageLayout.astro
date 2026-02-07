@@ -7,16 +7,17 @@ interface Props {
   title: string;
   description: string;
   image?: ImageMetadata;
+  dataPagefindIgnore?:"index" | "all";
 }
 
-const { title, description, image } = Astro.props;
+const { title, description, image, dataPagefindIgnore } = Astro.props;
 ---
 
 <html lang="en">
   <head>
     <BaseHead title={title} description={description} image={image} />
   </head>
-  <body class="m-3 lg:m-4">
+  <body class="m-3 lg:m-4" data-pagefind-ignore={dataPagefindIgnore}>
     <Header />
     <main class="min-h-screen">
       <slot />

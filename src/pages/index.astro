@@ -26,7 +26,7 @@ const latestNotice = allNotices.sort(
 )[0];
 ---
 
-<PageLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<PageLayout title={SITE_TITLE} description={SITE_DESCRIPTION} dataPagefindIgnore="all">
   {
     latestNotice && (
       <AnnouncementRibbon

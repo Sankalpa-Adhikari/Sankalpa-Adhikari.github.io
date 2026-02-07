@@ -23,7 +23,7 @@ const resourcesCollection = defineCollection({
           z.object({
             image: image(),
             alt: z.string().min(1, "Image alt text is required"),
-          })
+          }),
         )
         .optional(),
       attachments: z
@@ -32,7 +32,7 @@ const resourcesCollection = defineCollection({
             name: z.string(),
             url: z.string().url(),
             fileType: z.enum(["image", "videos", "files"]),
-          })
+          }),
         )
         .optional(),
     }),
@@ -183,7 +183,7 @@ const committeeCollection = defineCollection({
             portfolio: z.string().url().optional(),
             neaRegNo: z.string().optional(),
             necRegNo: z.string().optional(),
-          })
+          }),
         )
         .superRefine((members, ctx) => {
           const uniquePositions = [
@@ -244,7 +244,7 @@ const donateCollection = defineCollection({
           title: z.string(),
           icon: z.string(),
           description: z.string(),
-        })
+        }),
       ),
       bankDetails: z.object({
         bankName: z.string(),
@@ -339,7 +339,7 @@ const careersCollection = defineCollection({
       {
         message: "Closing date must be after the posted date.",
         path: ["closingDate"],
-      }
+      },
     ),
 });
 
@@ -411,7 +411,9 @@ const instructorSchema = (image: any) =>
     z.object({
       instructorType: z.literal("nsae_member"),
       nsaeMember: reference("authors"),
-      eventRole: z.enum(["speaker", "panelist", "moderator", "guest", "instructor"]).default("instructor"),
+      eventRole: z
+        .enum(["speaker", "panelist", "moderator", "guest", "instructor"])
+        .default("instructor"),
     }),
 
     z.object({
@@ -422,14 +424,16 @@ const instructorSchema = (image: any) =>
       bio: z.string().optional(),
       profileImage: image().optional(),
       socials: socialsSchema.optional(),
-      eventRole: z.enum(["speaker", "panelist", "moderator", "guest", "instructor"]).default("instructor"),
+      eventRole: z
+        .enum(["speaker", "panelist", "moderator", "guest", "instructor"])
+        .default("instructor"),
     }),
 
     z.object({
       instructorType: z.literal("organization"),
       organizationName: z.string(),
       website: z.string().url().optional(),
-      logo: image().optional(), 
+      logo: image().optional(),
       description: z.string().optional(),
       representatives: z
         .array(
@@ -437,8 +441,10 @@ const instructorSchema = (image: any) =>
             name: z.string(),
             position: z.string().optional(),
             email: z.string().email().optional(),
-            eventRole: z.enum(["speaker", "panelist", "moderator", "guest", "instructor"]).default("instructor"),
-          })
+            eventRole: z
+              .enum(["speaker", "panelist", "moderator", "guest", "instructor"])
+              .default("instructor"),
+          }),
         )
         .optional(),
     }),

@@ -44,6 +44,7 @@ const isClosed = status === "closed";
 <PageLayout title={title} description={description ?? title}>
   <article class="py-8 space-y-10">
     <a
+      data-pagefind-ignore
       href="/careers/page/1"
       class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors px-4"
     >
@@ -57,7 +58,9 @@ const isClosed = status === "closed";
         {company?.name && <Badge variant="outline">{company.name}</Badge>}
       </div>
 
-      <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-balance">
+      <h1 
+          data-pagefind-meta="title"
+          class="text-3xl md:text-4xl font-bold tracking-tight text-balance">
         {title}
       </h1>
 
@@ -91,7 +94,7 @@ const isClosed = status === "closed";
 
         <div class="flex items-center gap-1.5">
           <CalendarWeek class="size-4" />
-          <span>
+          <span data-pagefind-meta={`date:${postedDate.toISOString()}`} data-pagefind-ignore>
             Posted: <FormattedDate date={postedDate} />
           </span>
         </div>

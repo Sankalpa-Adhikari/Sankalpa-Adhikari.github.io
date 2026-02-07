@@ -87,12 +87,14 @@ if (data.location) {
       </div>
 
       <div class="flex flex-col gap-2">
-        <h1 class="font-sans text-3xl md:text-4xl font-medium tracking-tighter">
+        <h1 
+          data-pagefind-meta="title"
+          class="font-sans text-3xl md:text-4xl font-medium tracking-tighter">
           {data.title}
         </h1>
         {
           data.subtitle && (
-            <p class="font-sans text-lg text-muted-foreground">
+            <p data-pagefind-meta="sub_title"  class="font-sans text-lg text-muted-foreground">
               {data.subtitle}
             </p>
           )
@@ -111,7 +113,7 @@ if (data.location) {
             class="font-mono text-xs text-muted-foreground uppercase tracking-wider block mb-0.5"
             >Start</span
           >
-          <p class="font-sans font-medium whitespace-nowrap">
+          <p data-pagefind-meta={`date:${data.eventStart.toISOString()}`} data-pagefind-ignore class="font-sans font-medium whitespace-nowrap">
             {startTimeDisplay}
           </p>
         </div>
