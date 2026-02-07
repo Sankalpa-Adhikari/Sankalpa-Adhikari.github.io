@@ -28,7 +28,7 @@ const { Content } = await render(event);
 ---
 
 <PageLayout title={data.title} description={data.subtitle || SITE_DESCRIPTION}>
-  <article class="py-8 space-y-10">
+  <article class="py-8 space-y-10" data-pagefind-body>
     <a
       data-pagefind-ignore
       href="/events/page/1"
@@ -57,7 +57,10 @@ const { Content } = await render(event);
         <EventSchedule schedule={data.eventSchedule} />
       </div>
 
-      <aside data-pagefind-ignore class="flex flex-col gap-6 lg:sticky lg:top-24 h-fit">
+      <aside
+        data-pagefind-ignore
+        class="flex flex-col gap-6 lg:sticky lg:top-24 h-fit"
+      >
         <EventLocation location={data.location} />
         <EventInstructors instructors={data.instructors} />
         <EventContact contactPersons={data.contactPersons} />
