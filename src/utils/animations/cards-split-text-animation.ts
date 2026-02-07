@@ -46,7 +46,7 @@ const defaultOptions: Required<CardSplitTextAnimationOptions> = {
 };
 
 export function initCardSplitTextAnimation(
-  options: CardSplitTextAnimationOptions = {}
+  options: CardSplitTextAnimationOptions = {},
 ): () => void {
   const config = { ...defaultOptions, ...options };
 

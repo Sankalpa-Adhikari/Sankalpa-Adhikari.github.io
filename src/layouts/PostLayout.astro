@@ -38,9 +38,10 @@ const { href: backHref, label: backLabel } =
 ---
 
 <PageLayout title={title} description={description ?? title}>
-  <article class="py-8 space-y-10">
+  <article class="py-8 space-y-10" data-pagefind-body>
     <header class="space-y-8 border-b border-border pb-10">
       <a
+        data-pagefind-ignore
         href={backHref}
         class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors px-4"
       >
@@ -50,12 +51,13 @@ const { href: backHref, label: backLabel } =
       <div class="space-y-4 text-center">
         <h1
           class="font-sans text-3xl md:text-5xl font-medium tracking-tighter first-letter:capitalize"
+          data-pagefind-meta="title"
         >
           {title}
         </h1>
         {
           subtitle && (
-            <p class="font-sans text-lg text-muted-foreground leading-relaxed first-letter:capitalize max-w-3xl mx-auto">
+            <p data-pagefind-meta="sub_title"  class="font-sans text-lg text-muted-foreground leading-relaxed first-letter:capitalize max-w-3xl mx-auto">
               {subtitle}
             </p>
           )
@@ -67,6 +69,8 @@ const { href: backHref, label: backLabel } =
 
         <span
           class="font-mono text-xs text-muted-foreground uppercase tracking-wider border-l border-border/50 pl-6"
+          data-pagefind-meta={`date:${pubDate.toISOString()}`}
+          data-pagefind-ignore
         >
           <FormattedDate date={pubDate} />
         </span>
@@ -77,6 +81,7 @@ const { href: backHref, label: backLabel } =
       heroImage && (
         <div class="flex items-center justify-center overflow-hidden">
           <Image
+          data-pagefind-meta="image[src], image_alt[alt]"
             inferSize
             class="object-cover rounded-xl max-h-1/2"
             src={heroImage}
@@ -86,7 +91,7 @@ const { href: backHref, label: backLabel } =
       )
     }
 
-    <div class="prose max-w-7xl mx-auto dark:prose-invert">
+    <div class="prose max-w-7xl mx-auto dark:prose-invert"  >
       <slot />
     </div>
 

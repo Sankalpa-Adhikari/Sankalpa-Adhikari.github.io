@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin '@tailwindcss/typography';
+@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -21,7 +22,7 @@
 }
 
 @theme inline {
-   --breakpoint-xs: 30rem;
+  --breakpoint-xs: 30rem;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

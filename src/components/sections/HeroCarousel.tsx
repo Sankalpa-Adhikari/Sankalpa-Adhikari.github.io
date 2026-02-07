@@ -14,18 +14,18 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Badge } from "@/components/ui/badge"; 
+import { Badge } from "@/components/ui/badge";
 import homeImage from "../../assets/nsae-logo.png";
 import blogPlaceholder1 from "../../assets/posts/blog/blog-placeholder-1.jpg";
 import blogPlaceholder2 from "../../assets/posts/blog/blog-placeholder-2.jpg";
-import Autoplay from "embla-carousel-autoplay"
+import Autoplay from "embla-carousel-autoplay";
 
 gsap.registerPlugin(useGSAP, SplitText, ScrollTrigger);
 
 const SLIDES = [
   { id: 1, image: homeImage },
-//   { id: 2, image: blogPlaceholder1 },
-//   { id: 3, image: blogPlaceholder2 },
+  //   { id: 2, image: blogPlaceholder1 },
+  //   { id: 3, image: blogPlaceholder2 },
 ];
 
 const HeroSlide = ({ data }: { data: (typeof SLIDES)[0] }) => {
@@ -35,22 +35,21 @@ const HeroSlide = ({ data }: { data: (typeof SLIDES)[0] }) => {
     () => {
       if (!containerRef.current) return;
 
-      const splitTargets = containerRef.current.querySelectorAll(".subtitle-lines");
-      
+      const splitTargets =
+        containerRef.current.querySelectorAll(".subtitle-lines");
+
       let subtitleInner: SplitText | null = null;
-      
+
       if (splitTargets.length > 0) {
-      
         subtitleInner = new SplitText(splitTargets, {
           type: "lines",
           linesClass: "line-inner will-change-transform",
         });
       }
 
-      
       gsap.set(".home-hero-redg-text", { y: -16, autoAlpha: 0 });
-      gsap.set(".engineering-text-anim", { autoAlpha: 1 }); 
-      gsap.set(".subtitle-lines", { autoAlpha: 1 }); 
+      gsap.set(".engineering-text-anim", { autoAlpha: 1 });
+      gsap.set(".subtitle-lines", { autoAlpha: 1 });
       gsap.set(".hero-desc-anim", { y: 16, autoAlpha: 0 });
       gsap.set(".hero-actions-anim", { y: 16, autoAlpha: 0 });
       gsap.set(".scroll-indicator", { autoAlpha: 0 });
@@ -61,53 +60,81 @@ const HeroSlide = ({ data }: { data: (typeof SLIDES)[0] }) => {
         delay: 0.2,
       });
 
-      tl.to(".hero-image-anim", {
-        scale: 1,
-        duration: 2.5,
-        ease: "expo.out",
-      }, 0);
+      tl.to(
+        ".hero-image-anim",
+        {
+          scale: 1,
+          duration: 2.5,
+          ease: "expo.out",
+        },
+        0,
+      );
 
-      tl.to(".home-hero-redg-text", {
-        y: 0,
-        autoAlpha: 1, 
-        duration: 1.5,
-      }, 0.2);
+      tl.to(
+        ".home-hero-redg-text",
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 1.5,
+        },
+        0.2,
+      );
 
-      tl.from(".engineering-text-anim", {
-        yPercent: 100,
-        rotation: 2,
-        autoAlpha: 0,
-        duration: 1.2,
-        ease: "power4.out",
-      }, 0.3);
+      tl.from(
+        ".engineering-text-anim",
+        {
+          yPercent: 100,
+          rotation: 2,
+          autoAlpha: 0,
+          duration: 1.2,
+          ease: "power4.out",
+        },
+        0.3,
+      );
 
-      tl.to(".badge-anim-wrapper", {
-        opacity: 1,
-        scale: 1,
-        rotation: 12,
-        duration: 0.8,
-        ease: "back.out(1.7)",
-      }, 0.8);
+      tl.to(
+        ".badge-anim-wrapper",
+        {
+          opacity: 1,
+          scale: 1,
+          rotation: 12,
+          duration: 0.8,
+          ease: "back.out(1.7)",
+        },
+        0.8,
+      );
 
       if (subtitleInner && subtitleInner.lines.length > 0) {
-        tl.from(subtitleInner.lines, {
-          yPercent: 100,
-          opacity: 0,
-          duration: 1.1,
-          stagger: 0.1,
-          ease: "power4.out",
-        }, 0.5);
+        tl.from(
+          subtitleInner.lines,
+          {
+            yPercent: 100,
+            opacity: 0,
+            duration: 1.1,
+            stagger: 0.1,
+            ease: "power4.out",
+          },
+          0.5,
+        );
       }
 
-      tl.to([".hero-desc-anim", ".hero-actions-anim"], {
-        y: 0,
-        autoAlpha: 1,
-        stagger: 0.1,
-        duration: 0.5,
-      }, "-=1");
+      tl.to(
+        [".hero-desc-anim", ".hero-actions-anim"],
+        {
+          y: 0,
+          autoAlpha: 1,
+          stagger: 0.1,
+          duration: 0.5,
+        },
+        "-=1",
+      );
 
       tl.to(".scroll-indicator", { autoAlpha: 1, duration: 1 }, "-=1");
-      tl.to(".scroll-line", { width: 48, duration: 1, ease: "expo.out" }, "-=0.5");
+      tl.to(
+        ".scroll-line",
+        { width: 48, duration: 1, ease: "expo.out" },
+        "-=0.5",
+      );
 
       gsap.to(".hero-image-anim", {
         yPercent: 20,
@@ -124,10 +151,10 @@ const HeroSlide = ({ data }: { data: (typeof SLIDES)[0] }) => {
         if (subtitleInner) subtitleInner.revert();
       };
     },
-    { 
-      scope: containerRef, 
-      dependencies: [data] 
-    }
+    {
+      scope: containerRef,
+      dependencies: [data],
+    },
   );
 
   return (
@@ -170,10 +197,7 @@ const HeroSlide = ({ data }: { data: (typeof SLIDES)[0] }) => {
         </p>
 
         <div className="hero-actions-anim opacity-0 flex translate-y-4 items-center gap-6 mt-4">
-          <Button
-            asChild
-            className="rounded-full px-8 py-4 font-sans font-medium"
-          >
+          <Button className="rounded-full px-8 py-4 font-sans font-medium">
             <a href="/contact">Get in Touch</a>
           </Button>
 
@@ -199,7 +223,7 @@ const HeroSlide = ({ data }: { data: (typeof SLIDES)[0] }) => {
         <img
           className="hero-image-anim absolute inset-0 h-full w-full scale-110 rounded-2xl object-cover"
           alt="Agricultural Engineering"
-          src={typeof data.image === 'string' ? data.image : data.image.src} 
+          src={typeof data.image === "string" ? data.image : data.image.src}
         />
       </div>
     </section>
@@ -215,10 +239,10 @@ export function HeroCarousel() {
           duration: 20,
         }}
         plugins={[
-        Autoplay({
-          delay: 4000,
-        }),
-      ]}
+          Autoplay({
+            delay: 4000,
+          }),
+        ]}
         className="w-full"
       >
         <CarouselContent>
