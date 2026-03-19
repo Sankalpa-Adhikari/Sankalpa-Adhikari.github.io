@@ -74,24 +74,33 @@ const { title, description, image = FallbackImage } = Astro.props;
 
 <script>
   import Lenis from "lenis";
-  import { gsap } from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { gsap, ScrollTrigger } from "@/utils/gsap-init";
 
-  import { functionRestartAfterSwap } from "@/lib/helpers";
-  gsap.registerPlugin(ScrollTrigger);
+  let lenis: Lenis | null = null;
 
   function lenisScroll() {
-    const lenis = new Lenis();
+    lenis = new Lenis();
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((time) => {
-      lenis.raf(time * 700);
+      lenis!.raf(time * 700);
     });
     gsap.ticker.lagSmoothing(0);
-    lenis.on("scroll", () => {
-      ScrollTrigger.update();
+  }
+
+  function cleanup() {
+    ScrollTrigger.getAll().forEach((t) => t.kill());
+    if (lenis) {
+      lenis.destroy();
+      lenis = null;
+    }
+    gsap.ticker.remove((time) => {
+      lenis?.raf(time * 700);
     });
   }
-  functionRestartAfterSwap(lenisScroll);
+
+  lenisScroll();
+  document.addEventListener("astro:before-swap", cleanup);
+  document.addEventListener("astro:after-swap", lenisScroll);
 </script>
 
 <script is:inline>

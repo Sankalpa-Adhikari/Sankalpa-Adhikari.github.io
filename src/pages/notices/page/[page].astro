@@ -108,12 +108,9 @@ const pageDescription = "Updates, announcements, and official notices.";
 </PageLayout>
 
 <script>
-  import gsap from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-  import { SplitText } from "gsap/SplitText";
+  import { gsap, SplitText } from "@/utils/gsap-init";
 
-  if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
+  {
 
     const headerTl = gsap.timeline({
       defaults: { ease: "power3.out" },
