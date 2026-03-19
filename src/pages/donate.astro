@@ -306,9 +306,7 @@ const iconMap: Record<string, any> = {
 </PageLayout>
 
 <script>
-  import gsap from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-  import { SplitText } from "gsap/SplitText";
+  import { gsap, SplitText } from "@/utils/gsap-init";
 
   const copyBtn = document.getElementById("copy-btn");
   const accountNum = document.getElementById("account-number");
@@ -327,9 +325,7 @@ const iconMap: Record<string, any> = {
     });
   }
 
-  if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
-
+  {
     const heroTl = gsap.timeline({
       defaults: { ease: "power3.out" },
     });
@@ -370,6 +366,7 @@ const iconMap: Record<string, any> = {
       0.3,
     );
 
+    heroTl.set(".anim-split-text", { autoAlpha: 1 }, 0.4);
     heroTl.from(
       heroSplit.lines,
       {
@@ -420,6 +417,7 @@ const iconMap: Record<string, any> = {
 
     impactTl
       .to(".anim-impact-header", { opacity: 1, duration: 0.5 })
+      .set(".impact-section .anim-split-heading", { autoAlpha: 1 }, "-=0.3")
       .from(
         impactSplit.words,
         {
@@ -428,7 +426,7 @@ const iconMap: Record<string, any> = {
           stagger: 0.02,
           ease: "power4.out",
         },
-        "-=0.3",
+        "<",
       )
       .to(
         ".anim-impact-desc",
@@ -468,6 +466,7 @@ const iconMap: Record<string, any> = {
 
     methodsTl
       .to(".anim-methods-header", { opacity: 1, duration: 0.5 })
+      .set(".methods-section .anim-split-heading", { autoAlpha: 1 }, "-=0.3")
       .from(
         methodsSplit.chars,
         {
@@ -477,7 +476,7 @@ const iconMap: Record<string, any> = {
           stagger: 0.02,
           ease: "back.out",
         },
-        "-=0.3",
+        "<",
       )
       .to(
         ".anim-method-card",

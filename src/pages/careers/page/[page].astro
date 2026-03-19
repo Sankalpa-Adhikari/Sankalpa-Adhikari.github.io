@@ -87,12 +87,9 @@ const pageDescription = "Your Next Chapter Starts Here";
 </PageLayout>
 
 <script>
-  import gsap from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-  import { SplitText } from "gsap/SplitText";
+  import { gsap, SplitText } from "@/utils/gsap-init";
 
-  if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
+  {
 
     const headerTitleEl = document.querySelector(".anim-header-title");
     const headerDescEl = document.querySelector(".anim-header-desc");

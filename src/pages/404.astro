@@ -42,9 +42,9 @@ import PageLayout from "@/layouts/PageLayout.astro";
   }
 </style>
 <script>
-  import gsap from "gsap";
+  import { gsap } from "@/utils/gsap-init";
 
-  if (typeof window !== "undefined") {
+  {
     const tl = gsap.timeline();
 
     gsap.set(".digit", { y: 50 });

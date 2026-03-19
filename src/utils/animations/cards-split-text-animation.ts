@@ -1,5 +1,4 @@
-import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
+import { gsap, SplitText } from "@/utils/gsap-init";
 
 export interface CardSplitTextAnimationOptions {
   cardSelector?: string;
@@ -49,8 +48,6 @@ export function initCardSplitTextAnimation(
   options: CardSplitTextAnimationOptions = {},
 ): () => void {
   const config = { ...defaultOptions, ...options };
-
-  gsap.registerPlugin(SplitText);
 
   const cards = document.querySelectorAll(config.cardSelector);
   const cleanupFunctions: Array<() => void> = [];
