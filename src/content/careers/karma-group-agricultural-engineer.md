@@ -8,6 +8,7 @@ company:
   name: "Karma Group of Companies"
   website: "https://www.facebook.com/KarmaGroupNepal"
 description: "Karma group is seeking an Agricultural Engineer.."
+status: "closed"
 ---
 
 ## 🔧 Responsibilities
