@@ -16,6 +16,11 @@ export default defineConfig({
 	integrations: [mdx(), sitemap(), react()],
 	vite: {
 		plugins: [tailwindcss()],
+		resolve: {
+			alias: {
+				"@": "/src",
+			},
+		},
 		build: {
 			rollupOptions: {
 				external: ["/pagefind/pagefind.js"],
