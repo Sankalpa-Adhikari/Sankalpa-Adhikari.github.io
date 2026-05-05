@@ -22,7 +22,7 @@ jobs:
         env:
           PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.PUBLIC_CLOUDINARY_CLOUD_NAME }}
         with:
-          package-manager: pnpm@8.15.4
+          package-manager: bun@latest
 
   deploy:
     needs: build
