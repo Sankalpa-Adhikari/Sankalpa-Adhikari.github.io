@@ -4,7 +4,7 @@ import PageLayout from "@/layouts/PageLayout.astro";
 import { getCollection } from "astro:content";
 import Mail from "@tabler/icons/outline/mail.svg";
 import Phone from "@tabler/icons/outline/phone.svg";
-import Map from "@tabler/icons/outline/map.svg";
+import { default as MapIcon } from "@tabler/icons/outline/map.svg";
 import BrandLinkedin from "@tabler/icons/outline/brand-linkedin.svg";
 import BrandX from "@tabler/icons/outline/brand-x.svg";
 import BrandFacebook from "@tabler/icons/outline/brand-facebook.svg";
@@ -122,7 +122,7 @@ const socialIcons: Record<string, any> = {
         <span
           class="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground"
         >
-          <Map class="size-4" /> Visit us
+          <MapIcon class="size-4" /> Visit us
         </span>
         <div class="font-sans text-2xl font-medium tracking-tight">
           {

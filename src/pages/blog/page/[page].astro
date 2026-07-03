@@ -41,7 +41,6 @@ const pageTitle = "Our latest blog posts";
 const pageDescription =
   "Read the latest articles and insights from our community.";
 ---
-
 <PageLayout title={pageTitle} description={pageDescription} dataPagefindIgnore="all">
   <header class="flex flex-col items-center justify-center py-16 md:py-24">
     <div class="anim-header-badge opacity-0 scale-50">
@@ -63,12 +62,12 @@ const pageDescription =
   {
     featuredPosts.length > 0 && page.currentPage === 1 && (
       <section class="mb-12">
-        <h2 class="anim-section-title font-sans text-xl md:text-2xl font-medium mb-6 uppercase tracking-wider border-b border-border/50 pb-2 opacity-0 translate-y-4">
+        <h2 class="anim-featured-title font-sans text-xl md:text-2xl font-medium mb-6 uppercase tracking-wider border-b border-border/50 pb-2 opacity-0 translate-y-4">
           Featured Posts
         </h2>
         <div class="grid gap-8 lg:gap-10 xl:gap-18">
           {featuredPosts.map((post) => (
-            <ClickableCard href={`/${post.id}/`}>
+            <ClickableCard class="anim-featured-card opacity-0 translate-y-4" href={`/${post.id}/`}>
               <BlogFeaturedCard {...post} />
             </ClickableCard>
           ))}
@@ -77,9 +76,9 @@ const pageDescription =
     )
   }
 
-  <section class="mb-12">
+  <section class="mb-12" data-manual-card-anim>
     <h2
-      class="anim-section-title font-sans text-xl md:text-2xl font-medium mb-8 uppercase tracking-wider border-b border-border/50 pb-2 opacity-0 translate-y-4"
+      class="anim-all-title font-sans text-xl md:text-2xl font-medium mb-8 uppercase tracking-wider border-b border-border/50 pb-2 opacity-0 translate-y-4"
     >
       All Posts
     </h2>
@@ -89,7 +88,7 @@ const pageDescription =
           <div class="grid grid-cols-2 gap-8">
             {page.data.map((post) => (
               <ClickableCard
-                class="group relative col-span-2 lg:col-span-1 border-b border-border last:border-b-0 lg:[&:nth-last-child(2)]:border-b-0 hover:bg-secondary/20 transition-colors"
+                class="anim-regular-card group relative col-span-2 lg:col-span-1 border-b border-border last:border-b-0 lg:[&:nth-last-child(2)]:border-b-0 hover:bg-secondary/20 transition-colors opacity-0 translate-y-4"
                 href={`/${post.id}/`}
               >
                 <BlogCard {...post} />
@@ -131,10 +130,10 @@ const pageDescription =
 
 <script>
   import { gsap, SplitText } from "@/utils/gsap-init";
+  import { initCardSplitTextAnimation } from "@/utils/animations/cards-split-text-animation";
 
   {
-
-    const headerTl = gsap.timeline({
+    const mainTl = gsap.timeline({
       defaults: { ease: "power3.out" },
     });
 
@@ -143,58 +142,80 @@ const pageDescription =
       linesClass: "overflow-hidden",
     });
 
-    headerTl
+    mainTl
       .to(".anim-header-badge", {
         scale: 1,
         opacity: 1,
-        duration: 0.8,
-        ease: "back.out(1.7)",
+        duration: 0.6,
+        ease: "back.out(1.5)",
       })
-      .set(".anim-header-title", { autoAlpha: 1 }, "-=0.4")
+      .set(".anim-header-title", { autoAlpha: 1 }, "-=0.3")
       .from(
         titleSplit.words,
         {
           yPercent: 100,
           opacity: 0,
-          duration: 1,
-          stagger: 0.05,
+          duration: 0.8,
+          stagger: 0.04,
           ease: "power4.out",
         },
         "<"
       );
 
-    gsap.utils.toArray(".anim-section-title").forEach((title: any) => {
-      gsap.to(title, {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: title,
-          start: "top 90%",
-        },
-      });
-    });
+    if (document.querySelector(".anim-featured-title")) {
+      mainTl
+        .to(".anim-featured-title", {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+        }, "-=0.6")
+        .to(".anim-featured-card", {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.1,
+        }, "-=0.3")
+        .add(() => {
+          initCardSplitTextAnimation({ cardSelector: ".anim-featured-card" });
+        }, "<");
+    }
+
+    const regularPostOffset = document.querySelector(".anim-featured-title") ? "-=0.3" : "-=0.6";
+
+    mainTl.to(".anim-all-title", {
+      y: 0,
+      opacity: 1,
+      duration: 0.5,
+    }, regularPostOffset);
+
+    if (document.querySelector(".anim-regular-card")) {
+      mainTl
+        .to(".anim-regular-card", {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: "power2.out",
+        }, "-=0.3")
+        .add(() => {
+          initCardSplitTextAnimation({ cardSelector: ".anim-regular-card" });
+        }, "<");
+    }
 
     if (document.querySelector(".anim-pagination")) {
-      gsap.to(".anim-pagination", {
+      mainTl.to(".anim-pagination", {
         opacity: 1,
-        duration: 1,
-        scrollTrigger: {
-          trigger: ".anim-pagination",
-          start: "top 95%",
-        },
-      });
+        duration: 0.5,
+      }, "-=0.2");
     }
 
     if (document.querySelector(".anim-empty-state")) {
-      gsap.to(".anim-empty-state", {
+      mainTl.to(".anim-empty-state", {
         scale: 1,
         opacity: 1,
-        duration: 0.8,
-        ease: "back.out(1.5)",
-        delay: 0.5,
-      });
+        duration: 0.6,
+        ease: "back.out(1.2)",
+      }, "-=0.3");
     }
   }
 </script>
