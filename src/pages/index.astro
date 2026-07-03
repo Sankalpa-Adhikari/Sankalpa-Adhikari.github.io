@@ -10,7 +10,6 @@ import Memberships from "@/components/sections/Memberships.astro";
 
 import AnnouncementRibbon from "@/components/astro/AnnouncementRibbon.astro";
 import { getCollection } from "astro:content";
-import HomeHero from "@/components/sections/HomeHero.astro";
 import { HeroCarousel } from "@/components/sections/HeroCarousel";
 
 const allNotices = await getCollection("posts", ({ data }) => {
@@ -20,7 +19,6 @@ const allNotices = await getCollection("posts", ({ data }) => {
   );
 });
 
-// Sort by date (newest first) and grab the first one
 const latestNotice = allNotices.sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 )[0];
@@ -37,7 +35,6 @@ const latestNotice = allNotices.sort(
       />
     )
   }
-  <!-- <HomeHero /> -->
   <HeroCarousel client:load />
 
   <MissionBrief />

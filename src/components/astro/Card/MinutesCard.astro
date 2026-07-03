@@ -2,7 +2,6 @@
 import ArrowRight from "@tabler/icons/outline/arrow-right.svg";
 import CalendarWeek from "@tabler/icons/outline/calendar-week.svg";
 import MapPin from "@tabler/icons/outline/map-pin.svg";
-import FileText from "@tabler/icons/outline/file-text.svg";
 import type { CollectionEntry } from "astro:content";
 import Badge from "../Badge.astro";
 import ArrowNarrowRight from "@tabler/icons/outline/arrow-narrow-right.svg";
@@ -68,7 +67,9 @@ const formatType = (type: string) => {
 
   if (typeof window !== "undefined") {
     window.addEventListener("load", () => {
-      initCardSplitTextAnimation();
+      if (!document.querySelector("[data-manual-card-anim]")) {
+        initCardSplitTextAnimation();
+      }
     });
   }
 </script>

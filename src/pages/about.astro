@@ -385,7 +385,6 @@ function formatPosition(position: string) {
   import { gsap, SplitText } from "@/utils/gsap-init";
 
   {
-
     const heroTl = gsap.timeline({
       defaults: { ease: "power3.out" },
     });
@@ -459,10 +458,11 @@ function formatPosition(position: string) {
       },
     });
 
+    // 1. Mission Section Animation (Updated to character-by-character back pop)
     const missionSplit = SplitText.create(
       ".mission-section .anim-split-heading",
       {
-        type: "lines, words",
+        type: "lines, chars",
         linesClass: "overflow-hidden",
       }
     );
@@ -478,12 +478,13 @@ function formatPosition(position: string) {
       .to(".anim-mission-header", { opacity: 1, duration: 0.5 })
       .set(".mission-section .anim-split-heading", { autoAlpha: 1 }, "-=0.3")
       .from(
-        missionSplit.words,
+        missionSplit.chars,
         {
-          yPercent: 100,
-          duration: 0.8,
+          opacity: 0,
+          y: 20,
+          duration: 0.5,
           stagger: 0.02,
-          ease: "power4.out",
+          ease: "back.out",
         },
         "<"
       )
@@ -496,9 +497,10 @@ function formatPosition(position: string) {
           stagger: 0.1,
           ease: "power3.out",
         },
-        "-=0.5"
+        "-=0.3"
       );
 
+    // 2. Focus Section Animation (Original character pop style)
     const focusSplit = SplitText.create(".focus-section .anim-split-heading", {
       type: "lines, chars",
       linesClass: "overflow-hidden",
@@ -514,7 +516,6 @@ function formatPosition(position: string) {
     focusTl
       .to(".anim-focus-header", { opacity: 1, duration: 0.5 })
       .set(".focus-section .anim-split-heading", { autoAlpha: 1 }, "-=0.3")
-
       .from(
         focusSplit.chars,
         {
@@ -538,6 +539,12 @@ function formatPosition(position: string) {
         "-=0.3"
       );
 
+    // 3. Team Section Animation (Updated to character-by-character back pop)
+    const teamSplit = SplitText.create(".team-section .anim-split-heading", {
+      type: "lines, chars",
+      linesClass: "overflow-hidden",
+    });
+
     const teamTl = gsap.timeline({
       scrollTrigger: {
         trigger: ".team-section",
@@ -551,6 +558,18 @@ function formatPosition(position: string) {
         duration: 0.5,
         stagger: 0.1,
       })
+      .set(".team-section .anim-split-heading", { autoAlpha: 1 }, "-=0.3")
+      .from(
+        teamSplit.chars,
+        {
+          opacity: 0,
+          y: 20,
+          duration: 0.5,
+          stagger: 0.02,
+          ease: "back.out",
+        },
+        "<"
+      )
       .to(
         ".anim-member-card",
         {
