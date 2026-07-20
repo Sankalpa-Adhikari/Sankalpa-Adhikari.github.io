@@ -1,4 +1,5 @@
-import { defineCollection, z, reference } from "astro:content";
+import { defineCollection, reference } from "astro:content";
+import { z } from "astro/zod";
 import { glob, file } from "astro/loaders";
 import { TableOfContentsSchema } from "./schemas/tableOfContents";
 import { PrevNextLinkConfigSchema } from "./schemas/prevnextLink";
@@ -562,6 +563,66 @@ const eventsCollection = defineCollection({
       }),
 });
 
+const quizCollection = defineCollection({
+  loader: glob({ pattern: "**/*.json", base: "./src/content/quizzes" }),
+  schema: () =>
+    z
+      .object({
+        id: z.string(),
+        title: z.string(),
+        settings: z.object({
+          shuffleQuestions: z.boolean(),
+          shuffleOptions: z.boolean(),
+          showExplanations: z.boolean(),
+          passingScore: z.number().min(0).max(100),
+          negativeMarkingPercentage: z
+            .number()
+            .int()
+            .min(0)
+            .max(100)
+            .optional(),
+        }),
+        questions: z.array(
+          z.object({
+            id: z.string(),
+            type: z.enum(["single-select", "multi-select"]),
+            question: z.string(),
+            points: z.number().min(0),
+            required: z.boolean().default(false),
+            options: z.array(
+              z.object({
+                id: z.string(),
+                text: z.string(),
+              }),
+            ),
+            correctOptionIds: z.array(z.string()),
+            hint: z.string().optional(),
+            explanation: z.string().optional(),
+          }),
+        ),
+      })
+      .refine(
+        (data) => {
+          // If negative marking is defined and we have at least one question...
+          if (
+            data.settings.negativeMarkingPercentage !== undefined &&
+            data.questions.length > 0
+          ) {
+            const firstPointValue = data.questions[0].points;
+
+            return data.questions.every((q) => q.points === firstPointValue);
+          }
+
+          return true;
+        },
+        {
+          message:
+            "When negative marking is specified, all questions must have the exact same point value.",
+          path: ["questions"],
+        },
+      ),
+});
+
 export const collections = {
   authors: authorsCollection,
   faq: faqCollection,
@@ -575,4 +636,5 @@ export const collections = {
   resources: resourcesCollection,
   banners: bannersCollection,
   donate: donateCollection,
+  quizzes: quizCollection,
 };
