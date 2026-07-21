@@ -1,43 +1,6 @@
 import { defineCollection, reference } from "astro:content";
 import { z } from "astro/zod";
 import { glob, file } from "astro/loaders";
-import { TableOfContentsSchema } from "./schemas/tableOfContents";
-import { PrevNextLinkConfigSchema } from "./schemas/prevnextLink";
-const resourcesCollection = defineCollection({
-  loader: glob({ base: "./src/content/resources", pattern: "**/*.{md,mdx}" }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      subtitle: z.string().optional(),
-      resourceType: z.enum([
-        "notice",
-        "press_release",
-        "online_form",
-        "report",
-        "others",
-      ]),
-      description: z.string(),
-      pubDate: z.coerce.date(),
-      draft: z.boolean().default(false),
-      resourceImages: z
-        .array(
-          z.object({
-            image: image(),
-            alt: z.string().min(1, "Image alt text is required"),
-          }),
-        )
-        .optional(),
-      attachments: z
-        .array(
-          z.object({
-            name: z.string(),
-            url: z.string().url(),
-            fileType: z.enum(["image", "videos", "files"]),
-          }),
-        )
-        .optional(),
-    }),
-});
 
 // === Blog Collection ===
 const postsCollection = defineCollection({
@@ -47,47 +10,12 @@ const postsCollection = defineCollection({
       title: z.string(),
       subtitle: z.string().optional(),
       type: z.enum(["blog", "news", "notice"]).default("blog"),
-      /**
-       * A short description of the current page’s content. Optional, but recommended.
-       * A good description is 150–160 characters long and outlines the key content
-       * of the page in a clear and engaging way.
-       */
       description: z.string().optional(),
       pubDate: z.coerce.date(),
-      updatedDate: z.coerce.date().optional(),
-      /**
-       * The last update date of the current page.
-       * Overrides the date generated from the Git history.
-       */
-      lastUpdated: z.union([z.date(), z.boolean()]).optional(),
       heroImage: image().optional(),
       heroImageAlt: z.string().optional(),
       tags: z.array(z.string()).optional(),
-      /**
-       * The previous navigation link configuration.
-       */
-      prev: PrevNextLinkConfigSchema(),
-      /**
-       * The next navigation link configuration.
-       */
-      next: PrevNextLinkConfigSchema(),
-      tableOfContents: TableOfContentsSchema().optional(),
-      /**
-       * Custom URL where a reader can edit this page.
-       *  * Can also be set to `false` to disable showing an edit link on this page.
-       */
-      editUrl: z
-        .union([z.string().url(), z.boolean()])
-        .optional()
-        .default(true),
-
-      /** Pagefind indexing for this page - set to false to disable. */
       pagefind: z.boolean().default(true),
-
-      /**
-       * Indicates that this page is a draft and will not be included in production builds.
-       * Note that the page will still be available when running Astro in development mode.
-       */
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
       categories: z.array(reference("categories")).optional(),
@@ -633,7 +561,6 @@ export const collections = {
   careers: careersCollection,
   minutes: minutesCollection,
   events: eventsCollection,
-  resources: resourcesCollection,
   banners: bannersCollection,
   donate: donateCollection,
   quizzes: quizCollection,

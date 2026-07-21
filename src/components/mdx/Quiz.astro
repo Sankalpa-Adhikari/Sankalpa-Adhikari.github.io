@@ -1,21 +1,32 @@
 ---
-import { getEntry, type CollectionEntry } from "astro:content";
+import { getQuizDetails } from "@/sanity/lib/queries/quiz";
 
 export interface Props {
-  quizId: CollectionEntry<"quizzes">["id"];
+  slug?: string;
   questionsPerPage?: number;
+  node?: {
+    _type: "quizReference";
+    slug: string;
+    questionsPerPage?: number;
+  };
 }
 
-const { quizId, questionsPerPage = 10 } = Astro.props;
+const { slug, questionsPerPage = 10, node } = Astro.props;
 
-const quizEntry = await getEntry("quizzes", quizId);
+const quizSlug = slug || node?.slug;
 
-if (!quizEntry) {
-  throw new Error(`Quiz "${quizId}" not found.`);
+if (!quizSlug) {
+  throw new Error("Quiz slug is missing in QuizBlock.");
+}
+const quiz = await getQuizDetails(quizSlug);
+
+if (!quiz) {
+  throw new Error(`Quiz not found.`);
 }
 
-const quiz = quizEntry.data;
-const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
+const totalPoints = quiz.questions
+  ? quiz.questions.reduce((sum, q) => sum + q.points, 0)
+  : 0;
 ---
 
 <div
@@ -25,117 +36,159 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
   data-shuffle-options={quiz.settings.shuffleOptions}
   data-show-explanations={quiz.settings.showExplanations}
   data-per-page={questionsPerPage}
-  data-negative-marking-percentage={quiz.settings.negativeMarkingPercentage || 0}
+  data-negative-marking-percentage={quiz.settings.negativeMarkingPercentage ||
+    0}
 >
   <header class="mb-6">
     <h2 class="text-2xl font-semibold tracking-tight mb-1">{quiz.title}</h2>
-   <div class="flex flex-wrap items-center gap-2 text-sm">
-    <span class="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-      {quiz.questions.length} {quiz.questions.length === 1 ? "question" : "questions"}
-    </span>
-    
-    <span class="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-      {totalPoints} {totalPoints === 1 ? "point" : "points"} total
-    </span>
-    
-    <span class="inline-flex items-center rounded-md bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 border border-emerald-200/40 dark:border-emerald-800/30">
-      {quiz.settings.passingScore} {quiz.settings.passingScore === 1 ? "point" : "points"} to pass
-    </span>
-    
-    {quiz.settings.negativeMarkingPercentage !== undefined && quiz.settings.negativeMarkingPercentage > 0 && (
-      <span class="inline-flex items-center rounded-md bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive border border-destructive/20">
-        {quiz.settings.negativeMarkingPercentage}% Negative Marking
+    <div class="flex flex-wrap items-center gap-2 text-sm">
+      <span
+        class="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+      >
+        {quiz.questions.length}
+        {quiz.questions.length === 1 ? "question" : "questions"}
       </span>
-    )}
-  </div>
+
+      <span
+        class="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+      >
+        {totalPoints}
+        {totalPoints === 1 ? "point" : "points"} total
+      </span>
+
+      <span
+        class="inline-flex items-center rounded-md bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 border border-emerald-200/40 dark:border-emerald-800/30"
+      >
+        {quiz.settings.passingScore}
+        {quiz.settings.passingScore === 1 ? "point" : "points"} to pass
+      </span>
+
+      {
+        quiz.settings.negativeMarkingPercentage !== undefined &&
+          quiz.settings.negativeMarkingPercentage > 0 && (
+            <span class="inline-flex items-center rounded-md bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive border border-destructive/20">
+              {quiz.settings.negativeMarkingPercentage}% Negative Marking
+            </span>
+          )
+      }
+    </div>
   </header>
 
   <div class="mb-6 p-4 rounded-xl border border-border bg-card">
-    <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide m-0! mb-3!">Questions</p>
-    <nav class="question-nav flex flex-wrap gap-4" aria-label="Jump to question"></nav>
+    <p
+      class="text-xs font-medium text-muted-foreground uppercase tracking-wide m-0! mb-3!"
+    >
+      Questions
+    </p>
+    <nav
+      class="question-nav flex flex-wrap gap-4"
+      aria-label="Jump to question"
+    >
+    </nav>
   </div>
 
   <form class="quiz-form group" novalidate>
-    {quiz.questions.map((q, index) => (
-      <fieldset
-        class="question mb-7 border-0 p-0"
-        data-question-id={q.id}
-        data-points={q.points}
-        data-required={q.required}
-        data-correct={JSON.stringify(q.correctOptionIds)}
-      >
-        <legend class="flex flex-wrap items-baseline justify-between gap-2 w-full pb-2.5 font-semibold">
-          <span>
-            <span class="question-number text-muted-foreground font-semibold">{index + 1}.</span> {q.question}
-            {q.required && (
-              <>
-                <span class="text-destructive font-bold ml-0.5" aria-hidden="true">*</span>
-                <span class="sr-only">(required)</span>
-              </>
-            )}
-          </span>
-          <span class="flex gap-2 items-center font-normal">
-            {q.type === "multi-select" && (
-              <span class="text-xs font-medium text-muted-foreground bg-muted rounded-full px-2.5 py-0.5 whitespace-nowrap">
-                Select all that apply
-              </span>
-            )}
-            <span class="text-xs font-medium text-muted-foreground bg-muted rounded-full px-2.5 py-0.5 whitespace-nowrap">
-              {q.points} {q.points === 1 ? "pt" : "pts"}
+    {
+      quiz.questions.map((q, index) => (
+        <fieldset
+          class="question mb-7 border-0 p-0"
+          data-question-id={q.id}
+          data-points={q.points}
+          data-required={q.required}
+          data-correct={JSON.stringify(q.correctOptionIds)}
+        >
+          <legend class="flex flex-wrap items-baseline justify-between gap-2 w-full pb-2.5 font-semibold">
+            <span>
+              <span class="question-number text-muted-foreground font-semibold">
+                {index + 1}.
+              </span>{" "}
+              {q.question}
+              {q.required && (
+                <>
+                  <span
+                    class="text-destructive font-bold ml-0.5"
+                    aria-hidden="true"
+                  >
+                    *
+                  </span>
+                  <span class="sr-only">(required)</span>
+                </>
+              )}
             </span>
-          </span>
-        </legend>
-
-        <div class="options flex flex-col gap-1.5">
-          {q.options.map((option) => (
-            <label
-              data-option-id={option.id}
-              class="flex items-center gap-2.5 px-3 py-2 border border-input rounded-lg cursor-pointer transition-colors motion-reduce:transition-none hover:bg-accent hover:border-ring/40 group-[.is-submitted]:cursor-default group-[.is-submitted]:hover:bg-transparent group-[.is-submitted]:hover:border-input"
-            >
-              <input
-                type={q.type === "single-select" ? "radio" : "checkbox"}
-                name={q.id}
-                value={option.id}
-                class="peer sr-only"
-              />
-              <span
-                class={`option-control relative flex-none w-5 h-5 border border-muted-foreground/40 flex items-center justify-center transition-colors motion-reduce:transition-none peer-checked:border-primary peer-checked:[&>span]:scale-100 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-ring peer-focus-visible:outline-offset-2 ${
-                  q.type === "single-select" ? "rounded-full" : "rounded-[5px]"
-                }`}
-                aria-hidden="true"
-              >
-                <span
-                  class={`option-fill block bg-primary scale-0 transition-transform duration-300 motion-reduce:transition-none motion-reduce:duration-0 ${
-                    q.type === "single-select" ? "w-2.5 h-2.5 rounded-full" : "w-3 h-3 rounded-[3px]"
-                  }`}
-                ></span>
+            <span class="flex gap-2 items-center font-normal">
+              {q.type === "multi-select" && (
+                <span class="text-xs font-medium text-muted-foreground bg-muted rounded-full px-2.5 py-0.5 whitespace-nowrap">
+                  Select all that apply
+                </span>
+              )}
+              <span class="text-xs font-medium text-muted-foreground bg-muted rounded-full px-2.5 py-0.5 whitespace-nowrap">
+                {q.points} {q.points === 1 ? "pt" : "pts"}
               </span>
-              <span class="option-text">{option.text}</span>
-            </label>
-          ))}
-        </div>
+            </span>
+          </legend>
 
-        <p class="question-error mt-2 text-sm text-destructive" role="alert" hidden>
-          Please select an answer before submitting.
-        </p>
+          <div class="options flex flex-col gap-1.5">
+            {q.options.map((option) => (
+              <label
+                data-option-id={option.id}
+                class="flex items-center gap-2.5 px-3 py-2 border border-input rounded-lg cursor-pointer transition-colors motion-reduce:transition-none hover:bg-accent hover:border-ring/40 group-[.is-submitted]:cursor-default group-[.is-submitted]:hover:bg-transparent group-[.is-submitted]:hover:border-input"
+              >
+                <input
+                  type={q.type === "single-select" ? "radio" : "checkbox"}
+                  name={q.id}
+                  value={option.id}
+                  class="peer sr-only"
+                />
+                <span
+                  class={`option-control relative flex-none w-5 h-5 border border-muted-foreground/40 flex items-center justify-center transition-colors motion-reduce:transition-none peer-checked:border-primary peer-checked:[&>span]:scale-100 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-ring peer-focus-visible:outline-offset-2 ${
+                    q.type === "single-select"
+                      ? "rounded-full"
+                      : "rounded-[5px]"
+                  }`}
+                  aria-hidden="true"
+                >
+                  <span
+                    class={`option-fill block bg-primary scale-0 transition-transform duration-300 motion-reduce:transition-none motion-reduce:duration-0 ${
+                      q.type === "single-select"
+                        ? "w-2.5 h-2.5 rounded-full"
+                        : "w-3 h-3 rounded-[3px]"
+                    }`}
+                  />
+                </span>
+                <span class="option-text">{option.text}</span>
+              </label>
+            ))}
+          </div>
 
-        {q.hint && (
-          <details class="mt-2.5 text-sm">
-            <summary class="cursor-pointer text-primary font-medium">Show hint</summary>
-            <p class="mt-1.5 text-muted-foreground">{q.hint}</p>
-          </details>
-        )}
-
-        {q.explanation && quiz.settings.showExplanations && (
           <p
-            class="explanation mt-2.5 px-3 py-2.5 bg-muted border-l-2 border-primary rounded text-sm text-foreground/80"
+            class="question-error mt-2 text-sm text-destructive"
+            role="alert"
             hidden
           >
-            <strong class="text-foreground">Explanation:</strong> {q.explanation}
+            Please select an answer before submitting.
           </p>
-        )}
-      </fieldset>
-    ))}
+
+          {q.hint && (
+            <details class="mt-2.5 text-sm">
+              <summary class="cursor-pointer text-primary font-medium">
+                Show hint
+              </summary>
+              <p class="mt-1.5 text-muted-foreground">{q.hint}</p>
+            </details>
+          )}
+
+          {q.explanation && quiz.settings.showExplanations && (
+            <p
+              class="explanation mt-2.5 px-3 py-2.5 bg-muted border-l-2 border-primary rounded text-sm text-foreground/80"
+              hidden
+            >
+              <strong class="text-foreground">Explanation:</strong>{" "}
+              {q.explanation}
+            </p>
+          )}
+        </fieldset>
+      ))
+    }
 
     <div class="quiz-actions flex items-center justify-between gap-3 mt-6">
       <button
@@ -146,8 +199,13 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
         Previous
       </button>
 
-      <p class="page-indicator text-sm text-muted-foreground m-0" aria-live="polite">
-        Page <span class="current-page-num">1</span> of <span class="total-pages-num">1</span>
+      <p
+        class="page-indicator text-sm text-muted-foreground m-0"
+        aria-live="polite"
+      >
+        Page <span class="current-page-num">1</span> of <span
+          class="total-pages-num">1</span
+        >
       </p>
 
       <button
@@ -172,7 +230,8 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
     role="status"
     aria-live="polite"
     hidden
-  ></div>
+  >
+  </div>
 </div>
 
 <script>
@@ -197,36 +256,65 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
     <path d="M9 9l6 6M15 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`;
 
-  const LABEL_CORRECT = ["!bg-emerald-50", "!border-emerald-300", "!text-emerald-900", "dark:!bg-emerald-950/40", "dark:!border-emerald-800", "dark:!text-emerald-300"];
-  const LABEL_INCORRECT = ["!bg-destructive/10", "!border-destructive/40", "!text-destructive"];
+  const LABEL_CORRECT = [
+    "!bg-emerald-50",
+    "!border-emerald-300",
+    "!text-emerald-900",
+    "dark:!bg-emerald-950/40",
+    "dark:!border-emerald-800",
+    "dark:!text-emerald-300",
+  ];
+  const LABEL_INCORRECT = [
+    "!bg-destructive/10",
+    "!border-destructive/40",
+    "!text-destructive",
+  ];
   const CONTROL_CORRECT = ["!border-emerald-600"];
   const CONTROL_INCORRECT = ["!border-destructive"];
   const FILL_CORRECT = ["!bg-emerald-600"];
   const FILL_INCORRECT = ["!bg-destructive"];
-  const ALL_STATE_CLASSES = [...LABEL_CORRECT, ...LABEL_INCORRECT, ...CONTROL_CORRECT, ...CONTROL_INCORRECT, ...FILL_CORRECT, ...FILL_INCORRECT];
+  const ALL_STATE_CLASSES = [
+    ...LABEL_CORRECT,
+    ...LABEL_INCORRECT,
+    ...CONTROL_CORRECT,
+    ...CONTROL_INCORRECT,
+    ...FILL_CORRECT,
+    ...FILL_INCORRECT,
+  ];
 
   document.querySelectorAll<HTMLElement>(".quiz").forEach((container) => {
     const form = container.querySelector<HTMLFormElement>(".quiz-form")!;
     const resultEl = container.querySelector<HTMLElement>(".quiz-result")!;
-    const submitBtn = container.querySelector<HTMLButtonElement>(".submit-btn")!;
-    const prevBtn = container.querySelector<HTMLButtonElement>(".prev-page-btn")!;
-    const nextBtn = container.querySelector<HTMLButtonElement>(".next-page-btn")!;
-    const currentPageNumEl = container.querySelector<HTMLElement>(".current-page-num")!;
-    const totalPagesNumEl = container.querySelector<HTMLElement>(".total-pages-num")!;
-    const pageIndicator = container.querySelector<HTMLElement>(".page-indicator")!;
+    const submitBtn =
+      container.querySelector<HTMLButtonElement>(".submit-btn")!;
+    const prevBtn =
+      container.querySelector<HTMLButtonElement>(".prev-page-btn")!;
+    const nextBtn =
+      container.querySelector<HTMLButtonElement>(".next-page-btn")!;
+    const currentPageNumEl =
+      container.querySelector<HTMLElement>(".current-page-num")!;
+    const totalPagesNumEl =
+      container.querySelector<HTMLElement>(".total-pages-num")!;
+    const pageIndicator =
+      container.querySelector<HTMLElement>(".page-indicator")!;
     const actions = container.querySelector<HTMLElement>(".quiz-actions")!;
     const navEl = container.querySelector<HTMLElement>(".question-nav")!;
 
     const passingScore = Number(container.dataset.passingScore);
     const showExplanations = container.dataset.showExplanations === "true";
     const perPage = Math.max(1, Number(container.dataset.perPage) || 10);
-    const negativeMarkingPercentage = Number(container.dataset.negativeMarkingPercentage) || 0;
+    const negativeMarkingPercentage =
+      Number(container.dataset.negativeMarkingPercentage) || 0;
 
-    const initialQuestions = [...form.querySelectorAll<HTMLFieldSetElement>(".question")];
+    const initialQuestions = [
+      ...form.querySelectorAll<HTMLFieldSetElement>(".question"),
+    ];
     if (container.dataset.shuffleQuestions === "true") {
       shuffle(initialQuestions).forEach((q) => form.insertBefore(q, actions));
     }
-    const questions = [...form.querySelectorAll<HTMLFieldSetElement>(".question")];
+    const questions = [
+      ...form.querySelectorAll<HTMLFieldSetElement>(".question"),
+    ];
 
     const renumberQuestions = () => {
       questions.forEach((question, i) => {
@@ -248,7 +336,8 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
     const currentPage = atom(0);
     let submitted = false;
 
-    const pageOf = (questionIndex: number) => Math.floor(questionIndex / perPage);
+    const pageOf = (questionIndex: number) =>
+      Math.floor(questionIndex / perPage);
 
     const updateNavButtons = (page: number) => {
       prevBtn.disabled = page === 0;
@@ -258,17 +347,37 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
       currentPageNumEl.textContent = String(page + 1);
     };
 
-    const NAV_UNANSWERED = ["border-input", "text-muted-foreground", "bg-transparent", "hover:border-ring/50", "hover:bg-accent"];
-    const NAV_ANSWERED = ["bg-primary", "text-primary-foreground", "border-primary"];
+    const NAV_UNANSWERED = [
+      "border-input",
+      "text-muted-foreground",
+      "bg-transparent",
+      "hover:border-ring/50",
+      "hover:bg-accent",
+    ];
+    const NAV_ANSWERED = [
+      "bg-primary",
+      "text-primary-foreground",
+      "border-primary",
+    ];
     const NAV_CORRECT = ["bg-emerald-600", "text-white", "border-emerald-600"];
-    const NAV_INCORRECT = ["bg-destructive", "text-white", "border-destructive"];
-    const NAV_ALL_STATE = [...NAV_UNANSWERED, ...NAV_ANSWERED, ...NAV_CORRECT, ...NAV_INCORRECT];
+    const NAV_INCORRECT = [
+      "bg-destructive",
+      "text-white",
+      "border-destructive",
+    ];
+    const NAV_ALL_STATE = [
+      ...NAV_UNANSWERED,
+      ...NAV_ANSWERED,
+      ...NAV_CORRECT,
+      ...NAV_INCORRECT,
+    ];
 
     const navButtons: HTMLButtonElement[] = questions.map((question, i) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.textContent = String(i + 1);
-      btn.className = "question-nav-item inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-semibold border transition-colors motion-reduce:transition-none";
+      btn.className =
+        "question-nav-item inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-semibold border transition-colors motion-reduce:transition-none";
       btn.classList.add(...NAV_UNANSWERED);
       btn.addEventListener("click", () => {
         currentPage.set(pageOf(i));
@@ -283,14 +392,19 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
     const updateNavItem = (i: number) => {
       const btn = navButtons[i];
       const question = questions[i];
-      const selected = [...question.querySelectorAll<HTMLInputElement>("input:checked")].map((input) => input.value);
+      const selected = [
+        ...question.querySelectorAll<HTMLInputElement>("input:checked"),
+      ].map((input) => input.value);
       const answered = selected.length > 0;
 
       btn.classList.remove(...NAV_ALL_STATE);
 
       if (submitted) {
         const correct: string[] = JSON.parse(question.dataset.correct || "[]");
-        const isCorrect = answered && selected.length === correct.length && selected.every((id) => correct.includes(id));
+        const isCorrect =
+          answered &&
+          selected.length === correct.length &&
+          selected.every((id) => correct.includes(id));
         if (!answered) {
           btn.classList.add(...NAV_UNANSWERED);
           btn.setAttribute("aria-label", `Question ${i + 1}, not answered`);
@@ -310,7 +424,8 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
       }
     };
 
-    const updateAllNavItems = () => questions.forEach((_, i) => updateNavItem(i));
+    const updateAllNavItems = () =>
+      questions.forEach((_, i) => updateNavItem(i));
     updateAllNavItems();
 
     const updateNavCurrentPage = (page: number) => {
@@ -324,7 +439,9 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
     };
 
     form.addEventListener("change", (e) => {
-      const question = (e.target as HTMLElement).closest(".question") as HTMLFieldSetElement | null;
+      const question = (e.target as HTMLElement).closest(
+        ".question",
+      ) as HTMLFieldSetElement | null;
       if (!question) return;
       const i = questions.indexOf(question);
       if (i !== -1) updateNavItem(i);
@@ -376,8 +493,12 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
     const clearGradingState = (question: HTMLElement) => {
       question.querySelectorAll<HTMLLabelElement>("label").forEach((label) => {
         label.classList.remove(...ALL_STATE_CLASSES);
-        label.querySelector(".option-control")?.classList.remove(...CONTROL_CORRECT, ...CONTROL_INCORRECT);
-        label.querySelector(".option-fill")?.classList.remove(...FILL_CORRECT, ...FILL_INCORRECT);
+        label
+          .querySelector(".option-control")
+          ?.classList.remove(...CONTROL_CORRECT, ...CONTROL_INCORRECT);
+        label
+          .querySelector(".option-fill")
+          ?.classList.remove(...FILL_CORRECT, ...FILL_INCORRECT);
       });
     };
 
@@ -405,7 +526,10 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
           currentPage.set(targetPage);
         }
         requestAnimationFrame(() => {
-          (firstUnanswered as HTMLElement).scrollIntoView({ behavior: "smooth", block: "center" });
+          (firstUnanswered as HTMLElement).scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
         });
         return;
       }
@@ -422,13 +546,15 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
         const points = Number(question.dataset.points);
         totalPoints += points;
 
-        const selected = [...question.querySelectorAll<HTMLInputElement>("input:checked")].map(
-          (i) => i.value,
-        );
+        const selected = [
+          ...question.querySelectorAll<HTMLInputElement>("input:checked"),
+        ].map((i) => i.value);
 
         const answered = selected.length > 0;
-        const isCorrect = answered &&
-          selected.length === correct.length && selected.every((id) => correct.includes(id));
+        const isCorrect =
+          answered &&
+          selected.length === correct.length &&
+          selected.every((id) => correct.includes(id));
 
         if (answered) {
           if (isCorrect) {
@@ -446,38 +572,43 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
 
         clearGradingState(question);
 
-        question.querySelectorAll<HTMLLabelElement>("label").forEach((label) => {
-          const optionId = label.dataset.optionId!;
-          const isChecked = selected.includes(optionId);
-          const control = label.querySelector<HTMLElement>(".option-control");
-          const fill = label.querySelector<HTMLElement>(".option-fill");
+        question
+          .querySelectorAll<HTMLLabelElement>("label")
+          .forEach((label) => {
+            const optionId = label.dataset.optionId!;
+            const isChecked = selected.includes(optionId);
+            const control = label.querySelector<HTMLElement>(".option-control");
+            const fill = label.querySelector<HTMLElement>(".option-fill");
 
-          if (correct.includes(optionId)) {
-            label.classList.add(...LABEL_CORRECT);
-            if (isChecked) {
-              control?.classList.add(...CONTROL_CORRECT);
-              fill?.classList.add(...FILL_CORRECT);
+            if (correct.includes(optionId)) {
+              label.classList.add(...LABEL_CORRECT);
+              if (isChecked) {
+                control?.classList.add(...CONTROL_CORRECT);
+                fill?.classList.add(...FILL_CORRECT);
+              }
             }
-          }
-          if (isChecked && !correct.includes(optionId)) {
-            label.classList.add(...LABEL_INCORRECT);
-            control?.classList.add(...CONTROL_INCORRECT);
-            fill?.classList.add(...FILL_INCORRECT);
-          }
-        });
+            if (isChecked && !correct.includes(optionId)) {
+              label.classList.add(...LABEL_INCORRECT);
+              control?.classList.add(...CONTROL_INCORRECT);
+              fill?.classList.add(...FILL_INCORRECT);
+            }
+          });
 
         if (showExplanations) {
-          const explanation = question.querySelector<HTMLElement>(".explanation");
+          const explanation =
+            question.querySelector<HTMLElement>(".explanation");
           if (explanation) explanation.hidden = false;
         }
       });
 
       const passed = earnedPoints >= passingScore;
-      
-      const percentage = totalPoints === 0 ? 0 : (earnedPoints / totalPoints) * 100;
+
+      const percentage =
+        totalPoints === 0 ? 0 : (earnedPoints / totalPoints) * 100;
       const clampedPercentage = Math.min(Math.max(percentage, 0), 100);
 
-      const thresholdPercentage = totalPoints === 0 ? 0 : (passingScore / totalPoints) * 100;
+      const thresholdPercentage =
+        totalPoints === 0 ? 0 : (passingScore / totalPoints) * 100;
       const clampedThreshold = Math.min(Math.max(thresholdPercentage, 0), 100);
 
       const summary = `${passed ? "Passed" : "Not passed"}. Score ${percentage.toFixed(1)}%, ${earnedPoints.toFixed(2)} of ${totalPoints} points, ${correctCount} correct, ${wrongCount} incorrect, ${unansweredCount} skipped. Required points to pass: ${passingScore}.`;
@@ -536,7 +667,9 @@ const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
         });
       });
 
-      form.querySelectorAll("input").forEach((input) => ((input as HTMLInputElement).disabled = true));
+      form
+        .querySelectorAll("input")
+        .forEach((input) => ((input as HTMLInputElement).disabled = true));
       form.classList.add("is-submitted");
       submitted = true;
       submitBtn.hidden = true;
