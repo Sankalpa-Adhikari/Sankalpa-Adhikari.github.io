@@ -11,7 +11,7 @@ import sanity from "@sanity/astro";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://www.nsae.org.np",
+  site: "https://sankalpa-adhikari.github.io/",
   image: {
     domains: [
       "res.cloudinary.com",
