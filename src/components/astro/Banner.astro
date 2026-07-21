@@ -1,0 +1,166 @@
+---
+import { getImage } from "astro:assets";
+import ArrowUpRight from "@tabler/icons/outline/arrow-up-right.svg";
+import type { Banner } from "@/sanity/lib/queries/banner";
+import Button from "./Button/Button.astro";
+
+type Props = {
+  banner: Banner;
+};
+const { banner } = Astro.props;
+
+const optimizedImage = await getImage({
+  src: banner.backgroundImage,
+  inferSize: true,
+});
+
+const contentBoxClasses = [
+  "flex",
+  "flex-col",
+  "max-w-4xl",
+  "p-8 md:p-12",
+  banner.contentPosition === "left"
+    ? "mr-auto items-start text-left"
+    : "ml-auto items-end text-right",
+];
+const baseOverlayColor = "15, 23, 42";
+
+const gradientDirection =
+  banner.contentPosition === "left" ? "to right" : "to left";
+
+const directionalScrim = `linear-gradient(
+  ${gradientDirection},
+  rgba(${baseOverlayColor}, 0.98) 0%,
+  rgba(${baseOverlayColor}, 0.92) 15%,
+  rgba(${baseOverlayColor}, 0.75) 30%,
+  rgba(${baseOverlayColor}, 0.40) 50%,
+  rgba(${baseOverlayColor}, 0.10) 75%,
+  transparent 100%
+)`;
+
+const subtleVignette = `radial-gradient(
+  circle at center,
+  transparent 40%,
+  rgba(${baseOverlayColor}, 0.4) 100%
+)`;
+---
+
+<section class="pt-4">
+  <div
+    class="relative min-h-[400px] lg:min-h-[500px] bg-cover bg-center text-white flex items-center rounded-xl overflow-hidden shadow-sm"
+    style={`background-image: ${directionalScrim}, ${subtleVignette}, url(${optimizedImage.src})`}
+  >
+    <div class:list={contentBoxClasses}>
+      {
+        banner.countdownTarget && (
+          <div
+            class="countdown flex items-start gap-x-4 md:gap-x-6 font-mono text-3xl md:text-5xl font-medium tracking-tighter my-4 border-b border-white/20 pb-4"
+            data-target-date={banner.countdownTarget}
+          />
+        )
+      }
+      {
+        banner.subtitle && (
+          <p class="font-mono text-xs uppercase tracking-widest text-white/80 mb-3">
+            {banner.subtitle}
+          </p>
+        )
+      }
+
+      <h2
+        class="font-sans text-4xl md:text-6xl lg:text-7xl font-medium uppercase tracking-tighter leading-[0.9] my-2"
+      >
+        {banner.title}
+      </h2>
+      {
+        banner.description && (
+          <p class="font-sans text-lg text-white/90 mb-8 max-w-prose leading-relaxed">
+            {banner.description}
+          </p>
+        )
+      }
+      <Button
+        href={banner.buttonLink}
+        class="rounded-full font-sans font-medium h-12 text-base shadow-sm hover:shadow-md transition-all px-5!"
+      >
+        {banner.buttonText}
+        <ArrowUpRight class={"ml-2 size-5"} />
+      </Button>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initializeCountdowns() {
+    const countdownElements =
+      document.querySelectorAll<HTMLElement>(".countdown");
+    if (countdownElements.length === 0) return;
+
+    countdownElements.forEach((countdownElement) => {
+      const oldIntervalId = Number(countdownElement.dataset.intervalId);
+      if (oldIntervalId) {
+        clearInterval(oldIntervalId);
+      }
+
+      const targetDateStr = countdownElement.dataset.targetDate;
+      if (!targetDateStr) return;
+
+      const targetDate = new Date(targetDateStr).getTime();
+
+      const updateCountdown = () => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance < 0) {
+          countdownElement.innerHTML = "EVENT STARTED";
+          const intervalId = Number(countdownElement.dataset.intervalId);
+          if (intervalId) clearInterval(intervalId);
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        );
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownElement.innerHTML = `
+          <div class="text-center">
+            ${String(days).padStart(2, "0")}
+            <span class="block text-[10px] uppercase tracking-widest opacity-70 font-mono mt-1">Days</span>
+          </div>
+          <span class="opacity-50 text-2xl md:text-4xl mt-1 md:mt-2">:</span>
+          <div class="text-center">
+            ${String(hours).padStart(2, "0")}
+            <span class="block text-[10px] uppercase tracking-widest opacity-70 font-mono mt-1">Hrs</span>
+          </div>
+          <span class="opacity-50 text-2xl md:text-4xl mt-1 md:mt-2">:</span>
+          <div class="text-center">
+            ${String(minutes).padStart(2, "0")}
+            <span class="block text-[10px] uppercase tracking-widest opacity-70 font-mono mt-1">Min</span>
+          </div>
+          <span class="opacity-50 text-2xl md:text-4xl mt-1 md:mt-2">:</span>
+          <div class="text-center">
+            ${String(seconds).padStart(2, "0")}
+            <span class="block text-[10px] uppercase tracking-widest opacity-70 font-mono mt-1">Sec</span>
+          </div>
+        `;
+      };
+
+      updateCountdown();
+
+      const newIntervalId = setInterval(updateCountdown, 1000);
+      countdownElement.dataset.intervalId = String(newIntervalId);
+    });
+  }
+
+  document.addEventListener("astro:page-load", initializeCountdowns);
+  document.addEventListener("DOMContentLoaded", initializeCountdowns);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeCountdowns);
+  } else {
+    initializeCountdowns();
+  }
+</script>

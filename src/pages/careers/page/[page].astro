@@ -1,0 +1,174 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+import Badge from "@/components/astro/Badge.astro";
+import CareersCard from "@/components/astro/Card/CareersCard.astro";
+import ClickableCard from "@/components/astro/Card/ClickableCard.astro";
+import Empty from "@/components/astro/Empty.astro";
+import Pagination from "@/components/astro/Pagination.astro";
+import { PAGE_SIZE } from "@/consts";
+import PageLayout from "@/layouts/PageLayout.astro";
+import { getVacancies, type Vacancy } from "@/sanity/lib/queries/careers";
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const allVacancies = (await getVacancies()) || [];
+
+  return paginate(allVacancies, {
+    pageSize: PAGE_SIZE,
+  });
+};
+
+interface Props {
+  page: Page;
+}
+
+const { page } = Astro.props;
+const pageTitle = "Our latest careers";
+const pageDescription = "Your Next Chapter Starts Here";
+---
+
+<PageLayout
+  title={pageTitle}
+  description={pageDescription}
+  dataPagefindIgnore="all"
+>
+  <section
+    class="min-h-40 flex flex-col items-center justify-center gap-4 py-16 md:py-24 px-6"
+  >
+    <div class="anim-header-badge opacity-0 scale-50">
+      <Badge
+        variant={"secondary"}
+        size={"sm"}
+        class="font-mono uppercase tracking-widest text-xs mb-3 border border-border/50"
+      >
+        Careers
+      </Badge>
+    </div>
+    <h1
+      class="anim-header-title invisible font-sans text-5xl md:text-7xl font-medium text-center tracking-tighter leading-tight max-w-4xl"
+    >
+      Your Next Chapter Starts Here
+    </h1>
+  </section>
+
+  {
+    page.data.length > 0 ? (
+      <section class="space-y-6 mb-24">
+        <h1 class="anim-section-title font-sans text-xl md:text-2xl font-medium mb-6 uppercase tracking-wider border-b border-border/50 pb-2 opacity-0 translate-y-4">
+          Open Positions
+        </h1>
+        <div class="space-y-4">
+          {page.data.map((vacancy: Vacancy) => (
+            <ClickableCard
+              class="group relative block w-full rounded-xl  bg-secondary p-6 text-secondary-foreground shadow-sm"
+              href={`/careers/${vacancy.slug}/`}
+            >
+              <CareersCard data={vacancy} />
+            </ClickableCard>
+          ))}
+        </div>
+        <div class="anim-pagination flex justify-center mt-16 opacity-0">
+          <Pagination
+            url={page.url}
+            class="font-mono text-sm uppercase tracking-widest"
+          />
+        </div>
+      </section>
+    ) : (
+      <div class="anim-empty-state opacity-0 scale-95">
+        <Empty
+          title="No open positions"
+          description="We don't have any vacancies right now. Please check back later for new opportunities."
+        />
+      </div>
+    )
+  }
+</PageLayout>
+
+<script>
+  import { gsap, SplitText } from "@/utils/gsap-init";
+
+  {
+    const headerTitleEl = document.querySelector(".anim-header-title");
+    const headerDescEl = document.querySelector(".anim-header-desc");
+    const sectionTitleEl = document.querySelector(".anim-section-title");
+
+    const headerTl = gsap.timeline({
+      defaults: { ease: "power3.out" },
+    });
+
+    headerTl.to(".anim-header-badge", {
+      scale: 1,
+      opacity: 1,
+      duration: 0.8,
+      ease: "back.out(1.7)",
+    });
+
+    if (headerTitleEl) {
+      const titleSplit = SplitText.create(headerTitleEl, {
+        type: "lines, words",
+        linesClass: "overflow-hidden",
+      });
+
+      headerTl.set(headerTitleEl, { autoAlpha: 1 }, "-=0.4").from(
+        titleSplit.words,
+        {
+          yPercent: 100,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.05,
+          ease: "power4.out",
+        },
+        "<",
+      );
+    }
+
+    if (headerDescEl) {
+      headerTl.to(
+        headerDescEl,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+        },
+        "-=0.5",
+      );
+    }
+
+    if (sectionTitleEl) {
+      headerTl.to(
+        sectionTitleEl,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+        },
+        "-=0.5",
+      );
+    }
+
+    const paginationEl = document.querySelector(".anim-pagination");
+    if (paginationEl) {
+      gsap.to(paginationEl, {
+        opacity: 1,
+        duration: 1,
+        scrollTrigger: {
+          trigger: paginationEl,
+          start: "top 95%",
+        },
+      });
+    }
+
+    const emptyStateEl = document.querySelector(".anim-empty-state");
+    if (emptyStateEl) {
+      gsap.to(emptyStateEl, {
+        scale: 1,
+        opacity: 1,
+        duration: 0.8,
+        ease: "back.out(1.5)",
+        delay: 0.5,
+      });
+    }
+  }
+</script>

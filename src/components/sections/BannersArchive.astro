@@ -1,0 +1,15 @@
+---
+import { getCollection } from "astro:content";
+import Banner from "@/components/astro/Banner.astro";
+import { getBanners } from "@/sanity/lib/queries/banner";
+
+const allBanners = (await getBanners()) || [];
+---
+
+<section class="space-y-4">
+  {
+    allBanners.map((banner) => {
+      return <Banner banner={banner} />;
+    })
+  }
+</section>

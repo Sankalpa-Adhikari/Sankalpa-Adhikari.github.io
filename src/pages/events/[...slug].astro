@@ -1,0 +1,72 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import ArrowLeft from "@tabler/icons/outline/arrow-left.svg";
+import PortableText from "@/components/PortableText.astro";
+import EventContact from "@/components/pages/events/EventContact.astro";
+import EventHeader from "@/components/pages/events/EventHeader.astro";
+import EventInstructors from "@/components/pages/events/EventInstructors.astro";
+import EventLocation from "@/components/pages/events/EventLocation.astro";
+import EventSchedule from "@/components/pages/events/EventSchedule.astro";
+import { SITE_DESCRIPTION } from "@/consts";
+import PageLayout from "@/layouts/PageLayout.astro";
+import { getEventDetails, getEvents } from "@/sanity/lib/queries/events";
+
+export async function getStaticPaths() {
+  const events = await getEvents();
+
+  return events.map((event) => ({
+    params: {
+      slug: event.slug,
+    },
+  }));
+}
+
+const { slug } = Astro.params;
+
+const event = await getEventDetails(slug!);
+---
+
+<PageLayout
+  title={event.title}
+  description={event.subtitle || SITE_DESCRIPTION}
+>
+  <article class="py-8 space-y-10" data-pagefind-body>
+    <a
+      data-pagefind-ignore
+      href="/events/page/1"
+      class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors px-4"
+    >
+      <ArrowLeft class="size-4" /> Back to All Events
+    </a>
+
+    <EventHeader data={event} />
+
+    <hr class="my-8 border-muted" />
+
+    <div class="grid grid-cols-1 lg:grid-cols-[3fr_1.5fr] gap-8 lg:gap-12">
+      <div class="flex flex-col gap-10">
+        <section>
+          <h2 class="font-sans text-2xl font-medium tracking-tight mb-4">
+            About the Event
+          </h2>
+          <div
+            class="prose prose-lg prose-headings:font-sans prose-p:font-sans dark:prose-invert max-w-none"
+          >
+            <PortableText portableText={event.body} />
+          </div>
+        </section>
+
+        <EventSchedule schedule={event.eventSchedule} />
+      </div>
+
+      <aside
+        data-pagefind-ignore
+        class="flex flex-col gap-6 lg:sticky lg:top-24 h-fit"
+      >
+        <EventLocation location={event.location} />
+        <EventInstructors instructors={event.instructors} />
+        <EventContact contactPersons={event.contactPersons} />
+      </aside>
+    </div>
+  </article>
+</PageLayout>

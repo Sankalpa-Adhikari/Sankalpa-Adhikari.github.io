@@ -1,0 +1,208 @@
+---
+import ArrowRight from "@tabler/icons/outline/arrow-right.svg";
+import Plus from "@tabler/icons/outline/plus.svg";
+import { getFaqDetails } from "@/sanity/lib/queries/faq";
+import Badge from "../astro/Badge.astro";
+
+const { items: faqItems } = await getFaqDetails();
+---
+
+<section id="faq-section" class="py-24 md:py-32">
+  <div class="flex flex-col gap-4 mb-12 header-content">
+    <Badge
+      variant="secondary"
+      size="sm"
+      class={"font-mono text-xs uppercase tracking-widest faq-badge opacity-0 translate-y-8"}
+    >
+      FAQ
+    </Badge>
+
+    <h1
+      class="font-sans text-4xl md:text-5xl font-medium tracking-tighter text-balance opacity-0 translate-y-8"
+    >
+      Frequently Asked Questions
+    </h1>
+  </div>
+
+  {
+    faqItems.length > 0 ? (
+      <div class="space-y-4">
+        {faqItems.map((faq, index) => (
+          <details
+            class=" p-6 group rounded-xl bg-secondary/50 border border-border/50 [&_summary::-webkit-details-marker]:hidden overflow-hidden opacity-0 translate-y-8"
+            name="faq-accordion"
+          >
+            <summary class="faq-summary flex cursor-pointer items-center justify-between gap-4 text-lg font-sans font-medium text-foreground marker:content-none select-none relative z-10">
+              <span class="question-text transition-colors duration-300">
+                {faq.question}
+              </span>
+
+              <span class="relative flex size-8 shrink-0 items-center justify-center rounded-full border border-border bg-muted text-muted-foreground transition-colors duration-300 group-hover:border-primary">
+                <div class="icon-container relative size-4">
+                  <Plus class="absolute inset-0 size-4 transition-all duration-300" />
+                </div>
+              </span>
+            </summary>
+
+            <div class="faq-content-wrapper overflow-hidden h-0 opacity-0">
+              <div class="faq-inner-content font-sans text-muted-foreground leading-relaxed border-t border-border mt-4 pt-4">
+                {faq.answer}
+              </div>
+            </div>
+          </details>
+        ))}
+      </div>
+    ) : (
+      <div class="text-center p-12 font-sans text-muted-foreground">
+        <p>No questions currently available.</p>
+      </div>
+    )
+  }
+
+  <div
+    class="mt-12 flex flex-col items-center gap-3 text-center cta-content opacity-0 translate-y-8"
+  >
+    <p class="font-sans text-lg text-muted-foreground text-balance">
+      Need a personalized answer?
+    </p>
+    <a
+      href="/contact"
+      class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
+    >
+      Contact our team <ArrowRight class="size-4" />
+    </a>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "@/utils/gsap-init";
+
+  if (typeof window !== "undefined") {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#faq-section",
+        start: "top 80%",
+      },
+    });
+
+    tl.to("#faq-section .header-content > *", {
+      y: 0,
+      opacity: 1,
+      duration: 1,
+      stagger: 0.1,
+      ease: "power3.out",
+    })
+      .to(
+        "#faq-section details",
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.05,
+          ease: "power2.out",
+        },
+        "-=0.6",
+      )
+      .to(
+        ".cta-content",
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+        },
+        "-=0.4",
+      );
+
+    const detailsElements = document.querySelectorAll("#faq-section details");
+
+    detailsElements.forEach((detail) => {
+      const summary = detail.querySelector("summary");
+      const contentWrapper = detail.querySelector(".faq-content-wrapper");
+      const innerContent = detail.querySelector(".faq-inner-content");
+      const iconContainer = detail.querySelector(".icon-container");
+
+      if (!summary || !contentWrapper || !innerContent || !iconContainer) {
+        return;
+      }
+      summary.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        if (gsap.isTweening(contentWrapper)) return;
+
+        const isOpen = detail.hasAttribute("open");
+
+        if (!isOpen) {
+          detailsElements.forEach((otherDetail) => {
+            if (otherDetail !== detail && otherDetail.hasAttribute("open")) {
+              const otherWrapper = otherDetail.querySelector(
+                ".faq-content-wrapper",
+              );
+              const otherIcon = otherDetail.querySelector(".icon-container");
+
+              gsap.to(otherWrapper, {
+                height: 0,
+                opacity: 0,
+                duration: 0.4,
+                ease: "power3.inOut",
+                onComplete: () => otherDetail.removeAttribute("open"),
+              });
+              gsap.to(otherIcon, {
+                rotation: 0,
+                duration: 0.4,
+                ease: "power3.inOut",
+              });
+            }
+          });
+        }
+
+        if (isOpen) {
+          gsap.to(contentWrapper, {
+            height: 0,
+            opacity: 0,
+            duration: 0.4,
+            ease: "power3.inOut",
+            onComplete: () => detail.removeAttribute("open"),
+          });
+
+          gsap.to(iconContainer, {
+            rotation: 0,
+            duration: 0.4,
+            ease: "power3.inOut",
+          });
+        } else {
+          detail.setAttribute("open", "true");
+
+          gsap.fromTo(
+            contentWrapper,
+            { height: 0, opacity: 1 },
+            {
+              height: "auto",
+              opacity: 1,
+              duration: 0.6,
+              ease: "expo.out",
+            },
+          );
+
+          gsap.fromTo(
+            innerContent,
+            { y: 20, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.5,
+              delay: 0.1,
+              ease: "power3.out",
+            },
+          );
+
+          gsap.to(iconContainer, {
+            rotation: 45,
+            duration: 0.4,
+            ease: "back.out(1.7)",
+          });
+        }
+      });
+    });
+  }
+</script>

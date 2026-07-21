@@ -1,0 +1,83 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArrowNarrowRight from "@tabler/icons/outline/arrow-narrow-right.svg";
+import CalendarWeek from "@tabler/icons/outline/calendar-week.svg";
+import MapPin from "@tabler/icons/outline/map-pin.svg";
+import type { Vacancy } from "@/sanity/lib/queries/careers";
+import Badge from "../Badge.astro";
+
+type Props = {
+  data: Vacancy;
+  class?: string;
+};
+
+const { data, class: className } = Astro.props;
+---
+
+<article class="split-card flex flex-col gap-2">
+  <div class="flex items-center justify-between">
+    <span class="font-sans text-sm font-medium text-primary">
+      {data.company?.name ?? "In-house"}
+    </span>
+    <Badge
+      size={"xs"}
+      variant={data.status === "closed" ? "destructive" : "default"}
+      class="font-mono text-xs uppercase tracking-widest"
+    >
+      {data.status === "closed" ? "Closed" : data.type}
+    </Badge>
+  </div>
+
+  <h3
+    class="split-target font-sans text-2xl md:text-3xl font-medium leading-snug"
+  >
+    {data.title}
+  </h3>
+
+  <div
+    class="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 font-mono text-sm text-muted-foreground/80"
+  >
+    {
+      data.closingDate && (
+        <span class="inline-flex items-center gap-1.5 leading-none">
+          <CalendarWeek class={"size-4 shrink-0 text-primary/70"} />
+          <span>
+            Closes:{" "}
+            {new Date(data.closingDate).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </span>
+        </span>
+      )
+    }
+  </div>
+
+  <div class="flex flex-row items-center justify-between mt-4">
+    <span
+      class="inline-flex items-center gap-1.5 font-mono text-sm uppercase tracking-wider leading-none"
+    >
+      <MapPin class="size-4 shrink-0 text-primary/70" />
+
+      <span class="translate-y-[1px]">{data.location}</span>
+    </span>
+    <a
+      class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest hover:text-primary transition-colors leading-none"
+      href={`/careers/${data.slug}/`}
+    >
+      <span class="translate-y-[1px]">Learn more</span>
+      <ArrowNarrowRight class="w-4 h-4 shrink-0" />
+    </a>
+  </div>
+</article>
+
+<script>
+  import { initCardSplitTextAnimation } from "@/utils/animations/cards-split-text-animation";
+
+  if (typeof window !== "undefined") {
+    window.addEventListener("load", () => {
+      initCardSplitTextAnimation();
+    });
+  }
+</script>

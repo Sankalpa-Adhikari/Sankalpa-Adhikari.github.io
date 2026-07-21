@@ -1,0 +1,32 @@
+---
+import Button from "./astro/Button/Button.astro";
+import HeaderLink from "./HeaderLink.astro";
+import ArrowUpRight from "@tabler/icons/outline/arrow-up-right.svg";
+import { SearchCommand } from "./sections/SearchCommand";
+---
+
+<header
+  class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex flex-row gap-2 items-center"
+  data-pagefind-ignore="all"
+>
+  <nav
+    class="flex flex-nowrap whitespace-nowrap gap-1 items-center bg-foreground text-background rounded-full p-2"
+  >
+    <HeaderLink href="/">Home</HeaderLink>
+    <HeaderLink href="/about">About us</HeaderLink>
+    <HeaderLink href="/notices/page/1">Notices</HeaderLink>
+    <HeaderLink class={"hidden lg:block"} href="/blog/page/1">Blog</HeaderLink>
+    <HeaderLink href="/events/page/1">Events</HeaderLink>
+  </nav>
+  <Button
+  class="rounded-full items-center pr-2 bg-foreground hover:bg-foreground h-fit hidden xs:flex"
+  href={"/contact"}
+  >
+  Contact
+  <span class="bg-primary text-primary-foreground rounded-full p-1">
+    <ArrowUpRight class="w-4 h-4 shrink-0" />
+  </span>
+</Button>
+
+  <SearchCommand client:load />
+</header>
