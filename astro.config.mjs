@@ -9,7 +9,7 @@ import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://www.nsae.org.np",
+	site: "https://sankalpa-adhikari.github.io/",
 	image: {
 		domains: [
 			"res.cloudinary.com",
@@ -30,7 +30,7 @@ export default defineConfig({
 		sitemap(),
 		react(),
 		sanity({
-			projectId: "zv3un63s",
+			projectId: "1pkiz8qd",
 			dataset: "production",
 			useCdn: false,
 			apiVersion: "2025-02-19",
