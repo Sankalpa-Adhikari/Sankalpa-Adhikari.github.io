@@ -1,0 +1,60 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<div
+  id="field-notes-dialog"
+  class="fixed inset-0 z-50 hidden items-center justify-center p-4 md:p-8"
+  role="dialog"
+  aria-modal="true"
+>
+  <div
+    id="dialog-backdrop"
+    class="fixed inset-0 bg-background/80 transition-opacity"
+  >
+  </div>
+
+  <div
+    class="relative z-10 p-3 flex flex-col md:flex-row w-full max-w-3xl max-h-[90vh] bg-white border border-foreground/10 rounded-2xl overflow-hidden shadow-2xl"
+  >
+    <button
+      id="dialog-close"
+      aria-label="Close dialog"
+      class="absolute top-4 right-4 z-20 flex size-9 items-center justify-center rounded-full bg-background text-foreground transition-colors hover:bg-primary hover:text-background cursor-pointer"
+    >
+      <Icon name="heroicons:x-mark" class="size-5" />
+    </button>
+
+    <div
+      class="w-full rounded-md md:w-1/2 aspect-9/16 max-h-[50vh] md:max-h-none bg-black flex items-center justify-center overflow-hidden"
+    >
+      <iframe
+        id="dialog-iframe"
+        src=""
+        class="w-full h-full border-0"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        allowfullscreen></iframe>
+    </div>
+
+    <div
+      class="w-full md:w-1/2 p-6 flex flex-col justify-between overflow-y-auto space-y-4"
+    >
+      <div class="space-y-3">
+        <span
+          id="dialog-date"
+          class="text-xs font-mono uppercase tracking-widest text-black/50"
+        ></span>
+        <h3
+          id="dialog-title"
+          class="text-xl md:text-3xl font-medium uppercase tracking-wide leading-snug"
+        >
+        </h3>
+        <p
+          id="dialog-desc"
+          class="text-sm text-background/70 normal-case leading-relaxed md:pt-8"
+        >
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

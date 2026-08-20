@@ -1,0 +1,140 @@
+---
+import { Icon } from "astro-icon/components";
+
+const data = [
+  {
+    title: "WHAT?",
+    question: "What do we offer?",
+    answers: [
+      "End-to-end design, engineering, and digital strategy for modern web apps.",
+      "Scalable infrastructure built for performance, speed, and reliability.",
+      "Custom UI/UX designs focused on accessibility and high conversion rates.",
+      "Dedicated ongoing support, maintenance, and feature enhancement post-launch.",
+    ],
+  },
+  {
+    title: "HOW?",
+    question: "How can I get started?",
+    answers: [
+      "Book a free discovery call to walk through your project vision and requirements.",
+      "Receive a tailored proposal, scope breakdown, and fixed timeline within 48 hours.",
+      "Collaborate directly with our core engineering team in real-time communication channels.",
+      "Review weekly interactive builds as your product transitions smoothly to launch.",
+    ],
+  },
+  {
+    title: "WHEN?",
+    question: "When will my project launch?",
+    answers: [
+      "Initial design prototypes and wireframes are delivered within the first two weeks.",
+      "Standard development cycles average 4 to 8 weeks depending on custom features.",
+      "Sprint deadlines are strictly tracked with progress updates every Friday.",
+      "Priority fast-track options are available for urgent business launch dates.",
+    ],
+  },
+  {
+    title: "WHERE?",
+    question: "Where can we collaborate?",
+    answers: [
+      "100% remote collaboration optimized across all major global time zones.",
+      "Dedicated Slack or Discord channels for instant, direct team messaging.",
+      "Asynchronous project tracking via Notion boards and short Loom updates.",
+      "On-site strategy workshops available upon request for enterprise teams.",
+    ],
+  },
+];
+
+const qaStyles = [
+  "bg-primary text-black",
+  "bg-background text-white",
+  "bg-foreground text-black",
+];
+---
+
+<section class="min-h-screen border-t border-black/20 mt-16 relative">
+  {
+    data.map((items, index) => {
+      const isOdd = index % 2 !== 0;
+      const currentStyle = qaStyles[index % qaStyles.length];
+
+      return (
+        <div
+          style={`z-index: ${index === data.length - 1 ? 90 : index + 1};`}
+          class="qa-row relative grid grid-cols-1 lg:grid-cols-2 w-full border-b border-black/20 items-center p-4 bg-white"
+        >
+          <div
+            class={`hidden lg:flex items-center justify-center uppercase font-mono text-[150px] text-center ${
+              isOdd ? "rotate-6 lg:order-2" : "-rotate-6 lg:order-1"
+            }`}
+          >
+            {items.title}
+          </div>
+          <div
+            class={`qa-block ${currentStyle} flex flex-col justify-start gap-18 p-6 lg:p-10 rounded-xl min-h-137 lg:min-h-142 ${
+              isOdd ? "lg:order-1" : "lg:order-2"
+            }`}
+          >
+            <h3 class="uppercase font-mono text-4xl lg:text-6xl tracking-tight [word-spacing:-0.1em]">
+              {items.question}
+            </h3>
+
+            <ul class="flex flex-col w-full p-0 list-none divide-y divide-dashed border-y border-dashed border-black/20 divide-black/20">
+              {items.answers.map((answer) => (
+                <li class="text-[18px] flex items-center gap-4 py-3">
+                  <Icon
+                    name={"heroicons:check-circle-solid"}
+                    class="w-5 h-5 shrink-0"
+                  />
+                  <span>{answer}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    })
+  }
+</section>
+
+<script>
+  import { gsap, ScrollTrigger } from "@/utils/gsap-init";
+
+  let ctx: gsap.Context;
+
+  function initQAAnimation() {
+    ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray<HTMLElement>(".qa-row");
+      const blocks = gsap.utils.toArray<HTMLElement>(".qa-block");
+
+      if (blocks.length > 0) {
+        let maxBlockHeight = 0;
+        blocks.forEach((block) => {
+          maxBlockHeight = Math.max(maxBlockHeight, block.offsetHeight);
+        });
+
+        blocks.forEach((block) => {
+          gsap.set(block, { minHeight: `${maxBlockHeight}px` });
+        });
+      }
+
+      cards.forEach((card, index) => {
+        if (index < cards.length - 1) {
+          ScrollTrigger.create({
+            trigger: card,
+            start: "top top",
+            pin: true,
+            pinSpacing: false,
+          });
+        } else {
+          gsap.set(card, { zIndex: 40 });
+        }
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initQAAnimation);
+
+  document.addEventListener("astro:before-swap", () => {
+    ctx && ctx.revert();
+  });
+</script>

@@ -1,0 +1,89 @@
+---
+import { Icon } from "astro-icon/components";
+
+const publications = [
+  {
+    publisher: "ICRA",
+    publishedYear: 2026,
+    title: "SaLF: Sparse local fields for multi-sensor rendering in real-time",
+    authors:
+      "Yun Chen*, Matthew Haines*, Jingkang Wang, Sahil Jain, Krzysztof Baron-Lis, Sivabalan Manivasagam, Ze Yang, Raquel Urtasun",
+    tags: ["Sensor Simulation", "Traffic Monitoring"],
+    href: "publications/salf",
+  },
+  {
+    publisher: "CVPR",
+    publishedYear: 2025,
+    title:
+      "UrbanNeRF: Building High-Resolution City Models from Multi-View Aerial Imagery",
+    authors:
+      "Elena Rostova*, David Miller, Sarah Zhang, Lucas Vance, Marcus Thorne",
+    tags: ["3D Reconstruction", "Aerial Imaging"],
+    href: "publications/urban-nerf",
+  },
+  {
+    publisher: "ECCV",
+    publishedYear: 2024,
+    title: "MonoTrax: Real-Time 3D Multi-Object Tracking with Monocular Vision",
+    authors: "Aisha Patel, Hiroshi Tanaka, Mateo Gomez, Elena Rostova",
+    tags: ["Autonomous Driving", "Object Tracking"],
+    href: "publications/monotrax",
+  },
+  {
+    publisher: "NeurIPS",
+    publishedYear: 2024,
+    title:
+      "DiffuLidar: Generative Point Cloud Synthesis for Adverse Weather Conditions",
+    authors: "Liam O'Connor*, Chen Wei, Priya Sharma, Jonathan Reyes",
+    tags: ["Sensor Simulation", "Generative Models"],
+    href: "publications/diffulidar",
+  },
+  {
+    publisher: "IEEE T-RO",
+    publishedYear: 2023,
+    title:
+      "Robust Lidar-Visual Inertial Odometry in Dynamic Urban Environments",
+    authors: "Kwang-Ji Park, Sofia Rossi, Benjamin Hayes, Arthur Pendelton",
+    tags: ["SLAM", "Sensor Fusion"],
+    href: "publications/robust-lio",
+  },
+];
+---
+
+<section class="w-full mt-16 px-4 overflow-hidden relative">
+  <div class="mb-8 space-y-2">
+    <h2 class="text-3xl md:text-4xl font-medium capitalize tracking-wide">
+      Our Research
+    </h2>
+  </div>
+  <div class="flex flex-col gap-4 relative">
+    {
+      publications.map((pub) => (
+        <article class="relative border-b border-black/20 pb-4">
+          <a href={pub.href} class="flex flex-col gap-4 pr-14 block">
+            <span class="absolute -translate-y-1/2 top-1/2 right-4 flex size-8 items-center justify-center rounded-full bg-background text-white transition-transform">
+              <Icon
+                class="size-5"
+                name="heroicons:arrow-small-right-20-solid"
+              />
+            </span>
+            <div class="flex flex-wrap items-center gap-1.5">
+              {pub.tags.map((tag) => (
+                <span class="font-mono inline-flex items-center rounded-full bg-primary/80 px-2.5 py-0.5 text-xs font-medium text-black">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="inline-flex items-center text-sm font-medium">
+                {pub.publisher} {pub.publishedYear}
+              </span>
+              <span class="text-3xl">{pub.title}</span>
+            </div>
+            <div class="text-sm">{pub.authors}</div>
+          </a>
+        </article>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,291 @@
+---
+import "@blossom-carousel/core/style.css";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import FieldNotesDialog from "@/components/field-notes/field-notes-dialog.astro";
+
+const slides = [
+  {
+    num: "01",
+    date: "Aug 2026",
+    title: "Typography in Motion",
+    desc: "Exploring cubic-bezier curves in kinetic text. Exploring cubic-bezier curves in kinetic text. Exploring cubic-bezier curves in kinetic text. Exploring cubic-bezier curves in kinetic text.",
+    image: "https://picsum.photos/seed/slide1/600/800",
+    embedUrl:
+      "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0",
+  },
+  {
+    num: "02",
+    date: "Jul 2026",
+    title: "Grid Systems Unbound",
+    desc: "Breaking constraints with fluid masonry layouts.",
+    image: "https://picsum.photos/seed/slide2/600/800",
+    embedUrl: "https://www.youtube.com/embed/Oextk-If8HQ",
+  },
+  {
+    num: "03",
+    date: "Jun 2026",
+    title: "Spatial Interfaces",
+    desc: "Preparing 2D web architectures for spatial AR.",
+    image: "https://picsum.photos/seed/slide3/600/800",
+    embedUrl:
+      "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0",
+  },
+  {
+    num: "04",
+    date: "May 2026",
+    title: "Return to Texture",
+    desc: "Subtle grain and tactile digital surfaces.",
+    image: "https://picsum.photos/seed/slide4/600/800",
+    embedUrl:
+      "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0",
+  },
+  {
+    num: "05",
+    date: "Apr 2026",
+    title: "Micro-Animations",
+    desc: "Enhancing user feedback through low-latency state changes.",
+    image: "https://picsum.photos/seed/slide5/600/800",
+    embedUrl:
+      "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0",
+  },
+  {
+    num: "06",
+    date: "Mar 2026",
+    title: "System Design 2026",
+    desc: "Scaling component tokens across multi-brand setups.",
+    image: "https://picsum.photos/seed/slide6/600/800",
+    embedUrl:
+      "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0",
+  },
+];
+---
+
+<section class="w-full mt-16 px-4 overflow-hidden relative">
+  <div class="mb-8 space-y-2">
+    <h2 class="text-3xl md:text-4xl font-medium capitalize tracking-wide">
+      Field Notes
+    </h2>
+    <p
+      class="text-xs md:text-sm text-black/80 max-w-md normal-case leading-relaxed"
+    >
+      Insights, experiments, and ongoing thoughts from our research process.
+    </p>
+  </div>
+
+  <div
+    id="field-notes-carousel"
+    class="grid auto-cols-[260px] md:auto-cols-[calc((100%_-_1.5rem)/2)] lg:auto-cols-[calc((100%_-_4.5rem)/4)] snap-x snap-mandatory grid-flow-col gap-3 w-full cursor-grab active:cursor-grabbing overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] py-2"
+  >
+    {
+      slides.map((slide, index) => (
+        <article
+          data-blossom-slide
+          data-index={index}
+          data-title={slide.title}
+          data-date={slide.date}
+          data-desc={slide.desc}
+          data-embed={slide.embedUrl}
+          class="w-full snap-start group relative flex flex-col gap-4 cursor-pointer"
+        >
+          <div class="relative w-full aspect-4/5 overflow-hidden rounded-md bg-background/5 transition-transform duration-500 ease-out group-hover:scale-[0.97]">
+            <Image
+              inferSize
+              referrerpolicy="no-referrer"
+              src={slide.image}
+              alt={slide.title}
+              class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              loading="lazy"
+            />
+
+            <div class="absolute bottom-4 left-4 flex size-8 items-center justify-center rounded-full bg-background/40 text-white transition-colors duration-300 group-hover:bg-primary group-hover:text-black z-10 shadow-sm">
+              <Icon name="heroicons:play-solid" class="size-4 ml-1" />
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 px-1">
+            <div class="flex justify-between items-start uppercase tracking-widest text-xs">
+              <span class="text-black/50 font-mono">{slide.num}</span>
+              <span class="text-black/50 font-mono">{slide.date}</span>
+            </div>
+
+            <div class="space-y-1">
+              <h3 class="text-xl uppercase tracking-wide font-medium  leading-snug truncate">
+                {slide.title}
+              </h3>
+              <p class="text-xs text-black/60 normal-case leading-relaxed line-clamp-2">
+                {slide.desc}
+              </p>
+            </div>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="mt-8 flex items-center gap-6">
+    <div class="flex items-center gap-2">
+      <button
+        id="carousel-prev"
+        aria-label="Previous slide"
+        class="flex size-10 items-center justify-center rounded-full border border-foreground/20 transition-colors hover:bg-background hover:text-foreground disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+      >
+        <Icon name="heroicons:chevron-left" class="size-5" />
+      </button>
+      <button
+        id="carousel-next"
+        aria-label="Next slide"
+        class="flex size-10 items-center justify-center rounded-full border border-foreground/20 transition-colors hover:bg-background hover:text-foreground disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+      >
+        <Icon name="heroicons:chevron-right" class="size-5" />
+      </button>
+    </div>
+
+    <div id="carousel-dots" class="flex items-center gap-2">
+      {
+        slides.map((_, index) => (
+          <button
+            data-dot={index}
+            aria-label={`Go to slide ${index + 1}`}
+            class="dot-btn h-1.5 rounded-full bg-background/20 transition-all duration-300 w-3 hover:bg-background/50 cursor-pointer"
+          />
+        ))
+      }
+    </div>
+  </div>
+
+  <FieldNotesDialog />
+</section>
+
+<script>
+  import { Blossom } from "@blossom-carousel/core";
+
+  let blossomInstance: any;
+
+  function initFieldNotesCarousel() {
+    const carouselEl = document.querySelector(
+      "#field-notes-carousel",
+    ) as HTMLElement;
+    const prevBtn = document.querySelector(
+      "#carousel-prev",
+    ) as HTMLButtonElement;
+    const nextBtn = document.querySelector(
+      "#carousel-next",
+    ) as HTMLButtonElement;
+    const dots = document.querySelectorAll("#carousel-dots [data-dot]");
+
+    const dialogEl = document.querySelector(
+      "#field-notes-dialog",
+    ) as HTMLElement;
+    const dialogIframe = document.querySelector(
+      "#dialog-iframe",
+    ) as HTMLIFrameElement;
+    const dialogTitle = document.querySelector("#dialog-title") as HTMLElement;
+    const dialogDate = document.querySelector("#dialog-date") as HTMLElement;
+    const dialogDesc = document.querySelector("#dialog-desc") as HTMLElement;
+    const dialogClose = document.querySelector(
+      "#dialog-close",
+    ) as HTMLButtonElement;
+    const dialogBackdrop = document.querySelector(
+      "#dialog-backdrop",
+    ) as HTMLElement;
+
+    if (!carouselEl) return;
+
+    blossomInstance = Blossom(carouselEl, {});
+    blossomInstance.init();
+
+    function getSlideWidth() {
+      const firstSlide = carouselEl.querySelector(
+        "[data-blossom-slide]",
+      ) as HTMLElement;
+      return firstSlide ? firstSlide.offsetWidth + 24 : 300;
+    }
+
+    function openDialog(slide: HTMLElement) {
+      const { title, date, desc, embed } = slide.dataset;
+
+      if (dialogIframe) dialogIframe.src = embed || "";
+      if (dialogTitle) dialogTitle.textContent = title || "";
+      if (dialogDate) dialogDate.textContent = date || "";
+      if (dialogDesc) dialogDesc.textContent = desc || "";
+
+      dialogEl?.classList.remove("hidden");
+      dialogEl?.classList.add("flex");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeDialog() {
+      dialogEl?.classList.add("hidden");
+      dialogEl?.classList.remove("flex");
+      if (dialogIframe) dialogIframe.src = "";
+      document.body.style.overflow = "";
+    }
+
+    const slides = carouselEl.querySelectorAll("[data-blossom-slide]");
+    slides.forEach((slide) => {
+      slide.addEventListener("click", () => openDialog(slide as HTMLElement));
+    });
+
+    dialogClose?.addEventListener("click", closeDialog);
+    dialogBackdrop?.addEventListener("click", closeDialog);
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !dialogEl?.classList.contains("hidden")) {
+        closeDialog();
+      }
+    });
+
+    prevBtn?.addEventListener("click", () => {
+      carouselEl.scrollBy({ left: -getSlideWidth(), behavior: "smooth" });
+    });
+
+    nextBtn?.addEventListener("click", () => {
+      carouselEl.scrollBy({ left: getSlideWidth(), behavior: "smooth" });
+    });
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", (e) => {
+        const targetIndex = Number(
+          (e.currentTarget as HTMLElement).dataset.dot,
+        );
+        const targetSlide = carouselEl.querySelector(
+          `[data-index="${targetIndex}"]`,
+        ) as HTMLElement;
+        if (targetSlide) {
+          carouselEl.scrollTo({
+            left: targetSlide.offsetLeft - carouselEl.offsetLeft,
+            behavior: "smooth",
+          });
+        }
+      });
+    });
+
+    function updateActiveState() {
+      const scrollLeft = carouselEl.scrollLeft;
+      const slideWidth = getSlideWidth();
+      const activeIndex = Math.round(scrollLeft / slideWidth);
+
+      dots.forEach((dot, idx) => {
+        if (idx === activeIndex) {
+          dot.classList.add("w-8", "bg-background");
+          dot.classList.remove("w-3", "bg-background/20");
+        } else {
+          dot.classList.add("w-3", "bg-background/20");
+          dot.classList.remove("w-8", "bg-background");
+        }
+      });
+    }
+
+    carouselEl.addEventListener("scroll", updateActiveState, { passive: true });
+    updateActiveState();
+  }
+
+  document.addEventListener("astro:page-load", initFieldNotesCarousel);
+
+  document.addEventListener("astro:before-swap", () => {
+    if (blossomInstance) {
+      blossomInstance.destroy();
+    }
+  });
+</script>

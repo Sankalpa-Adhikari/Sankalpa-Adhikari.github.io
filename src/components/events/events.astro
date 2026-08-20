@@ -1,0 +1,382 @@
+---
+import { Image } from "astro:assets";
+import "@blossom-carousel/core/style.css";
+
+const data = [
+  {
+    title: "Stargazing on the edge",
+    year: "2025",
+    description:
+      "So if it's beyond us then it's beyond us. And we will still be here stargazing.",
+    tags: ["stargazing", "Far away"],
+    images: ["https://picsum.photos/id/10/1200/800"],
+    href: "#",
+  },
+  {
+    title: "Echoes of the deep ocean",
+    year: "2026",
+    description:
+      "Descending into the abyss, discovering life forms that thrive in the dark and crushing pressure. So if it's beyond us then it's beyond us. And we will still be here stargazing. So if it's beyond us then it's beyond us. And we will still be here stargazing. So if it's beyond us then it's beyond us. And we will still be here stargazing.",
+    tags: ["ocean", "exploration", "nature"],
+    images: [
+      "https://picsum.photos/id/28/1200/800",
+      "https://picsum.photos/id/130/1200/800",
+      "https://picsum.photos/id/133/1200/800",
+      "https://picsum.photos/id/123/1200/800",
+      "https://picsum.photos/id/125/1200/800",
+      "https://picsum.photos/id/124/1200/800",
+      "https://picsum.photos/id/143/1200/800",
+      "https://picsum.photos/id/144/1200/800",
+      "https://picsum.photos/id/145/1200/800",
+      "https://picsum.photos/id/146/1200/800",
+    ],
+    href: "#",
+  },
+  {
+    title: "Mountain summit diaries",
+    year: "2024",
+    description:
+      "The air is thin, but the view is unparalleled. Reaching the peak changes your perspective entirely.",
+    tags: ["hiking", "altitude"],
+    images: [
+      "https://picsum.photos/id/29/1200/800",
+      "https://picsum.photos/id/30/1200/800",
+      "https://picsum.photos/id/53/1200/800",
+    ],
+    href: "#",
+  },
+  {
+    title: "Urban neon reflections",
+    year: "2027",
+    description:
+      "A cyberpunk vision of tomorrow. Rain hitting the pavement reflecting the endless glow of the city.",
+    tags: ["cyberpunk", "cityscape"],
+    images: [
+      "https://picsum.photos/id/59/1200/800",
+      "https://picsum.photos/id/30/1200/800",
+      "https://picsum.photos/id/10/1200/800",
+      "https://picsum.photos/id/40/1200/800",
+    ],
+    href: "#",
+  },
+];
+---
+
+<section class="w-full overflow-hidden pl-4 mt-16">
+  <div class="mb-8 space-y-2">
+    <h2 class="text-3xl md:text-4xl font-medium capitalize tracking-wide">
+      Events
+    </h2>
+    <p
+      class="text-xs md:text-sm text-black/80 max-w-md normal-case leading-relaxed"
+    >
+      Insights, experiments, and ongoing thoughts from our research process.
+    </p>
+  </div>
+  <div class="flex flex-col w-full border-t border-black/20">
+    {
+      data.map((item) => (
+        <div
+          role="button"
+          tabindex="0"
+          class="item-wrapper group relative text-left focus:outline-none w-full py-6 lg:py-8 border-b border-black/20 transition-colors duration-300 hover:bg-gray-50/50 cursor-pointer lg:cursor-pointer cursor-default"
+        >
+          <div class="relative flex flex-col lg:flex-row gap-6 lg:gap-12">
+            <div class="flex flex-col lg:flex-row gap-6 lg:w-5/12 justify-between z-20 relative bg-transparent">
+              <div class="relative flex flex-col gap-y-6 lg:w-1/2">
+                <h2 class="text-3xl tracking-tight">{item.title}</h2>
+
+                <div class="hidden lg:flex gap-x-4 opacity-0 group-[.is-active]:opacity-100 transition-opacity duration-300">
+                  <a
+                    href={item.href}
+                    class="flex items-center justify-center rounded px-4 py-2 border border-black/20 hover:bg-black hover:text-white transition-colors text-sm"
+                  >
+                    View Details
+                  </a>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 lg:w-1/2 content-start">
+                <div class="bg-gray-100 text-black flex items-center w-max px-2 py-1 rounded text-xs font-mono uppercase">
+                  {item.year}
+                </div>
+                {item.tags.map((tag) => (
+                  <div class="bg-gray-100 text-black flex items-center w-max px-2 py-1 rounded text-xs font-mono uppercase">
+                    {tag}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="hidden lg:flex justify-start relative w-full lg:w-7/12 min-h-[6.25rem]">
+              <div class="text-container absolute right-0 h-[calc(120/16*1rem)] hidden group-[.is-active]:lg:block lg:ml-auto lg:min-h-[calc(120/16*1rem)] mr-18">
+                <p class="description-text text-sm leading-relaxed max-w-[60ch] text-left">
+                  {item.description}
+                </p>
+              </div>
+
+              <div class="thumbnail-container hidden lg:flex justify-start relative w-full lg:w-6/12 gap-x-2 shrink-0 h-full">
+                {item.images.map((img, i) => (
+                  <div class="thumb-slot relative h-full shrink-0 w-40 ">
+                    <Image
+                      src={img}
+                      alt={`${item.title} image ${i + 1}`}
+                      inferSize
+                      class="gallery-img absolute inset-0 h-full w-full object-cover rounded-lg pointer-events-none"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="absolute right-4 top-0 hidden lg:flex items-center text-2xl font-light z-20">
+              <span class="group-[.is-active]:hidden">+</span>
+              <span class="hidden group-[.is-active]:block">-</span>
+            </div>
+          </div>
+
+          <div class="item-details w-full overflow-visible lg:h-0 relative z-10 pointer-events-auto lg:pointer-events-none group-[.is-active]:pointer-events-auto">
+            <div class="large-image-container flex flex-row gap-4 pt-10 pb-4 overflow-x-auto w-full scrollbar-hide flex-shrink-0 !opacity-100 cursor-grab active:cursor-grabbing">
+              {item.images.map((img, i) => (
+                <div
+                  data-blossom-slide
+                  class="target-slot relative shrink-0 aspect-[3/2] !opacity-100 h-[calc(160/16*1rem)] lg:h-[calc(400/16*1rem)]"
+                >
+                  <Image
+                    src={img}
+                    alt={`${item.title} image ${i + 1} mobile`}
+                    inferSize
+                    class="lg:hidden absolute inset-0 h-full w-full object-cover rounded-lg pointer-events-none"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>
+<script>
+  import { gsap, Flip, SplitText } from "@/utils/gsap-init";
+  import { Blossom } from "@blossom-carousel/core";
+
+  let mm: gsap.MatchMedia;
+
+  function initGallery() {
+    mm = gsap.matchMedia();
+    const items = document.querySelectorAll(".item-wrapper");
+
+    mm.add("(min-width: 1024px)", () => {
+      const cleanups: (() => void)[] = [];
+
+      items.forEach((item) => {
+        let blossomInstance: any = null;
+        let splitInstance: SplitText | null = null;
+
+        const carouselEl = item.querySelector(
+          ".large-image-container",
+        ) as HTMLElement;
+        const details = item.querySelector(".item-details");
+        const images = item.querySelectorAll(".gallery-img");
+        const thumbSlots = item.querySelectorAll(".thumb-slot");
+        const targetSlots = item.querySelectorAll(".target-slot");
+        const textContainer = item.querySelector(
+          ".text-container",
+        ) as HTMLElement;
+        const descriptionEl = item.querySelector(
+          ".description-text",
+        ) as HTMLElement;
+
+        const clearSplit = () => {
+          if (splitInstance) {
+            gsap.killTweensOf(splitInstance.lines);
+            splitInstance.revert();
+            splitInstance = null;
+          }
+          if (textContainer && !item.classList.contains("is-active")) {
+            gsap.set(textContainer, { clearProps: "display" });
+          }
+        };
+
+        const playLinesIn = () => {
+          if (!descriptionEl) return;
+          clearSplit();
+
+          if (textContainer) gsap.set(textContainer, { display: "block" });
+
+          splitInstance = new SplitText(descriptionEl, {
+            type: "lines",
+            mask: "lines",
+            linesClass: "description-line",
+          });
+
+          gsap.from(splitInstance.lines, {
+            yPercent: 110,
+            opacity: 0,
+            duration: 0.5,
+            ease: "power3.out",
+            stagger: 0.08,
+            delay: 0.5,
+          });
+        };
+
+        const playLinesOut = () => {
+          if (!splitInstance) return;
+          const outgoing = splitInstance;
+
+          if (textContainer) gsap.set(textContainer, { display: "block" });
+
+          gsap.to(outgoing.lines, {
+            yPercent: -110,
+            opacity: 0,
+            duration: 0.35,
+            ease: "power2.in",
+            stagger: 0.04,
+            onComplete: () => {
+              if (splitInstance === outgoing) {
+                outgoing.revert();
+                splitInstance = null;
+                if (textContainer && !item.classList.contains("is-active")) {
+                  gsap.set(textContainer, { clearProps: "display" });
+                }
+              }
+            },
+          });
+        };
+
+        const handleClick = (e: Event) => {
+          if ((e.target as HTMLElement)?.closest(".item-details")) return;
+          const isActive = item.classList.contains("is-active");
+
+          if (isActive && blossomInstance) {
+            if (typeof blossomInstance.destroy === "function") {
+              blossomInstance.destroy();
+            }
+            blossomInstance = null;
+          }
+
+          const state = Flip.getState(images);
+
+          if (!isActive) {
+            item.classList.add("is-active");
+
+            images.forEach((img, i) => {
+              if (targetSlots[i]) targetSlots[i].appendChild(img);
+            });
+
+            gsap.set(details, { height: "auto" });
+
+            Flip.from(state, {
+              duration: 0.8,
+              ease: "power3.inOut",
+              absolute: true,
+              stagger: 0.08,
+              nested: true,
+              onStart: () => {
+                gsap.set(carouselEl, {
+                  overflowX: "visible",
+                  overflowY: "visible",
+                });
+              },
+              onComplete: () => {
+                gsap.set(carouselEl, {
+                  overflowX: "auto",
+                  overflowY: "hidden",
+                });
+                if (carouselEl) {
+                  blossomInstance = Blossom(carouselEl, {});
+                  blossomInstance.init();
+                }
+              },
+            });
+
+            gsap.from(details, {
+              height: 0,
+              duration: 0.8,
+              ease: "power3.inOut",
+            });
+
+            playLinesIn();
+          } else {
+            item.classList.remove("is-active");
+
+            images.forEach((img, i) => {
+              if (thumbSlots[i]) thumbSlots[i].appendChild(img);
+            });
+
+            Flip.from(state, {
+              duration: 0.8,
+              ease: "power3.inOut",
+              absolute: true,
+              stagger: 0,
+              onStart: () => {
+                gsap.set(carouselEl, {
+                  overflowX: "visible",
+                  overflowY: "visible",
+                });
+              },
+            });
+
+            gsap.to(details, {
+              height: 0,
+              duration: 0.8,
+              ease: "power3.inOut",
+            });
+
+            playLinesOut();
+          }
+        };
+
+        item.addEventListener("click", handleClick);
+
+        cleanups.push(() => {
+          item.removeEventListener("click", handleClick);
+          if (
+            blossomInstance &&
+            typeof blossomInstance.destroy === "function"
+          ) {
+            blossomInstance.destroy();
+          }
+          clearSplit();
+          item.classList.remove("is-active");
+          if (textContainer) gsap.set(textContainer, { clearProps: "display" });
+
+          images.forEach((img, i) => {
+            if (thumbSlots[i]) thumbSlots[i].appendChild(img);
+          });
+        });
+      });
+
+      return () => cleanups.forEach((c) => c());
+    });
+
+    mm.add("(max-width: 1023px)", () => {
+      const blossomInstances: any[] = [];
+
+      items.forEach((item) => {
+        const carouselEl = item.querySelector(
+          ".large-image-container",
+        ) as HTMLElement;
+        if (carouselEl) {
+          gsap.set(carouselEl, { overflowX: "auto", overflowY: "hidden" });
+          const instance = Blossom(carouselEl, {});
+          instance.init();
+          blossomInstances.push(instance);
+        }
+      });
+
+      return () => {
+        blossomInstances.forEach((inst) => {
+          if (inst && typeof inst.destroy === "function") inst.destroy();
+        });
+      };
+    });
+  }
+
+  document.addEventListener("astro:page-load", initGallery);
+
+  document.addEventListener("astro:before-swap", () => {
+    mm && mm.revert();
+  });
+</script>

@@ -1,0 +1,200 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import Logo from "@/assets/images/logo.webp";
+---
+
+<header class="fixed top-4 left-4 right-4 z-5000">
+  <nav
+    class="relative z-10 flex h-16 w-full items-center justify-between text-sm font-medium tracking-wide text-foreground uppercase"
+  >
+    <div class="absolute inset-0 z-[-1] flex justify-end">
+      <div
+        id="nav-bg"
+        class="h-full w-full rounded-2xl bg-background shadow-md"
+      >
+      </div>
+    </div>
+
+    <a href="/" class="relative flex h-full shrink-0 items-center pl-4 pr-2">
+      <Image src={Logo} alt="Logo" class="h-8 w-auto object-contain" />
+    </a>
+
+    <div id="nav-links-container" class="overflow-hidden whitespace-nowrap">
+      <div class="group flex items-center gap-8 px-4">
+        <!-- Replaced group-hover:opacity-40 with group-has-[a:hover]:opacity-40 -->
+        <a
+          href="#about"
+          class="nav-link group/link relative inline-flex overflow-hidden transition-all duration-300 group-has-[a:hover]:opacity-40 hover:!opacity-100"
+        >
+          <span
+            class="block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full"
+          >
+            About us
+          </span>
+          <span
+            aria-hidden="true"
+            class="absolute left-0 top-full block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full"
+          >
+            About us
+          </span>
+        </a>
+
+        <a
+          href="media"
+          class="nav-link group/link relative inline-flex overflow-hidden transition-all duration-300 group-has-[a:hover]:opacity-40 hover:!opacity-100"
+        >
+          <span
+            class="block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full"
+          >
+            Media
+          </span>
+          <span
+            aria-hidden="true"
+            class="absolute left-0 top-full block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full"
+          >
+            Media
+          </span>
+        </a>
+
+        <a
+          href="#cart"
+          class="nav-link group/link relative inline-flex overflow-hidden transition-all duration-300 group-has-[a:hover]:opacity-40 hover:!opacity-100"
+        >
+          <span
+            class="block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full"
+          >
+            Cart
+          </span>
+          <span
+            aria-hidden="true"
+            class="absolute left-0 top-full block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full"
+          >
+            Cart
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <div
+      id="right-container"
+      class="relative flex h-full shrink-0 items-center pl-3 pr-4"
+    >
+      <a
+        href="#contact"
+        class="group inline-flex items-center gap-3 rounded-full bg-primary py-1.5 pl-5 pr-1.5 text-sm font-semibold text-black transition-all hover:brightness-110"
+      >
+        <span>Contact</span>
+        <span
+          class="flex size-8 items-center justify-center rounded-full bg-white text-black transition-transform group-hover:translate-x-0.5"
+        >
+          <Icon class="size-5" name="heroicons:arrow-small-right-20-solid" />
+        </span>
+      </a>
+
+      <div
+        id="cart-btn-container"
+        class="flex w-0 shrink-0 justify-end overflow-hidden opacity-0"
+      >
+        <div class="pl-2">
+          <button
+            aria-label="Open cart"
+            class="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-foreground/20 transition-colors hover:bg-foreground/5"
+          >
+            <Icon class="size-5" name="heroicons:shopping-bag-solid" />
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="menu-btn-container"
+        class="flex w-0 shrink-0 justify-end overflow-hidden opacity-0"
+      >
+        <div class="pl-2">
+          <button
+            aria-label="Toggle menu"
+            class="flex w-10 shrink-0 cursor-pointer flex-col items-center justify-center gap-1.5 p-2"
+          >
+            <span
+              class="block h-0.5 w-6 rounded-full bg-foreground transition-transform"
+            ></span>
+            <span
+              class="block h-0.5 w-6 rounded-full bg-foreground transition-opacity"
+            ></span>
+            <span
+              class="block h-0.5 w-6 rounded-full bg-foreground transition-transform"
+            ></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  import { gsap } from "@/utils/gsap-init";
+
+  let ctx: gsap.Context;
+
+  function initHeaderAnimation() {
+    const linksContainer = document.querySelector("#nav-links-container");
+    const menuContainer = document.querySelector("#menu-btn-container");
+    const cartContainer = document.querySelector("#cart-btn-container");
+    const navBg = document.querySelector("#nav-bg");
+    const rightContainer = document.querySelector("#right-container");
+
+    if (
+      !linksContainer ||
+      !menuContainer ||
+      !cartContainer ||
+      !navBg ||
+      !rightContainer
+    )
+      return;
+
+    ctx = gsap.context(() => {
+      let mm = gsap.matchMedia();
+
+      mm.add("(min-width: 769px)", () => {
+        gsap.set(linksContainer, { width: 0 });
+        gsap.set([menuContainer, cartContainer], { width: 48 });
+
+        const targetBgWidth = rightContainer.getBoundingClientRect().width;
+
+        gsap.set(linksContainer, { width: "auto", opacity: 1 });
+        gsap.set([menuContainer, cartContainer], { width: 0, opacity: 0 });
+        gsap.set(navBg, { width: "100%" });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: document.body,
+            start: "50px top",
+            toggleActions: "play none none reverse",
+          },
+          defaults: {
+            duration: 0.4,
+            ease: "power2.inOut",
+          },
+        });
+
+        tl.to(linksContainer, { width: 0, opacity: 0 }, 0)
+          .to([menuContainer, cartContainer], { width: 48, opacity: 1 }, 0)
+          .to(navBg, { width: targetBgWidth }, 0);
+      });
+
+      mm.add("(max-width: 768px)", () => {
+        gsap.set(linksContainer, { display: "none" });
+        gsap.set([menuContainer, cartContainer], { width: 48, opacity: 1 });
+
+        const mobileTargetWidth = rightContainer.getBoundingClientRect().width;
+        gsap.set(navBg, { width: mobileTargetWidth });
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initHeaderAnimation);
+
+  document.addEventListener("astro:before-swap", () => {
+    ctx && ctx.revert();
+  });
+</script>

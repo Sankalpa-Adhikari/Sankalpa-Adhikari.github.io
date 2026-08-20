@@ -1,0 +1,211 @@
+---
+import { Image } from "astro:assets";
+
+const bgColors = [
+  "#1e88a2",
+  "#4fa4b2",
+  "#e28743",
+  "#3b7a57",
+  "#8d5b4c",
+  "#2e4057",
+  "#048a81",
+  "#a8201a",
+];
+const aspects = ["4 / 5", "3 / 4"];
+
+const data = Array.from({ length: 200 }, (_, i) => {
+  const index = i + 1;
+  return {
+    id: `slide-${index}`,
+    index,
+    title: `Inspire Vol. ${index}`,
+    image: `https://picsum.photos/seed/gallery-${index}/800/1000`,
+    bgColor: bgColors[i % bgColors.length],
+    aspect: aspects[i % aspects.length],
+  };
+});
+---
+
+<div
+  id="gallery-section"
+  class="fixed inset-0 overflow-hidden select-none bg-gray-50"
+>
+  <div id="gallery-track" class="relative w-full h-full flex items-center">
+    {
+      data.map((item, index) => (
+        <article
+          class="group js-slide absolute top-1/2 -translate-y-1/2 min-w-[20rem] sm:min-w-[24rem] [perspective:1000px] pointer-events-auto"
+          data-index={index}
+        >
+          <div class="js-slide-content relative w-full transform-gpu transition-transform ease-out">
+            <div class="absolute bottom-full left-0 mb-3 overflow-hidden text-xs font-semibold tracking-wider uppercase text-gray-500 pointer-events-none">
+              <div class="transition-transform duration-500 ease-out translate-y-full group-hover:translate-y-0">
+                {String(item.index).padStart(2, "0")}
+              </div>
+            </div>
+
+            <div
+              class="relative w-full overflow-hidden shadow-xl"
+              style={`aspect-ratio: ${item.aspect}; background-color: ${item.bgColor};`}
+            >
+              <Image
+                src={item.image}
+                alt={item.title}
+                width={800}
+                height={1000}
+                loading={index === 0 ? "eager" : "lazy"}
+                draggable="false"
+                class="object-cover w-full h-full absolute inset-0"
+              />
+            </div>
+
+            <div class="absolute top-full left-0 mt-3 overflow-hidden text-sm font-semibold tracking-wider uppercase text-gray-800 pointer-events-none">
+              <div class="transition-transform duration-500 ease-out -translate-y-full group-hover:translate-y-0">
+                {item.title}
+              </div>
+            </div>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="absolute bottom-0 left-0 w-full h-32 z-20 pointer-events-auto">
+    <canvas id="sticks-canvas" class="w-full h-full block"></canvas>
+  </div>
+</div>
+
+<script>
+  import { gsap } from "@/utils/gsap-init";
+
+  let targetX = 0;
+  let currentX = 0;
+  let isDragging = false;
+  let startX = 0;
+  let dragStartX = 0;
+  let rafId: number;
+
+  function initGallery() {
+    const sectionEl = document.querySelector("#gallery-section") as HTMLElement;
+    const slides = Array.from(
+      document.querySelectorAll(".js-slide"),
+    ) as HTMLElement[];
+    const canvas = document.querySelector(
+      "#sticks-canvas",
+    ) as HTMLCanvasElement;
+    const ctx = canvas?.getContext("2d");
+
+    if (!sectionEl || !slides.length || !canvas || !ctx) return;
+
+    const itemWidth = slides[0].offsetWidth;
+    const gap = 48;
+    const slideStride = itemWidth + gap;
+    const totalWidth = slideStride * slides.length;
+
+    slides.forEach((slide, i) => {
+      slide.style.left = `${i * slideStride}px`;
+    });
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      targetX += e.deltaY * 1.5 || e.deltaX * 1.5;
+    };
+
+    const onMouseDown = (e: MouseEvent | TouchEvent) => {
+      isDragging = true;
+      startX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      dragStartX = targetX;
+    };
+
+    const onMouseMove = (e: MouseEvent | TouchEvent) => {
+      if (!isDragging) return;
+      const x = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const dist = startX - x;
+      targetX = dragStartX + dist * 2;
+    };
+
+    const onMouseUp = () => {
+      isDragging = false;
+    };
+
+    sectionEl.addEventListener("wheel", onWheel, { passive: false });
+    sectionEl.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+
+    sectionEl.addEventListener("touchstart", onMouseDown);
+    window.addEventListener("touchmove", onMouseMove);
+    window.addEventListener("touchend", onMouseUp);
+
+    let width = canvas.offsetWidth;
+    let height = canvas.offsetHeight;
+    let mouseX = -1000;
+
+    const resizeCanvas = () => {
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      const dpr = Math.min(2, window.devicePixelRatio);
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    canvas.addEventListener("mousemove", (e) => (mouseX = e.offsetX));
+    canvas.addEventListener("mouseleave", () => (mouseX = -1000));
+
+    const render = () => {
+      currentX = gsap.utils.interpolate(currentX, targetX, 0.08);
+
+      const velocity = currentX - targetX;
+      const tilt = Math.max(-20, Math.min(20, velocity * 0.04));
+
+      slides.forEach((slide, i) => {
+        const content = slide.querySelector(".js-slide-content") as HTMLElement;
+        const basePos = i * slideStride;
+
+        const wrappedPos = gsap.utils.wrap(
+          -slideStride,
+          totalWidth - slideStride,
+          basePos - currentX,
+        );
+
+        slide.style.transform = `translate3d(${wrappedPos - basePos}px, 0, 0)`;
+
+        if (content) {
+          content.style.transform = `rotateY(${tilt}deg)`;
+        }
+      });
+
+      ctx.clearRect(0, 0, width, height);
+      const stickGap = 12;
+      const baseH = 12;
+      const markerH = 24;
+      const offset = ((currentX % stickGap) + stickGap) % stickGap;
+
+      ctx.fillStyle = "#cbd5e1";
+      for (let x = -offset; x < width + stickGap; x += stickGap) {
+        const absIdx = Math.floor((x + currentX) / stickGap);
+        let h = absIdx % 15 === 0 ? markerH : baseH;
+
+        const dist = Math.abs(x - mouseX);
+        if (dist < 80) {
+          h += 20 * (1 - Math.pow(dist / 80, 2));
+        }
+
+        ctx.fillRect(x, height - h, 2, h);
+      }
+
+      rafId = requestAnimationFrame(render);
+    };
+
+    render();
+  }
+
+  document.addEventListener("astro:page-load", initGallery);
+
+  document.addEventListener("astro:before-swap", () => {
+    cancelAnimationFrame(rafId);
+  });
+</script>

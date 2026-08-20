@@ -1,17 +1,22 @@
 ---
-
+import Events from "@/components/events/events.astro";
+import FieldNotes from "@/components/field-notes/field-notes.astro";
+import Collections from "@/components/home/collections.astro";
+import Hero from "@/components/home/hero.astro";
+import Wrap from "@/components/home/wrap.astro";
+import Research from "@/components/publications/research.astro";
+import PageLayout from "@/layout/PageLayout.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<PageLayout
+  title="Saptabhumi Agro Research Center"
+  description={"Description"}
+  dataPagefindIgnore="all"
+>
+  <Hero />
+  <Collections />
+  <Wrap />
+  <FieldNotes />
+  <Research />
+  <Events />
+</PageLayout>

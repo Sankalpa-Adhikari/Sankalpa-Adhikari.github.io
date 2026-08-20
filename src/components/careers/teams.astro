@@ -1,0 +1,119 @@
+---
+import { Image } from "astro:assets";
+
+const teamMembers = [
+  {
+    firstName: "Julien",
+    lastName: "Sister",
+    role: "Creative Director",
+    tag: "Co-Founder",
+    src: "https://picsum.photos/id/1027/600/1000",
+  },
+  {
+    firstName: "Sarah",
+    lastName: "Connor",
+    role: "Lead Architect",
+    tag: "Partner",
+    src: "https://picsum.photos/id/64/600/1000",
+  },
+  {
+    firstName: "Marcus",
+    lastName: "Vance",
+    role: "Art Director",
+    tag: "Senior",
+    src: "https://picsum.photos/id/91/600/1000",
+  },
+  {
+    firstName: "Elena",
+    lastName: "Rostova",
+    role: "Head of Design",
+    tag: "Partner",
+    src: "https://picsum.photos/id/177/600/1000",
+  },
+  {
+    firstName: "David",
+    lastName: "Kim",
+    role: "Technical Director",
+    tag: "Co-Founder",
+    src: "https://picsum.photos/id/338/600/1000",
+  },
+  {
+    firstName: "Amara",
+    lastName: "Diop",
+    role: "Brand Strategist",
+    tag: "Senior",
+    src: "https://picsum.photos/id/342/600/1000",
+  },
+  {
+    firstName: "Liam",
+    lastName: "O'Connor",
+    role: "Motion Designer",
+    tag: "Associate",
+    src: "https://picsum.photos/id/334/600/1000",
+  },
+  {
+    firstName: "Sofia",
+    lastName: "Chen",
+    role: "Executive Producer",
+    tag: "Managing Partner",
+    src: "https://picsum.photos/id/433/600/1000",
+  },
+];
+---
+
+<section class="w-full py-16 px-4 overflow-hidden relative">
+  <div class="mb-8 space-y-2">
+    <h2 class="text-3xl md:text-4xl font-medium capitalize tracking-wide">
+      Our Team
+    </h2>
+    <p
+      class="text-xs md:text-sm text-black/80 max-w-md normal-case leading-relaxed"
+    >
+      The brilliant minds behind our research, design, and technical processes.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    {
+      teamMembers.map((member, index) => (
+        <div
+          class="group relative w-full cursor-pointer"
+          style={`--stagger-index: ${index};`}
+        >
+          <div class="relative grid grid-cols-1 grid-rows-1 w-full h-150 overflow-hidden rounded-md bg-background/5 transition-transform duration-500 ease-out group-hover:scale-[0.97]">
+            <div class="col-start-1 row-start-1 relative w-full h-full overflow-hidden">
+              <Image
+                src={member.src}
+                alt={`${member.firstName} ${member.lastName}`}
+                width={600}
+                height={1000}
+                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
+
+            <div class="col-start-1 row-start-1 relative z-10 grid grid-cols-1 grid-rows-1 h-full w-full pointer-events-none transition-opacity duration-500 ease-out group-hover:opacity-0">
+              <p class="col-start-1 row-start-1 place-self-start text-3xl font-black text-primary uppercase tracking-widest w-full text-center mt-10 px-4 drop-shadow-md">
+                {member.firstName}
+              </p>
+
+              <div class="col-start-1 row-start-1 place-self-center grid grid-rows-[auto_1fr_auto] items-center justify-items-center p-4 h-full w-full">
+                <p class="text-xs sm:text-sm font-semibold text-primary uppercase text-center tracking-widest pt-28 drop-shadow-md">
+                  {member.role}
+                </p>
+                <div class="h-20 sm:h-24" />
+                <p class="text-xs sm:text-sm font-semibold text-primary uppercase text-center tracking-widest pb-28 drop-shadow-md">
+                  {member.tag}
+                </p>
+              </div>
+
+              <p class="col-start-1 row-start-1 place-self-end text-3xl font-black text-primary uppercase tracking-widest w-full text-center mb-10 px-4 drop-shadow-md">
+                {member.lastName}
+              </p>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

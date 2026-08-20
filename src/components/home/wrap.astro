@@ -1,0 +1,179 @@
+---
+import { Image } from "astro:assets";
+
+const data = [
+  {
+    bgColor: "bg-primary",
+    textColor: "text-black",
+    title: "Our Mission: Empowering Sustainable Farming",
+    imageUrl: "https://picsum.photos/id/1015/2000/2999",
+    imageAlt: "Farmer tending to sustainable crop fields",
+    items: [
+      "Deliver innovative tech to boost crop yields.",
+      "Support local farming communities worldwide.",
+      "Optimize resource usage to reduce waste.",
+      "Provide accessible soil and crop analysis tools.",
+      "Strengthen global food security networks.",
+      "Promote climate-resilient agricultural practices.",
+    ],
+  },
+  {
+    bgColor: "bg-background",
+    textColor: "text-white",
+    title: "Our Vision: The Future of Global Agriculture",
+    imageUrl: "https://picsum.photos/id/1025/2000/2999",
+    imageAlt: "High-tech smart farming drone over fields",
+    items: [
+      "Precision agriculture driven by data.",
+      "Zero-carbon footprint farming ecosystems.",
+      "Smart irrigation for water conservation.",
+      "Restoration of global soil health.",
+      "Next-generation agtech integration.",
+    ],
+  },
+  {
+    bgColor: "bg-foreground",
+    textColor: "text-black",
+    title: "Our Values: Rooted in Integrity & Quality",
+    imageUrl: "https://picsum.photos/id/1040/1334/2000",
+    imageAlt: "Close-up of healthy organic crops",
+    items: [
+      "Environmental stewardship first.",
+      "Uncompromising product quality.",
+      "Transparency from seed to market.",
+      "Continuous research & development.",
+      "Fair partnerships with farm operators.",
+    ],
+  },
+];
+---
+
+<section
+  class="w-full mt-16 px-4 overflow-hidden relative expandable-highlights"
+>
+  <div class="mb-8 space-y-2">
+    <h2 class="text-3xl md:text-4xl font-medium capitalize tracking-wide">
+      What we stand for
+    </h2>
+  </div>
+  <ul
+    class="expandable-highlights-wrap flex flex-col lg:flex-row flex-1 gap-4 overflow-hidden h-auto lg:h-[clamp(750px,39.063vw,39.063vw)]"
+  >
+    {
+      data.map((item, index) => (
+        <li
+          data-event="click"
+          class="flex flex-col gap-4 cursor-pointer lg:flex-1"
+        >
+          <div
+            class={`top-wrap flex flex-col rounded-2xl ${item.bgColor} ${item.textColor} px-6 lg:px-[clamp(clamp(24px,0.938vw,18px),2.083vw,40px)] py-[35px]`}
+          >
+            <div class="header-wrap flex items-center gap-3">
+              <span class="number inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-current p-5 text-2xl">
+                {index + 1}
+              </span>
+
+              <span class="title text-xl lg:text-2xl font-semibold">
+                {item.title}
+              </span>
+            </div>
+
+            <div class="list-wrap h-0 overflow-hidden opacity-0">
+              <ul class="flex flex-col pt-5">
+                {item.items.map((listItem) => (
+                  <li class="border-b border-current/30 py-1 text-base lg:text-lg capitalize last:border-b-0">
+                    {listItem}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div class="image-wrap grow overflow-hidden max-h-full min-h-[250px] lg:min-h-0">
+            <Image
+              src={item.imageUrl}
+              alt={item.imageAlt}
+              width={2000}
+              height={2999}
+              decoding="async"
+              class="h-full w-full rounded-2xl object-cover"
+            />
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<script>
+  import { gsap } from "@/utils/gsap-init";
+
+  const items = document.querySelectorAll(
+    'section.expandable-highlights ul.expandable-highlights-wrap > li[data-event="click"]',
+  );
+
+  items.forEach((item) => {
+    const listWrap = item.querySelector(".list-wrap");
+
+    if (item.classList.contains("open")) {
+      gsap.set(listWrap, { height: "auto", opacity: 1 });
+    } else {
+      gsap.set(listWrap, { height: 0, opacity: 0 });
+    }
+  });
+
+  function switchAccordion(targetItem: Element) {
+    if (targetItem.classList.contains("open")) return;
+
+    const currentOpenItem = document.querySelector(
+      "section.expandable-highlights ul.expandable-highlights-wrap > li.open",
+    );
+
+    if (currentOpenItem) {
+      currentOpenItem.classList.remove("open");
+
+      gsap.to(currentOpenItem.querySelector(".list-wrap"), {
+        height: 0,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+        overwrite: "auto",
+      });
+
+      gsap.to(currentOpenItem.querySelector(".header-wrap .number"), {
+        backgroundColor: "transparent",
+        color: "currentColor",
+        duration: 0.4,
+      });
+    }
+
+    targetItem.classList.add("open");
+
+    gsap.to(targetItem.querySelector(".list-wrap"), {
+      height: "auto",
+      opacity: 1,
+      duration: 0.6,
+      ease: "power3.out",
+      overwrite: "auto",
+    });
+
+    const topWrap = targetItem.querySelector(".top-wrap");
+
+    if (topWrap) {
+      const computedStyle = getComputedStyle(topWrap);
+      const parentBgColor = computedStyle.backgroundColor;
+      const parentTextColor = computedStyle.color;
+
+      gsap.to(targetItem.querySelector(".header-wrap .number"), {
+        backgroundColor: parentTextColor,
+        color: parentBgColor,
+        duration: 0.4,
+      });
+    }
+  }
+
+  items.forEach((item) => {
+    item.addEventListener("click", () => switchAccordion(item));
+    item.addEventListener("mouseenter", () => switchAccordion(item));
+  });
+</script>

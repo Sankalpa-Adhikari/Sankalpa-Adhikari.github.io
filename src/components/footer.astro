@@ -1,0 +1,209 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import Logo from "@/assets/images/logo.webp";
+
+const currentYear = new Date().getFullYear();
+
+const mainLinks = [
+  { name: "About us", href: "#about" },
+  { name: "Media", href: "media" },
+];
+
+const companyLinks = [
+  { name: "Careers", href: "careers" },
+  { name: "FAQ", href: "#faq" },
+  { name: "Contact", href: "#contact" },
+];
+
+const socialLinks = [
+  { name: "Instagram", href: "#", icon: "heroicons:camera-20-solid" },
+  {
+    name: "Twitter / X",
+    href: "#",
+    icon: "heroicons:chat-bubble-bottom-center-text-20-solid",
+  },
+  { name: "Globe", href: "#", icon: "heroicons:globe-alt-20-solid" },
+];
+---
+
+<footer
+  class="relative w-full border-t border-foreground/10 bg-background px-6 pt-12 pb-8 md:px-12 text-foreground uppercase text-sm font-medium tracking-wide"
+>
+  <div class="grid grid-cols-2 gap-8 md:grid-cols-12 md:gap-12 w-full">
+    <div
+      class="animate-item col-span-2 md:col-span-4 flex flex-col justify-between gap-6"
+    >
+      <div class="space-y-4">
+        <a href="/" class="inline-block">
+          <Image
+            src={Logo}
+            inferSize
+            alt="Logo"
+            class="h-8 w-auto object-contain"
+          />
+        </a>
+        <p
+          class="text-xs text-foreground/60 normal-case max-w-xs leading-relaxed tracking-normal"
+        >
+          In this ever-changing world of agricultural technology, Saptabhume
+          Agro and Research institutionalize innovation by finding ways to
+          conduct research on commercialization of Agriculture and disseminate
+          agricultural knowledges to all active stake-holders trying to promote
+          agriculture industry of Nepal.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        {
+          socialLinks.map((social) => (
+            <a
+              href={social.href}
+              aria-label={social.name}
+              class="flex size-10 items-center justify-center rounded-full border border-foreground/20 transition-all hover:bg-foreground hover:text-background"
+            >
+              <Icon name={social.icon} class="size-5" />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="animate-item col-span-1 md:col-span-2 space-y-4">
+      <p class="text-xs text-foreground/40 tracking-widest font-semibold">
+        Navigation
+      </p>
+      <ul class="flex flex-col gap-3">
+        {
+          mainLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="group/link relative inline-flex overflow-hidden transition-all duration-300 opacity-70 hover:opacity-100"
+              >
+                <span class="block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full">
+                  {link.name}
+                </span>
+                <span
+                  aria-hidden="true"
+                  class="absolute left-0 top-full block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full"
+                >
+                  {link.name}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="animate-item col-span-1 md:col-span-2 space-y-4">
+      <p class="text-xs text-foreground/40 tracking-widest font-semibold">
+        Company
+      </p>
+      <ul class="flex flex-col gap-3">
+        {
+          companyLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="group/link relative inline-flex overflow-hidden transition-all duration-300 opacity-70 hover:opacity-100"
+              >
+                <span class="block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full">
+                  {link.name}
+                </span>
+                <span
+                  aria-hidden="true"
+                  class="absolute left-0 top-full block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full"
+                >
+                  {link.name}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div
+      class="animate-item col-span-2 md:col-span-4 flex flex-col justify-between items-start md:items-end gap-6 pt-4 md:pt-0 border-t md:border-t-0 border-foreground/10"
+    >
+      <div class="space-y-2 text-left md:text-right">
+        <p class="text-xs text-foreground/40 tracking-widest font-semibold">
+          Have questions?
+        </p>
+        <a
+          href="#contact"
+          class="text-sm underline underline-offset-4 hover:opacity-70 transition-opacity normal-case"
+        >
+          Get in touch with our team
+        </a>
+      </div>
+
+      <button
+        id="back-to-top"
+        class="group inline-flex items-center gap-3 rounded-full bg-primary py-1.5 pl-5 pr-1.5 text-sm font-semibold text-black transition-all hover:brightness-110 cursor-pointer"
+      >
+        <span>Back to top</span>
+        <span
+          class="flex size-8 items-center justify-center rounded-full bg-white text-black transition-transform group-hover:-translate-y-0.5"
+        >
+          <Icon class="size-5" name="heroicons:arrow-small-up-20-solid" />
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="animate-item mt-12 pt-6 border-t border-foreground/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-foreground/50 tracking-wider"
+  >
+    <p>© {currentYear} All rights reserved.</p>
+    <div class="flex gap-6">
+      <a href="#privacy" class="hover:text-foreground transition-colors"
+        >Privacy Policy</a
+      >
+      <a href="#terms" class="hover:text-foreground transition-colors"
+        >Terms of Service</a
+      >
+    </div>
+  </div>
+</footer>
+
+<script>
+  import { gsap } from "@/utils/gsap-init";
+
+  let ctx: gsap.Context;
+
+  function initFooterAnimation() {
+    const footer = document.querySelector("footer");
+    const backToTopBtn = document.querySelector("#back-to-top");
+
+    if (backToTopBtn) {
+      backToTopBtn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
+    if (!footer) return;
+
+    ctx = gsap.context(() => {
+      gsap.from(".animate-item", {
+        y: 20,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: footer,
+          start: "top 85%",
+        },
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initFooterAnimation);
+
+  document.addEventListener("astro:before-swap", () => {
+    ctx && ctx.revert();
+  });
+</script>

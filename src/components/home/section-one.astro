@@ -1,0 +1,19 @@
+---
+import ImageSlider from "./image-slider.astro";
+---
+<section>
+    <div class="flex flex-row">
+        <div class="w-1/4">Hello world</div>
+        <div class="px-4 sm:px-12 md:px-24 py-8 md:py-12 min-h-screen w-full">
+            <ImageSlider visibleCount={4} spanFraction={1} />
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+  import { gsap } from "@/utils/gsap-init";
+
+  let ctx: gsap.Context;
+</script>

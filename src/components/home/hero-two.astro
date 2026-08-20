@@ -1,0 +1,210 @@
+---
+import { Image } from "astro:assets";
+---
+
+<section
+  id="hero-container"
+  class="relative h-[300vh] bg-neutral-950 text-white"
+>
+  <div
+    class="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center"
+  >
+    <div
+      class="absolute inset-0 w-full max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-12 gap-4 md:gap-8 items-center z-20 pointer-events-none"
+    >
+      <div class="col-span-3 md:col-span-3 flex flex-col gap-4 md:gap-6 z-20">
+        <div
+          class="grid-img-left opacity-0 overflow-hidden rounded-xl md:rounded-2xl shadow-2xl h-24 sm:h-40 md:h-56 border border-white/10 pointer-events-auto"
+        >
+          <Image
+            src="https://picsum.photos/seed/architecture/800/600"
+            inferSize
+            alt="Grid Image 1"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div
+          class="grid-img-left opacity-0 overflow-hidden rounded-xl md:rounded-2xl shadow-2xl h-24 sm:h-40 md:h-56 border border-white/10 pointer-events-auto"
+        >
+          <Image
+            src="https://picsum.photos/seed/roadtrip/800/600"
+            inferSize
+            alt="Grid Image 2"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+
+      <div
+        id="center-spacer"
+        class="col-span-6 md:col-span-6 h-[40vh] sm:h-[50vh] md:h-[65vh]"
+      >
+      </div>
+
+      <div class="col-span-3 md:col-span-3 flex flex-col gap-4 md:gap-6 z-20">
+        <div
+          class="grid-img-right opacity-0 overflow-hidden rounded-xl md:rounded-2xl shadow-2xl h-20 sm:h-32 md:h-44 border border-white/10 pointer-events-auto"
+        >
+          <Image
+            src="https://picsum.photos/seed/coastal/800/600"
+            inferSize
+            alt="Grid Image 3"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div
+          class="grid-img-right opacity-0 overflow-hidden rounded-xl md:rounded-2xl shadow-2xl h-20 sm:h-32 md:h-44 border border-white/10 pointer-events-auto"
+        >
+          <Image
+            src="https://picsum.photos/seed/forest/800/600"
+            inferSize
+            alt="Grid Image 4"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="hero-mask"
+      class="absolute inset-0 w-full h-full z-10 flex items-center justify-center pointer-events-none"
+      style="clip-path: inset(0px 0px 0px 0px round 0px);"
+    >
+      <div class="relative w-full h-full flex items-center justify-center">
+        <Image
+          src="https://picsum.photos/seed/nature/1920/1080"
+          inferSize
+          alt="Main Hero Image"
+          class="w-full h-full object-cover"
+        />
+
+        <div
+          id="hero-text"
+          class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 p-6 text-center pointer-events-auto"
+        >
+          <h1
+            class="text-3xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-4"
+          >
+            Born for Adventure.
+          </h1>
+          <p class="text-base sm:text-2xl font-medium text-neutral-200">
+            Built in America.
+          </p>
+          <div
+            class="absolute bottom-10 flex flex-col items-center gap-2 text-xs uppercase tracking-widest text-neutral-300"
+          >
+            <span>Scroll to explore</span>
+            <svg
+              class="w-4 h-4 animate-bounce"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "@/utils/gsap-init";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  let ctx: gsap.Context;
+
+  function initHeroAnimation() {
+    ctx = gsap.context(() => {
+      const spacer = document.querySelector("#center-spacer") as HTMLElement;
+
+      const getDynamicClipPath = () => {
+        if (!spacer) return "inset(20% 20% 20% 20% round 24px)";
+
+        const rect = spacer.getBoundingClientRect();
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        const top = rect.top;
+        const right = windowWidth - rect.right;
+        const bottom = windowHeight - rect.bottom;
+        const left = rect.left;
+
+        const radius = windowWidth < 768 ? "16px" : "24px";
+
+        return `inset(${top}px ${right}px ${bottom}px ${left}px round ${radius})`;
+      };
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#hero-container",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      tl.to(
+        "#hero-text",
+        {
+          opacity: 0,
+          y: -50,
+          duration: 0.3,
+          ease: "power1.out",
+        },
+        0,
+      )
+
+        .to(
+          "#hero-mask",
+          {
+            clipPath: getDynamicClipPath,
+            duration: 1.0,
+            ease: "power2.inOut",
+          },
+          0,
+        )
+
+        .fromTo(
+          ".grid-img-left",
+          { x: "-200vw", opacity: 0, rotate: -6 },
+          {
+            x: "0vw",
+            opacity: 1,
+            rotate: 0,
+            stagger: 0.1,
+            duration: 0.85,
+            ease: "power2.out",
+          },
+          0.1,
+        )
+        .fromTo(
+          ".grid-img-right",
+          { x: "200vw", opacity: 0, rotate: 6 },
+          {
+            x: "0vw",
+            opacity: 1,
+            rotate: 0,
+            stagger: 0.1,
+            duration: 0.85,
+            ease: "power2.out",
+          },
+          0.1,
+        );
+    });
+  }
+
+  document.addEventListener("astro:page-load", initHeroAnimation);
+
+  document.addEventListener("astro:before-swap", () => {
+    ctx && ctx.revert();
+  });
+</script>

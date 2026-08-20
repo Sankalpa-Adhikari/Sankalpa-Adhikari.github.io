@@ -1,0 +1,220 @@
+---
+import { Image } from "astro:assets";
+
+interface CollectionItem {
+  id: string;
+  index: string;
+  tag: string;
+  title: string;
+  link: string;
+  media: string[];
+}
+
+interface Props {
+  title?: string;
+  collections?: CollectionItem[];
+}
+
+const {
+  title = "Our Collections",
+  collections = [
+    {
+      id: "urban",
+      index: "01",
+      tag: "Urban",
+      title: "Signage, furniture, and equipment for welcoming urban spaces",
+      link: "/products/urban",
+      media: ["https://picsum.photos/seed/urban/1920/1080"],
+    },
+    {
+      id: "nature",
+      index: "02",
+      tag: "Nature",
+      title: "Signage and equipment for all facets of the great outdoors",
+      link: "/products/nature",
+      media: ["https://picsum.photos/seed/nature/1920/1080"],
+    },
+    {
+      id: "architecture",
+      index: "03",
+      tag: "Architecture",
+      title: "Minimalist structural elements designed for contemporary facades",
+      link: "/products/architecture",
+      media: ["https://picsum.photos/seed/architecture/1920/1080"],
+    },
+    {
+      id: "coastal",
+      index: "04",
+      tag: "Coastal",
+      title:
+        "Weather-resistant marine installations and seaside infrastructure",
+      link: "/products/coastal",
+      media: ["https://picsum.photos/seed/coastal/1920/1080"],
+    },
+    {
+      id: "heritage",
+      index: "05",
+      tag: "Heritage",
+      title: "Custom restoration work and classic historical markers",
+      link: "/products/heritage",
+      media: ["https://picsum.photos/seed/heritage/1920/1080"],
+    },
+  ],
+} = Astro.props;
+---
+
+<section
+  class="relative w-full bg-neutral-900"
+  data-component="collections-pinned"
+>
+  <div class="relative h-screen w-full overflow-hidden" data-pin-wrapper>
+    <div class="absolute left-6 top-6 z-40 md:left-12 md:top-12">
+      <h2
+        class="text-sm font-semibold uppercase tracking-widest text-white/80 mix-blend-difference"
+      >
+        {title}
+      </h2>
+    </div>
+
+    {
+      collections.map((item, i) => (
+        <div
+          class="absolute inset-0 flex h-full w-full items-center justify-center overflow-hidden will-change-[clip-path]"
+          data-collection-item
+          style={{ zIndex: i + 1 }}
+        >
+          <div class="absolute inset-0 h-full w-full">
+            <Image
+              src={item.media[0]}
+              alt={item.title}
+              width={1920}
+              height={1080}
+              class="h-full w-full object-cover will-change-transform"
+              data-media-inner
+            />
+            <div class="absolute inset-0 bg-black/50" />
+          </div>
+
+          <div
+            class="relative z-20 flex max-w-4xl flex-col items-center p-6 text-center md:p-12"
+            data-content
+          >
+            <div class="mb-4 flex items-center gap-3">
+              <span class="text-sm font-semibold text-white/70">
+                {item.index}
+              </span>
+              <span class="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-white backdrop-blur-md">
+                {item.tag}
+              </span>
+            </div>
+
+            <h3 class="text-3xl font-medium tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
+              {item.title}
+            </h3>
+
+            <a
+              href={item.link}
+              class="mt-8 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition-all hover:bg-white hover:text-black"
+            >
+              See {item.tag} Products &rarr;
+            </a>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  import { gsap, ScrollTrigger } from "@/utils/gsap-init";
+
+  let ctx: gsap.Context | undefined;
+
+  function initPinnedCollections() {
+    if (ctx) ctx.revert();
+
+    const section = document.querySelector<HTMLElement>(
+      '[data-component="collections-pinned"]',
+    );
+    if (!section) return;
+
+    const pinWrapper = section.querySelector<HTMLElement>("[data-pin-wrapper]");
+    const items = gsap.utils.toArray("[data-collection-item]") as HTMLElement[];
+
+    if (!pinWrapper || items.length < 2) return;
+
+    ctx = gsap.context(() => {
+      items.forEach((item, i) => {
+        const mediaInner = item.querySelector("[data-media-inner]");
+
+        if (i === 0) {
+          gsap.set(item, { clipPath: "inset(0% 0% 0% 0%)" });
+          if (mediaInner) gsap.set(mediaInner, { scale: 1, yPercent: 0 });
+        } else {
+          gsap.set(item, { clipPath: "inset(100% 0% 0% 0%)" });
+          if (mediaInner) gsap.set(mediaInner, { scale: 1.15, yPercent: 8 });
+        }
+      });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: `+=${items.length * 100}%`,
+          pin: pinWrapper,
+          pinSpacing: true,
+          anticipatePin: 1,
+          scrub: 0.5,
+          refreshPriority: 1,
+        },
+      });
+
+      items.forEach((item, i) => {
+        if (i === 0) return;
+
+        const mediaInner = item.querySelector("[data-media-inner]");
+
+        const positionOffset = i === 1 ? undefined : "-=0.25";
+
+        tl.to(
+          item,
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 1, ease: "none" },
+          positionOffset,
+        );
+
+        if (mediaInner) {
+          tl.to(
+            mediaInner,
+            { scale: 1, yPercent: 0, duration: 1, ease: "none" },
+            "<",
+          );
+        }
+      });
+    }, section);
+  }
+
+  function setupAnimation() {
+    const images = document.querySelectorAll<HTMLImageElement>(
+      '[data-component="collections-pinned"] img',
+    );
+
+    const imagePromises = Array.from(images).map((img) => {
+      if (img.complete) return Promise.resolve();
+      return new Promise((resolve) => {
+        img.addEventListener("load", resolve, { once: true });
+        img.addEventListener("error", resolve, { once: true });
+      });
+    });
+
+    Promise.all(imagePromises).then(() => {
+      initPinnedCollections();
+      ScrollTrigger.sort();
+      ScrollTrigger.refresh();
+    });
+  }
+
+  document.addEventListener("astro:page-load", setupAnimation);
+  document.addEventListener("astro:before-swap", () => {
+    if (ctx) ctx.revert();
+  });
+</script>
