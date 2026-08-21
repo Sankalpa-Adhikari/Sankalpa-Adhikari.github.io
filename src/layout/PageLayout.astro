@@ -21,11 +21,9 @@ const { title, description, image, dataPagefindIgnore } = Astro.props;
     <BaseHead title={title} description={description} image={image} />
   </head>
   <body data-pagefind-ignore={dataPagefindIgnore} class="bg-white">
-    <div class="relative z-10 bg-white">
-      <Header />
-      <slot />
-      <GsapPointer />
-    </div>
+    <Header />
+    <slot />
+    <GsapPointer />
     <Footer />
   </body>
 </html>
