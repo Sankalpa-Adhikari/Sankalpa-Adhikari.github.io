@@ -52,10 +52,22 @@ const openingsCollection = defineCollection({
 		tags: z.array(z.string()),
 	}),
 });
+
+const successStoriesCollection = defineCollection({
+	loader: glob({ pattern: "**/*.md", base: "./src/content/success-stories" }),
+	schema: z.object({
+		src: z.string(),
+		date: z.string(),
+		title: z.string(),
+		subtitle: z.string(),
+	}),
+});
+
 export const collections = {
 	faqs: faqsCollection,
 	fieldNotes: fieldNotesCollection,
 	publications: publicationsCollection,
 	events: eventsCollection,
 	openings: openingsCollection,
+	"success-stories": successStoriesCollection,
 };

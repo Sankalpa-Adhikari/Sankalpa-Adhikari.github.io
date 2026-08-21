@@ -1,57 +1,14 @@
 ---
+import { getCollection } from "astro:content";
 import { Icon } from "astro-icon/components";
 import ImageSlider from "./image-slider.astro";
 
-const successStories = [
-  {
-    src: "https://picsum.photos/id/10/1200/800",
-    href: "/case-studies/smart-irrigation",
-    date: "Aug 2024",
-    title: "Smart Water Management",
-    subtitle:
-      "Optimizing water usage and boosting crop yield using IoT precision sensors.",
-  },
-  {
-    src: "https://picsum.photos/id/20/1200/800",
-    href: "/case-studies/soil-regeneration",
-    date: "Aug 2024",
-    title: "Regenerative Soil Health",
-    subtitle:
-      "Restoring soil microbial diversity and natural fertility across regional farms.",
-  },
-  {
-    src: "https://picsum.photos/id/30/1200/800",
-    href: "/case-studies/farmer-training",
-    date: "Aug 2024",
-    title: "Community Capacity Building",
-    subtitle:
-      "Empowering rural farming communities with climate-resilient ag-tech practices.",
-  },
-  {
-    src: "https://picsum.photos/id/40/1200/800",
-    href: "/case-studies/agri-supply-chain",
-    date: "Aug 2024",
-    title: "Direct Market Access",
-    subtitle:
-      "Connecting smallholder growers directly to fair-trade commercial distributors.",
-  },
-  {
-    src: "https://picsum.photos/id/50/1200/800",
-    href: "/case-studies/climate-resilience",
-    date: "Aug 2024",
-    title: "Drought-Resilient Crops",
-    subtitle:
-      "Scaling climate-adaptive crop varieties to secure yield stability.",
-  },
-  {
-    src: "https://picsum.photos/id/60/1200/800",
-    href: "/case-studies/precision-harvesting",
-    date: "Aug 2024",
-    title: "Precision Ag Expansion",
-    subtitle:
-      "Utilizing aerial mapping and automated monitoring to minimize post-harvest loss.",
-  },
-];
+const successStoriesEntries = await getCollection("success-stories");
+
+const successStories = successStoriesEntries.map((entry) => ({
+  ...entry.data,
+  href: `/case-studies/${entry.id}`,
+}));
 ---
 
 <section class="w-full overflow-hidden px-4 mt-16">
