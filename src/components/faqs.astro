@@ -35,7 +35,7 @@ const faqItems = [
 ];
 ---
 
-<section id="faq-section" class="w-full mt-16 px-4 overflow-hidden relative">
+<section id="faq" class="w-full mt-16 px-4 overflow-hidden relative">
   <div class="header-content mb-8 space-y-2">
     <h2 class="text-3xl md:text-6xl capitalize tracking-wide">FAQ</h2>
     <p
@@ -87,9 +87,7 @@ const faqItems = [
   function initFAQ() {
     ctx = gsap.context(() => {
       if (typeof window !== "undefined") {
-        const detailsElements = document.querySelectorAll(
-          "#faq-section details",
-        );
+        const detailsElements = document.querySelectorAll("#faq details");
 
         detailsElements.forEach((detail) => {
           const summary = detail.querySelector("summary");
