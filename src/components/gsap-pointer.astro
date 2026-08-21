@@ -4,27 +4,45 @@ import { Icon } from "astro-icon/components";
 
 <div
   data-custom-cursor
-  class="fixed top-0 left-0 pointer-events-none z-50 flex flex-row flex-nowrap gap-0.5 items-center opacity-0 invisible"
+  class="fixed top-0 left-0 pointer-events-none z-50 flex items-center justify-center opacity-0 invisible"
 >
-  <span
-    data-cursor-icon
-    class="bg-primary text-black py-1 px-1.5 rounded-lg"
+  <!-- Existing Pill/Drag Cursor -->
+  <div data-cursor-pill class="flex flex-row flex-nowrap gap-0.5 items-center">
+    <span
+      data-cursor-icon
+      class="bg-primary text-black py-1 px-1.5 rounded-lg"
+      style="display: none;"
+    >
+      <Icon name={"heroicons:chevron-left-20-solid"} />
+    </span>
+    <span
+      data-cursor-text-target
+      class="bg-primary text-black py-1.5 px-2 rounded-lg text-xs font-mono"
+    >
+    </span>
+    <span
+      data-cursor-icon
+      class="bg-primary text-black py-1 px-1.5 rounded-lg"
+      style="display: none;"
+    >
+      <Icon name={"heroicons:chevron-right-20-solid"} />
+    </span>
+  </div>
+
+  <!-- New Circular View Cursor -->
+  <div
+    data-cursor-view-container
+    class="bg-primary text-black w-20 h-20 rounded-full flex flex-col items-center justify-center gap-0.5 shadow-lg"
     style="display: none;"
   >
-    <Icon name={"heroicons:chevron-left-20-solid"} />
-  </span>
-  <span
-    data-cursor-text-target
-    class="bg-primary text-black py-1.5 px-2 rounded-lg text-xs font-mono"
-  >
-  </span>
-  <span
-    data-cursor-icon
-    class="bg-primary text-black py-1 px-1.5 rounded-lg"
-    style="display: none;"
-  >
-    <Icon name={"heroicons:chevron-right-20-solid"} />
-  </span>
+    <Icon name={"heroicons:arrow-up-right-20-solid"} class="w-5 h-5" />
+    <span
+      data-cursor-view-text
+      class="text-[10px] uppercase font-mono tracking-wider font-semibold"
+    >
+      View
+    </span>
+  </div>
 </div>
 
 <script>
@@ -71,8 +89,16 @@ import { Icon } from "astro-icon/components";
 
   function initCustomPointer() {
     const pointer = document.querySelector<HTMLElement>("[data-custom-cursor]");
+    const pillContainer =
+      document.querySelector<HTMLElement>("[data-cursor-pill]");
+    const viewContainer = document.querySelector<HTMLElement>(
+      "[data-cursor-view-container]",
+    );
     const textTarget = document.querySelector<HTMLElement>(
       "[data-cursor-text-target]",
+    );
+    const viewTextTarget = document.querySelector<HTMLElement>(
+      "[data-cursor-view-text]",
     );
     const icons = document.querySelectorAll<HTMLElement>("[data-cursor-icon]");
 
@@ -108,17 +134,32 @@ import { Icon } from "astro-icon/components";
 
       if (target) {
         const isDrag = target.hasAttribute("data-cursor-drag");
+        const isView = target.hasAttribute("data-cursor-view");
 
-        icons.forEach((icon) => {
-          icon.style.display = isDrag ? "" : "none";
-        });
+        // Toggle visibility between View (circular) and Drag/Default (pill) designs
+        if (isView) {
+          if (pillContainer) pillContainer.style.display = "none";
+          if (viewContainer) viewContainer.style.display = "flex";
 
-        const defaultText = isDrag ? "Drag" : "View";
-        const customText =
-          target.getAttribute("data-cursor-text") || defaultText;
+          const customText = target.getAttribute("data-cursor-text") || "View";
+          if (viewTextTarget && viewTextTarget.textContent !== customText) {
+            viewTextTarget.textContent = customText;
+          }
+        } else {
+          if (viewContainer) viewContainer.style.display = "none";
+          if (pillContainer) pillContainer.style.display = "flex";
 
-        if (textTarget && textTarget.textContent !== customText) {
-          textTarget.textContent = customText;
+          icons.forEach((icon) => {
+            icon.style.display = isDrag ? "" : "none";
+          });
+
+          const defaultText = isDrag ? "Drag" : "View";
+          const customText =
+            target.getAttribute("data-cursor-text") || defaultText;
+
+          if (textTarget && textTarget.textContent !== customText) {
+            textTarget.textContent = customText;
+          }
         }
 
         const cursorType = target.getAttribute("data-cursor");

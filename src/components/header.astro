@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import Logo from "@/assets/images/logo.webp";
+import MobileNavDrawer from "./mobile-nav-drawer.astro";
 ---
 
 <header class="fixed top-4 left-4 right-4 z-5000">
@@ -22,7 +23,6 @@ import Logo from "@/assets/images/logo.webp";
 
     <div id="nav-links-container" class="overflow-hidden whitespace-nowrap">
       <div class="group flex items-center gap-8 px-4">
-        <!-- Replaced group-hover:opacity-40 with group-has-[a:hover]:opacity-40 -->
         <a
           href="#about"
           class="nav-link group/link relative inline-flex overflow-hidden transition-all duration-300 group-has-[a:hover]:opacity-40 hover:!opacity-100"
@@ -112,27 +112,27 @@ import Logo from "@/assets/images/logo.webp";
       >
         <div class="pl-2">
           <button
+            id="menu-toggle-btn"
             aria-label="Toggle menu"
             class="flex w-10 shrink-0 cursor-pointer flex-col items-center justify-center gap-1.5 p-2"
           >
-            <span
-              class="block h-0.5 w-6 rounded-full bg-foreground transition-transform"
+            <span id="line-1" class="block h-0.5 w-6 rounded-full bg-foreground"
             ></span>
-            <span
-              class="block h-0.5 w-6 rounded-full bg-foreground transition-opacity"
+            <span id="line-2" class="block h-0.5 w-6 rounded-full bg-foreground"
             ></span>
-            <span
-              class="block h-0.5 w-6 rounded-full bg-foreground transition-transform"
+            <span id="line-3" class="block h-0.5 w-6 rounded-full bg-foreground"
             ></span>
           </button>
         </div>
       </div>
     </div>
   </nav>
+  <MobileNavDrawer />
 </header>
 
 <script>
   import { gsap } from "@/utils/gsap-init";
+  import { isMobileNavOpen, toggleMobileNav } from "@/utils/atoms/nav-store";
 
   let ctx: gsap.Context;
 
@@ -142,17 +142,74 @@ import Logo from "@/assets/images/logo.webp";
     const cartContainer = document.querySelector("#cart-btn-container");
     const navBg = document.querySelector("#nav-bg");
     const rightContainer = document.querySelector("#right-container");
+    const menuBtn = document.querySelector("#menu-toggle-btn");
+    const line1 = document.querySelector("#line-1");
+    const line2 = document.querySelector("#line-2");
+    const line3 = document.querySelector("#line-3");
 
     if (
       !linksContainer ||
       !menuContainer ||
       !cartContainer ||
       !navBg ||
-      !rightContainer
+      !rightContainer ||
+      !menuBtn
     )
       return;
 
     ctx = gsap.context(() => {
+      let isThrottled = false;
+      menuBtn.addEventListener("click", () => {
+        if (isThrottled) return;
+        isThrottled = true;
+        toggleMobileNav();
+        setTimeout(() => (isThrottled = false), 500);
+      });
+
+      const unsubscribe = isMobileNavOpen.subscribe((isOpen) => {
+        if (isOpen) {
+          gsap.to(line1, {
+            y: 8,
+            rotate: 45,
+            transformOrigin: "center center",
+            duration: 0.4,
+            ease: "back.out(1.5)",
+          });
+          gsap.to(line2, {
+            scaleX: 0,
+            opacity: 0,
+            duration: 0.2,
+            ease: "power2.inOut",
+          });
+          gsap.to(line3, {
+            y: -8,
+            rotate: -45,
+            transformOrigin: "center center",
+            duration: 0.4,
+            ease: "back.out(1.5)",
+          });
+        } else {
+          gsap.to(line1, {
+            y: 0,
+            rotate: 0,
+            duration: 0.4,
+            ease: "power3.out",
+          });
+          gsap.to(line2, {
+            scaleX: 1,
+            opacity: 1,
+            duration: 0.4,
+            ease: "power3.out",
+          });
+          gsap.to(line3, {
+            y: 0,
+            rotate: 0,
+            duration: 0.4,
+            ease: "power3.out",
+          });
+        }
+      });
+
       let mm = gsap.matchMedia();
 
       mm.add("(min-width: 769px)", () => {
@@ -189,6 +246,8 @@ import Logo from "@/assets/images/logo.webp";
         const mobileTargetWidth = rightContainer.getBoundingClientRect().width;
         gsap.set(navBg, { width: mobileTargetWidth });
       });
+
+      return () => unsubscribe();
     });
   }
 

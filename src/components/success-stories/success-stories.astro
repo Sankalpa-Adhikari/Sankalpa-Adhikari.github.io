@@ -1,0 +1,145 @@
+---
+import { Icon } from "astro-icon/components";
+import ImageSlider from "./image-slider.astro";
+
+const successStories = [
+  {
+    src: "https://picsum.photos/id/10/1200/800",
+    href: "/case-studies/smart-irrigation",
+    date: "Aug 2024",
+    title: "Smart Water Management",
+    subtitle:
+      "Optimizing water usage and boosting crop yield using IoT precision sensors.",
+  },
+  {
+    src: "https://picsum.photos/id/20/1200/800",
+    href: "/case-studies/soil-regeneration",
+    date: "Aug 2024",
+    title: "Regenerative Soil Health",
+    subtitle:
+      "Restoring soil microbial diversity and natural fertility across regional farms.",
+  },
+  {
+    src: "https://picsum.photos/id/30/1200/800",
+    href: "/case-studies/farmer-training",
+    date: "Aug 2024",
+    title: "Community Capacity Building",
+    subtitle:
+      "Empowering rural farming communities with climate-resilient ag-tech practices.",
+  },
+  {
+    src: "https://picsum.photos/id/40/1200/800",
+    href: "/case-studies/agri-supply-chain",
+    date: "Aug 2024",
+    title: "Direct Market Access",
+    subtitle:
+      "Connecting smallholder growers directly to fair-trade commercial distributors.",
+  },
+  {
+    src: "https://picsum.photos/id/50/1200/800",
+    href: "/case-studies/climate-resilience",
+    date: "Aug 2024",
+    title: "Drought-Resilient Crops",
+    subtitle:
+      "Scaling climate-adaptive crop varieties to secure yield stability.",
+  },
+  {
+    src: "https://picsum.photos/id/60/1200/800",
+    href: "/case-studies/precision-harvesting",
+    date: "Aug 2024",
+    title: "Precision Ag Expansion",
+    subtitle:
+      "Utilizing aerial mapping and automated monitoring to minimize post-harvest loss.",
+  },
+];
+---
+
+<section class="w-full overflow-hidden px-4 mt-16">
+  <div class="mb-8 space-y-2">
+    <h2 class="text-3xl md:text-6xl capitalize tracking-wide">
+      Success Stories
+    </h2>
+    <p
+      class="text-xs md:text-sm text-black/80 max-w-lg normal-case leading-relaxed"
+    >
+      Real-world agricultural impact, empowered farming communities, and
+      sustainable yield growth.
+    </p>
+  </div>
+  <div class="flex flex-col lg:flex-row items-start gap-8">
+    <div class="w-full lg:w-1/3 shrink-0 space-y-8 pr-4">
+      <div class="space-y-3">
+        <h3 class="text-xl md:text-3xl">Cultivating Measurable Growth</h3>
+        <p class="text-xs md:text-sm normal-case text-black/60 leading-relaxed">
+          We collaborate with farmers, cooperatives, and agricultural partners
+          to transition traditional farms into sustainable, high-yielding
+          ecosystems. Explore how precision farming and hands-on training scale
+          rural prosperity.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6 border-t border-black/10 pt-6">
+        <div class="space-y-1">
+          <p class="text-2xl md:text-4xl font-mono font-medium tracking-tight">
+            50K+
+          </p>
+          <p
+            class="text-[10px] md:text-xs text-black/60 uppercase tracking-widest font-mono"
+          >
+            Farmers Reached
+          </p>
+        </div>
+        <div class="space-y-1">
+          <p class="text-2xl md:text-4xl font-mono font-medium tracking-tight">
+            1,200+
+          </p>
+          <p
+            class="text-[10px] md:text-xs text-black/60 uppercase tracking-widest font-mono"
+          >
+            Trainings Provided
+          </p>
+        </div>
+        <div class="space-y-1">
+          <p class="text-2xl md:text-4xl font-mono font-medium tracking-tight">
+            120K
+          </p>
+          <p
+            class="text-[10px] md:text-xs text-black/60 uppercase tracking-widest font-mono"
+          >
+            Acres Farmed
+          </p>
+        </div>
+        <div class="space-y-1">
+          <p class="text-2xl md:text-4xl font-mono font-medium tracking-tight">
+            $35M+
+          </p>
+          <p
+            class="text-[10px] md:text-xs text-black/60 uppercase tracking-widest font-mono"
+          >
+            Farmer Revenue
+          </p>
+        </div>
+        <a
+          href="#stories"
+          class="group inline-flex items-center gap-3 rounded-full bg-primary py-1.5 pl-5 pr-1.5 text-base text-black w-fit col-span-2"
+        >
+          <span>View Stories</span>
+          <span
+            class="flex size-8 items-center justify-center rounded-full bg-white text-black"
+          >
+            <Icon class="size-5" name="heroicons:arrow-up-right-20-solid" />
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <div class="w-full lg:w-2/3 min-h-[50vh]">
+      <ImageSlider
+        images={successStories}
+        visibleCount={4}
+        spanFraction={1}
+        dimOnHover
+      />
+    </div>
+  </div>
+</section>

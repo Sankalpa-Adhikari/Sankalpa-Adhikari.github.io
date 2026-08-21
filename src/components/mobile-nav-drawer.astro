@@ -1,0 +1,118 @@
+---
+import { Image } from "astro:assets";
+
+const navItems = [
+  {
+    title: "Home",
+    image: "https://picsum.photos/id/58/600/1000",
+    href: "/",
+  },
+  {
+    title: "About Us",
+    image: "https://picsum.photos/id/59/600/1000",
+    href: "/about-us",
+  },
+  {
+    title: "FAQ",
+    image: "https://picsum.photos/id/59/600/1000",
+    href: "/#FAQ",
+  },
+];
+---
+
+<!-- Removed translate-x-12 -->
+<aside
+  id="mobile-drawer"
+  class="fixed top-24 left-4 right-4 sm:left-auto sm:w-140 bg-background text-foreground overflow-hidden h-[calc(100vh-7rem)] rounded-2xl p-4 invisible opacity-0 pointer-events-none"
+>
+  <div class="flex flex-col">
+    {
+      navItems.map((item) => (
+        <a
+          href={item.href}
+          class="nav-item group flex flex-row flex-nowrap items-center overflow-hidden cursor-pointer py-4 border-b first:border-t border-foreground/20"
+        >
+          <div class="h-18 w-0 overflow-hidden rounded-md transition-[width] duration-300 ease-in-out group-hover:w-18 group-hover:mr-4">
+            <Image
+              src={item.image}
+              alt={item.title}
+              inferSize
+              class="w-18 h-18 max-w-none object-cover"
+            />
+          </div>
+
+          <span class="nav-text text-3xl md:text-5xl lg:text-7xl opacity-40">
+            {item.title}
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</aside>
+
+<script>
+  import { gsap, SplitText } from "@/utils/gsap-init";
+  import { isMobileNavOpen } from "@/utils/atoms/nav-store";
+
+  let ctx: gsap.Context;
+
+  function initNavDrawerAnimation() {
+    ctx = gsap.context(() => {
+      const drawer = document.querySelector("#mobile-drawer");
+      const navItems = document.querySelectorAll(".nav-item");
+
+      if (!drawer) return;
+
+      // Set the origin point for the scale animation and initial scale size
+      gsap.set(drawer, { transformOrigin: "top right", scale: 0.8 });
+
+      navItems.forEach((item) => {
+        const textElement = item.querySelector(".nav-text");
+        if (!textElement) return;
+
+        const split = new SplitText(textElement, { type: "chars" });
+        gsap.set(split.chars, { opacity: 0.4 });
+        gsap.set(textElement, { opacity: 1 });
+
+        const tl = gsap.timeline({ paused: true });
+        tl.to(split.chars, {
+          opacity: 1,
+          stagger: 0.03,
+          duration: 0.4,
+          ease: "power1.inOut",
+        });
+
+        item.addEventListener("mouseenter", () => tl.play());
+        item.addEventListener("mouseleave", () => tl.reverse());
+      });
+
+      const unsubscribe = isMobileNavOpen.subscribe((isOpen) => {
+        if (isOpen) {
+          gsap.to(drawer, {
+            autoAlpha: 1,
+            scale: 1, // Scale up to normal size
+            pointerEvents: "auto",
+            duration: 0.6,
+            ease: "back.inOut(1.2)", // Gives a nice bouncy spring effect
+          });
+        } else {
+          gsap.to(drawer, {
+            autoAlpha: 0,
+            scale: 0.8, // Scale down towards the top right
+            pointerEvents: "none",
+            duration: 0.5,
+            ease: "back.inOut(1.2)",
+          });
+        }
+      });
+
+      return () => unsubscribe();
+    });
+  }
+
+  document.addEventListener("astro:page-load", initNavDrawerAnimation);
+
+  document.addEventListener("astro:before-swap", () => {
+    ctx && ctx.revert();
+  });
+</script>

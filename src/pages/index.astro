@@ -1,12 +1,11 @@
 ---
-import { Icon } from "astro-icon/components";
 import Events from "@/components/events/events.astro";
 import FieldNotes from "@/components/field-notes/field-notes.astro";
 import Collections from "@/components/home/collections.astro";
 import Hero from "@/components/home/hero.astro";
-import ImageSlider from "@/components/home/image-slider.astro";
 import Wrap from "@/components/home/wrap.astro";
 import Research from "@/components/publications/research.astro";
+import SuccessStories from "@/components/success-stories/success-stories.astro";
 import PageLayout from "@/layout/PageLayout.astro";
 ---
 
@@ -19,12 +18,7 @@ import PageLayout from "@/layout/PageLayout.astro";
   <Collections />
   <Wrap />
   <FieldNotes />
-  <div class="flex flex-row">
-    <div class="w-1/2">Hello</div>
-    <div class="px-4 sm:px-12 md:px-24 py-8 md:py-12 min-h-screen w-full">
-      <ImageSlider visibleCount={4} spanFraction={1} />
-    </div>
-  </div>
+  <SuccessStories />
   <Research />
   <Events />
 </PageLayout>
