@@ -1,0 +1,119 @@
+---
+import { Icon } from "astro-icon/components";
+
+const openings = [
+  {
+    location: "Ramechhap, Nepal",
+    title: "Agricultural Research Lead",
+    description:
+      "Lead on-ground research initiatives and feasibility studies to advance modern farming techniques and productivity.",
+    tags: ["Full-Time", "Research & Development"],
+    href: "#apply",
+  },
+  {
+    location: "Kathmandu / Field Visits",
+    title: "Value Chain Manager",
+    description:
+      "Scan and select value chain actors to build equitable partnerships, streamline processes, and eliminate intermediaries.",
+    tags: ["Full-Time", "Operations"],
+    href: "#apply",
+  },
+  {
+    location: "Gokulganga, Ramechhap",
+    title: "Rural Development Officer",
+    description:
+      "Empower local farmers and youth through entrepreneurship programs and hands-on technical training.",
+    tags: ["Contract", "Community Outreach"],
+    href: "#apply",
+  },
+  {
+    location: "Ramechhap, Nepal",
+    title: "Field Agronomist",
+    description:
+      "Implement sustainable agricultural practices and provide actionable technical know-how directly to our producers.",
+    tags: ["Full-Time", "Field Operations"],
+    href: "#apply",
+  },
+];
+---
+
+<section class="w-full overflow-hidden px-4 mt-16">
+  <div
+    class="flex flex-row flex-nowrap items-center justify-between mb-8 gap-10"
+  >
+    <div class="space-y-1">
+      <h2 class="text-3xl md:text-6xl capitalize tracking-wide">
+        Current Openings
+      </h2>
+      <p
+        class="text-sm md:text-base text-black/70 lg:max-w-lg normal-case leading-relaxed"
+      >
+        The brilliant minds behind our research, design, and technical
+        processes.
+      </p>
+    </div>
+
+    <a
+      href="mailto:careers@saptabhume.com"
+      class="shrink-0 flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 border-b border-black/30 pb-1.5 hover:border-black transition-colors group"
+    >
+      <span
+        class="text-sm font-medium text-black/80 group-hover:text-black transition-colors"
+      >
+        Don't see a perfect fit?
+      </span>
+      <span
+        class="text-sm font-medium flex items-center gap-1 whitespace-nowrap text-black"
+      >
+        Pitch us
+        <Icon
+          name="heroicons:arrow-up-right-20-solid"
+          class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300"
+        />
+      </span>
+    </a>
+  </div>
+
+  <div class="flex flex-col border-t border-black/20">
+    {
+      openings.map((job) => (
+        <article class="group relative border-b border-black/20 transition-colors duration-300">
+          <a
+            href={job.href}
+            class="grid grid-cols-1 md:grid-cols-12 md:items-start gap-4 md:gap-8 py-6 md:py-8 pr-16 md:pr-20 w-full"
+          >
+            <div class="flex flex-col gap-2 md:col-span-5 lg:col-span-4">
+              <span class="inline-flex items-center text-sm font-medium text-black/60 uppercase">
+                {job.location}
+              </span>
+              <h3 class="text-xl md:text-2xl lg:text-3xl group-hover:translate-x-2 transition-transform duration-300">
+                {job.title}
+              </h3>
+            </div>
+
+            <div class="md:col-span-4 lg:col-span-5 md:pt-1">
+              <p class="text-sm text-black/70 leading-relaxed">
+                {job.description}
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center md:justify-end gap-2 md:col-span-3 lg:col-span-3 md:pt-1">
+              {job.tags.map((tag) => (
+                <span class="font-mono inline-flex items-center rounded-full bg-primary/40 border border-primary/30 px-3 py-1 text-xs font-medium text-black whitespace-nowrap">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <span class="absolute -translate-y-1/2 top-1/2 right-4 flex size-8 items-center justify-center rounded-full bg-black/90 text-white transition-all duration-300 group-hover:scale-110 group-hover:bg-black group-hover:shadow-md">
+              <Icon
+                class="size-5 -rotate-45 group-hover:rotate-0 transition-transform duration-300"
+                name="heroicons:arrow-small-right-20-solid"
+              />
+            </span>
+          </a>
+        </article>
+      ))
+    }
+  </div>
+</section>

@@ -5,7 +5,7 @@ import "@blossom-carousel/core/style.css";
 const data = [
   {
     title: "Stargazing on the edge",
-    year: "2025",
+    year: "21 Aug 2025",
     description:
       "So if it's beyond us then it's beyond us. And we will still be here stargazing.",
     tags: ["stargazing", "Far away"],
@@ -14,7 +14,7 @@ const data = [
   },
   {
     title: "Echoes of the deep ocean",
-    year: "2026",
+    year: "3 September 2026",
     description:
       "Descending into the abyss, discovering life forms that thrive in the dark and crushing pressure. So if it's beyond us then it's beyond us. And we will still be here stargazing. So if it's beyond us then it's beyond us. And we will still be here stargazing. So if it's beyond us then it's beyond us. And we will still be here stargazing.",
     tags: ["ocean", "exploration", "nature"],
@@ -34,7 +34,7 @@ const data = [
   },
   {
     title: "Mountain summit diaries",
-    year: "2024",
+    year: "2 November 2024",
     description:
       "The air is thin, but the view is unparalleled. Reaching the peak changes your perspective entirely.",
     tags: ["hiking", "altitude"],
@@ -47,7 +47,7 @@ const data = [
   },
   {
     title: "Urban neon reflections",
-    year: "2027",
+    year: "12 Dec 2027",
     description:
       "A cyberpunk vision of tomorrow. Rain hitting the pavement reflecting the endless glow of the city.",
     tags: ["cyberpunk", "cityscape"],
@@ -99,15 +99,17 @@ const data = [
                 </div>
               </div>
 
-              <div class="flex flex-wrap gap-2 lg:w-1/2 content-start">
-                <div class="bg-gray-100 text-black flex items-center w-max px-2 py-1 rounded text-xs font-mono uppercase">
+              <div class="flex flex-row lg:flex-col  gap-2 lg:w-1/2 content-start">
+                <div class="text-black flex items-center w-max px-2 py-1 text-xs font-mono uppercase">
                   {item.year}
                 </div>
-                {item.tags.map((tag) => (
-                  <div class="bg-gray-100 text-black flex items-center w-max px-2 py-1 rounded text-xs font-mono uppercase">
-                    {tag}
-                  </div>
-                ))}
+                <div class="flex flex-row flex-wrap gap-2 items-center">
+                  {item.tags.map((tag) => (
+                    <span class="bg-primary/40 border border-primary/30 text-black flex items-center w-max px-3 py-1 rounded-full text-xs font-mono  whitespace-nowrap">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
 
