@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import Footer from "@/components/footer.astro";
+import GsapPointer from "@/components/gsap-pointer.astro";
 import Header from "@/components/header.astro";
 import BaseHead from "@/layout/BaseHead.astro";
 
@@ -23,6 +24,7 @@ const { title, description, image, dataPagefindIgnore } = Astro.props;
     <div class="relative z-10 bg-white">
       <Header />
       <slot />
+      <GsapPointer />
     </div>
     <Footer />
   </body>

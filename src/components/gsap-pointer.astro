@@ -1,0 +1,185 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<div
+  data-custom-cursor
+  class="fixed top-0 left-0 pointer-events-none z-50 flex flex-row flex-nowrap gap-0.5 items-center opacity-0 invisible"
+>
+  <span
+    data-cursor-icon
+    class="bg-primary text-black py-1 px-1.5 rounded-lg"
+    style="display: none;"
+  >
+    <Icon name={"heroicons:chevron-left-20-solid"} />
+  </span>
+  <span
+    data-cursor-text-target
+    class="bg-primary text-black py-1.5 px-2 rounded-lg text-xs font-mono"
+  >
+  </span>
+  <span
+    data-cursor-icon
+    class="bg-primary text-black py-1 px-1.5 rounded-lg"
+    style="display: none;"
+  >
+    <Icon name={"heroicons:chevron-right-20-solid"} />
+  </span>
+</div>
+
+<script>
+  import { gsap } from "@/utils/gsap-init";
+
+  interface PositionConfig {
+    xP: number;
+    yP: number;
+    xO: number;
+    yO: number;
+  }
+
+  type PositionKey = string | null;
+
+  function getPositionConfig(
+    posKey: PositionKey,
+    isNativeVisible: boolean,
+  ): PositionConfig {
+    const key = posKey || (isNativeVisible ? "top" : "center");
+    const gap = 12;
+
+    switch (key) {
+      case "top":
+        return { xP: -50, yP: -100, xO: 0, yO: -gap };
+      case "bottom":
+        return { xP: -50, yP: 0, xO: 0, yO: gap };
+      case "left":
+        return { xP: -100, yP: -50, xO: -gap, yO: 0 };
+      case "right":
+        return { xP: 0, yP: -50, xO: gap, yO: 0 };
+      case "top-left":
+        return { xP: -100, yP: -100, xO: -gap, yO: -gap };
+      case "top-right":
+        return { xP: 0, yP: -100, xO: gap, yO: -gap };
+      case "bottom-left":
+        return { xP: -100, yP: 0, xO: -gap, yO: gap };
+      case "bottom-right":
+        return { xP: 0, yP: 0, xO: gap, yO: gap };
+      case "center":
+      default:
+        return { xP: -50, yP: -50, xO: 0, yO: 0 };
+    }
+  }
+
+  function initCustomPointer() {
+    const pointer = document.querySelector<HTMLElement>("[data-custom-cursor]");
+    const textTarget = document.querySelector<HTMLElement>(
+      "[data-cursor-text-target]",
+    );
+    const icons = document.querySelectorAll<HTMLElement>("[data-cursor-icon]");
+
+    if (
+      !pointer ||
+      !textTarget ||
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    ) {
+      return;
+    }
+
+    gsap.set(pointer, { xPercent: -50, yPercent: -50 });
+
+    let mouseX: number = 0;
+    let mouseY: number = 0;
+    let xOffset: number = 0;
+    let yOffset: number = 0;
+    let isActive: boolean = false;
+
+    const xTo = gsap.quickTo(pointer, "x", {
+      duration: 0.4,
+      ease: "power3.out",
+    });
+    const yTo = gsap.quickTo(pointer, "y", {
+      duration: 0.4,
+      ease: "power3.out",
+    });
+
+    function updateCursorState(): void {
+      const target = document
+        .elementFromPoint(mouseX, mouseY)
+        ?.closest<HTMLElement>("[data-cursor]");
+
+      if (target) {
+        const isDrag = target.hasAttribute("data-cursor-drag");
+
+        icons.forEach((icon) => {
+          icon.style.display = isDrag ? "" : "none";
+        });
+
+        const defaultText = isDrag ? "Drag" : "View";
+        const customText =
+          target.getAttribute("data-cursor-text") || defaultText;
+
+        if (textTarget && textTarget.textContent !== customText) {
+          textTarget.textContent = customText;
+        }
+
+        const cursorType = target.getAttribute("data-cursor");
+        const posKey = target.getAttribute("data-cursor-pos");
+        const isNativeVisible = !!cursorType;
+
+        target.style.cursor = isNativeVisible ? cursorType : "none";
+
+        const { xP, yP, xO, yO } = getPositionConfig(posKey, isNativeVisible);
+        xOffset = xO;
+        yOffset = yO;
+
+        gsap.to(pointer, {
+          xPercent: xP,
+          yPercent: yP,
+          duration: 0.2,
+          overwrite: "auto",
+        });
+
+        xTo(mouseX + xOffset);
+        yTo(mouseY + yOffset);
+
+        gsap.to(pointer, { autoAlpha: 1, duration: 0.2, overwrite: "auto" });
+      } else {
+        gsap.to(pointer, { autoAlpha: 0, duration: 0.2, overwrite: "auto" });
+      }
+    }
+
+    window.addEventListener("mousemove", (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      isActive = true;
+      xTo(mouseX + xOffset);
+      yTo(mouseY + yOffset);
+      requestAnimationFrame(updateCursorState);
+    });
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (isActive) requestAnimationFrame(updateCursorState);
+      },
+      { passive: true },
+    );
+
+    window.addEventListener("mousedown", (e: MouseEvent) => {
+      if (e.button === 0) {
+        gsap.to(pointer, { scale: 0.9, duration: 0.4, ease: "power2.out" });
+      }
+    });
+
+    window.addEventListener("mouseup", (e: MouseEvent) => {
+      if (e.button === 0) {
+        gsap.to(pointer, { scale: 1, duration: 0.3, ease: "power2.out" });
+      }
+    });
+
+    window.addEventListener("mouseleave", () => {
+      gsap.to(pointer, { autoAlpha: 0, duration: 0.2, overwrite: "auto" });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initCustomPointer);
+</script>
