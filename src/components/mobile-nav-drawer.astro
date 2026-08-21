@@ -61,7 +61,7 @@ const navItems = [
 
 <script>
   import { gsap, SplitText } from "@/utils/gsap-init";
-  import { isMobileNavOpen } from "@/utils/atoms/nav-store";
+  import { isMobileNavOpen, toggleMobileNav } from "@/utils/atoms/nav-store";
 
   let ctx: gsap.Context;
 
@@ -122,5 +122,6 @@ const navItems = [
 
   document.addEventListener("astro:before-swap", () => {
     ctx && ctx.revert();
+    toggleMobileNav(false);
   });
 </script>
