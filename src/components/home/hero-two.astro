@@ -1,10 +1,11 @@
 ---
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 ---
 
 <section
   id="hero-container"
-  class="relative h-[300vh] bg-neutral-950 text-white"
+  class="relative h-[400vh] bg-neutral-950 text-white"
 >
   <div
     class="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center"
@@ -66,6 +67,19 @@ import { Image } from "astro:assets";
     </div>
 
     <div
+      id="reveal-container"
+      class="absolute inset-0 flex flex-col justify-end items-start z-30 pointer-events-none px-6 md:px-12 pb-24 md:pb-52 max-w-380 w-full"
+    >
+      <p
+        id="split-target"
+        class="opacity-0 translate-y-12 text-2xl md:text-4xl lg:text-7xl font-medium text-left leading-snug text-white drop-shadow-lg"
+      >
+        The journey doesn't end where the road stops. It begins when you decide
+        to keep going.
+      </p>
+    </div>
+
+    <div
       id="hero-mask"
       class="absolute inset-0 w-full h-full z-10 flex items-center justify-center pointer-events-none"
       style="clip-path: inset(0px 0px 0px 0px round 0px);"
@@ -78,34 +92,48 @@ import { Image } from "astro:assets";
           class="w-full h-full object-cover"
         />
 
+        <div class="absolute inset-0 bg-black/40 pointer-events-none"></div>
+
         <div
           id="hero-text"
-          class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 p-6 text-center pointer-events-auto"
+          class="absolute inset-0 flex flex-col justify-between p-8 md:p-12 lg:p-16 pointer-events-auto text-white"
         >
-          <h1
-            class="text-3xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-4"
-          >
-            Born for Adventure.
-          </h1>
-          <p class="text-base sm:text-2xl font-medium text-neutral-200">
-            Built in America.
-          </p>
-          <div
-            class="absolute bottom-10 flex flex-col items-center gap-2 text-xs uppercase tracking-widest text-neutral-300"
-          >
-            <span>Scroll to explore</span>
-            <svg
-              class="w-4 h-4 animate-bounce"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <!-- Minimalist, staggered heading utilizing negative space -->
+          <div class="w-full mt-12 md:mt-20">
+            <h1
+              class="flex flex-col -space-y-4 sm:-space-y-6 md:-space-y-8 lg:-space-y-12 text-5xl sm:text-7xl md:text-9xl lg:text-[10rem] font-light tracking-tighter leading-tight"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-            </svg>
+              <span class="inline-block pb-2">Connecting</span>
+              <span class="inline-block pb-2 ml-[10%] md:ml-[15%]"
+                >Soils To</span
+              >
+              <span class="inline-block ml-[20%] md:ml-[30%]">Solutions.</span>
+            </h1>
+          </div>
+
+          <!-- Bottom section anchoring the corners -->
+          <div class="w-full flex justify-between items-end gap-8 pb-4">
+            <!-- Scroll indicator pushed to bottom-left -->
+            <div
+              class="flex items-center gap-3 text-xs uppercase tracking-widest shrink-0"
+            >
+              <Icon
+                name="heroicons:arrow-long-down-20-solid"
+                class="animate-bounce size-5"
+              />
+              <span class="hidden sm:inline">Scroll</span>
+            </div>
+
+            <!-- Right-aligned paragraph -->
+            <div
+              class="max-w-[280px] md:max-w-sm text-right text-sm md:text-base font-light leading-relaxed"
+            >
+              <p>
+                Forging pathways between natural ecosystems and modern
+                infrastructure. We build enduring frameworks for a sustainable
+                tomorrow.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -114,16 +142,19 @@ import { Image } from "astro:assets";
 </section>
 
 <script>
-  import { gsap } from "@/utils/gsap-init";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-  gsap.registerPlugin(ScrollTrigger);
+  import { gsap, SplitText } from "@/utils/gsap-init";
 
   let ctx: gsap.Context;
 
   function initHeroAnimation() {
     ctx = gsap.context(() => {
       const spacer = document.querySelector("#center-spacer") as HTMLElement;
+      const targetText = document.querySelector("#split-target") as HTMLElement;
+
+      const split = new SplitText(targetText, { type: "words,chars" });
+
+      gsap.set(targetText, { opacity: 0, y: 50 });
+      gsap.set(split.chars, { opacity: 0.25 });
 
       const getDynamicClipPath = () => {
         if (!spacer) return "inset(20% 20% 20% 20% round 24px)";
@@ -162,7 +193,6 @@ import { Image } from "astro:assets";
         },
         0,
       )
-
         .to(
           "#hero-mask",
           {
@@ -172,7 +202,6 @@ import { Image } from "astro:assets";
           },
           0,
         )
-
         .fromTo(
           ".grid-img-left",
           { x: "-200vw", opacity: 0, rotate: -6 },
@@ -198,6 +227,38 @@ import { Image } from "astro:assets";
             ease: "power2.out",
           },
           0.1,
+        );
+
+      tl.to(
+        ".grid-img-left, .grid-img-right, #hero-mask",
+        {
+          y: "-150vh",
+          opacity: 0,
+          stagger: 0.05,
+          duration: 1.2,
+          ease: "power2.inOut",
+        },
+        "+=0.5",
+      )
+        .to(
+          targetText,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+          },
+          "<+=0.5",
+        )
+        .to(
+          split.chars,
+          {
+            opacity: 1,
+            stagger: 0.02,
+            duration: 0.1,
+            ease: "none",
+          },
+          "-=0.2",
         );
     });
   }
