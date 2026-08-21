@@ -1,38 +1,9 @@
 ---
+import { getCollection } from "astro:content";
 import { Icon } from "astro-icon/components";
 
-const faqItems = [
-  {
-    question: "What is your core research process?",
-    answer:
-      "We start by identifying real-world bottlenecks, formulating hypotheses, and validating them through rapid prototyping. Every iteration is backed by quantitative benchmark data and user feedback.",
-  },
-  {
-    question: "How do you handle data privacy and security?",
-    answer:
-      "Security is integrated into every phase of our architecture. We employ end-to-end encryption, strict access controls, and regular independent audits to ensure all research data remains protected.",
-  },
-  {
-    question: "Can we integrate your tools into our existing stack?",
-    answer:
-      "Yes. All of our models and frameworks expose clean, RESTful APIs and SDKs for JavaScript, Python, and Rust, allowing seamless integration with your existing infrastructure.",
-  },
-  {
-    question: "Are your research findings and code open source?",
-    answer:
-      "Whenever possible, we publish our core papers and release non-proprietary utilities under permissive open-source licenses like MIT and Apache 2.0 to support the broader community.",
-  },
-  {
-    question: "What hardware requirements are needed to run your models?",
-    answer:
-      "Our lightweight edge models run on standard consumer hardware, while our high-throughput enterprise systems are optimized for cloud GPU environments (CUDA, WebGPU).",
-  },
-  {
-    question: "How frequently do you push platform updates?",
-    answer:
-      "We operate on a bi-weekly deployment cycle for stable builds, while our experimental research branch receives daily continuous integration updates.",
-  },
-];
+const allFaqs = await getCollection("faqs");
+const faqItems = allFaqs.map((entry) => entry.data);
 ---
 
 <section id="faq" class="w-full mt-16 px-4 overflow-hidden relative">

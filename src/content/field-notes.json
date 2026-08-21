@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "num": "01",
+    "date": "Aug 2026",
+    "title": "Typography in Motion",
+    "desc": "Exploring cubic-bezier curves in kinetic text. Exploring cubic-bezier curves in kinetic text. Exploring cubic-bezier curves in kinetic text. Exploring cubic-bezier curves in kinetic text.",
+    "image": "https://picsum.photos/seed/slide1/600/800",
+    "embedUrl": "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0"
+  },
+  {
+    "id": "2",
+    "num": "02",
+    "date": "Jul 2026",
+    "title": "Grid Systems Unbound",
+    "desc": "Breaking constraints with fluid masonry layouts.",
+    "image": "https://picsum.photos/seed/slide2/600/800",
+    "embedUrl": "https://www.youtube.com/embed/Oextk-If8HQ"
+  },
+  {
+    "id": "3",
+    "num": "03",
+    "date": "Jun 2026",
+    "title": "Spatial Interfaces",
+    "desc": "Preparing 2D web architectures for spatial AR.",
+    "image": "https://picsum.photos/seed/slide3/600/800",
+    "embedUrl": "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0"
+  },
+  {
+    "id": "4",
+    "num": "04",
+    "date": "May 2026",
+    "title": "Return to Texture",
+    "desc": "Subtle grain and tactile digital surfaces.",
+    "image": "https://picsum.photos/seed/slide4/600/800",
+    "embedUrl": "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0"
+  },
+  {
+    "id": "5",
+    "num": "05",
+    "date": "Apr 2026",
+    "title": "Micro-Animations",
+    "desc": "Enhancing user feedback through low-latency state changes.",
+    "image": "https://picsum.photos/seed/slide5/600/800",
+    "embedUrl": "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0"
+  },
+  {
+    "id": "6",
+    "num": "06",
+    "date": "Mar 2026",
+    "title": "System Design 2026",
+    "desc": "Scaling component tokens across multi-brand setups.",
+    "image": "https://picsum.photos/seed/slide6/600/800",
+    "embedUrl": "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0"
+  }
+]

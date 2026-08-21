@@ -1,40 +1,13 @@
 ---
+import { getCollection } from "astro:content";
 import { Icon } from "astro-icon/components";
 
-const openings = [
-  {
-    location: "Ramechhap, Nepal",
-    title: "Agricultural Research Lead",
-    description:
-      "Lead on-ground research initiatives and feasibility studies to advance modern farming techniques and productivity.",
-    tags: ["Full-Time", "Research & Development"],
-    href: "#apply",
-  },
-  {
-    location: "Kathmandu / Field Visits",
-    title: "Value Chain Manager",
-    description:
-      "Scan and select value chain actors to build equitable partnerships, streamline processes, and eliminate intermediaries.",
-    tags: ["Full-Time", "Operations"],
-    href: "#apply",
-  },
-  {
-    location: "Gokulganga, Ramechhap",
-    title: "Rural Development Officer",
-    description:
-      "Empower local farmers and youth through entrepreneurship programs and hands-on technical training.",
-    tags: ["Contract", "Community Outreach"],
-    href: "#apply",
-  },
-  {
-    location: "Ramechhap, Nepal",
-    title: "Field Agronomist",
-    description:
-      "Implement sustainable agricultural practices and provide actionable technical know-how directly to our producers.",
-    tags: ["Full-Time", "Field Operations"],
-    href: "#apply",
-  },
-];
+const openingsEntries = await getCollection("openings");
+
+const openings = openingsEntries.map((entry) => ({
+  ...entry.data,
+  href: `/openings/${entry.id}`,
+}));
 ---
 
 <section class="w-full overflow-hidden px-4 mt-16">
