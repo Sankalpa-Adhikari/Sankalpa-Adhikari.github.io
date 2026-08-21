@@ -10,7 +10,7 @@ const fieldNotesEntries = await getCollection("fieldNotes");
 const slides = fieldNotesEntries.map((entry) => entry.data);
 ---
 
-<section class="w-full overflow-hidden px-4 mt-16">
+<section class="w-full overflow-hidden px-4 mt-16 max-h-200">
   <div class="flex flex-row flex-nowrap items-center justify-between mb-8">
     <div class="space-y-1">
       <h2 class="text-3xl md:text-6xl capitalize tracking-wide">Field Notes</h2>
@@ -238,9 +238,9 @@ const slides = fieldNotesEntries.map((entry) => entry.data);
 
   document.addEventListener("astro:page-load", initFieldNotesCarousel);
 
-  document.addEventListener("astro:before-swap", () => {
-    if (blossomInstance) {
-      blossomInstance.destroy();
-    }
-  });
+  // document.addEventListener("astro:before-swap", () => {
+  //   if (blossomInstance) {
+  //     blossomInstance.destroy();
+  //   }
+  // });
 </script>
