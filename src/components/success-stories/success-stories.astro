@@ -55,28 +55,30 @@ const successStories = [
 ---
 
 <section class="w-full overflow-hidden px-4 mt-16">
-  <div class="mb-8 space-y-2">
-    <h2 class="text-3xl md:text-6xl capitalize tracking-wide">
-      Success Stories
-    </h2>
-    <p
-      class="text-xs md:text-sm text-black/80 max-w-lg normal-case leading-relaxed"
-    >
-      Real-world agricultural impact, empowered farming communities, and
-      sustainable yield growth.
-    </p>
+  <div class="flex flex-row flex-nowrap items-center justify-between mb-8">
+    <div class="space-y-1">
+      <h2 class="text-3xl md:text-6xl capitalize tracking-wide">
+        Success Stories
+      </h2>
+      <p
+        class="text-sm md:text-base text-black/80 lg:max-w-lg normal-case leading-relaxed"
+      >
+        Real-world agricultural impact, empowered farming communities, and
+        sustainable yield growth.
+      </p>
+    </div>
+    <a href="/events" class="capitalize hover:underline text-sm md:text-base">
+      view all (9)
+    </a>
   </div>
   <div class="flex flex-col lg:flex-row items-start gap-8">
     <div class="w-full lg:w-1/3 shrink-0 space-y-8 pr-4">
-      <div class="space-y-3">
-        <h3 class="text-xl md:text-3xl">Cultivating Measurable Growth</h3>
-        <p class="text-xs md:text-sm normal-case text-black/60 leading-relaxed">
-          We collaborate with farmers, cooperatives, and agricultural partners
-          to transition traditional farms into sustainable, high-yielding
-          ecosystems. Explore how precision farming and hands-on training scale
-          rural prosperity.
-        </p>
-      </div>
+      <p class="text-base normal-case text-black/60 leading-relaxed">
+        We collaborate with farmers, cooperatives, and agricultural partners to
+        transition traditional farms into sustainable, high-yielding ecosystems.
+        Explore how precision farming and hands-on training scale rural
+        prosperity.
+      </p>
 
       <div class="grid grid-cols-2 gap-6 border-t border-black/10 pt-6">
         <div class="space-y-1">
@@ -133,7 +135,7 @@ const successStories = [
       </div>
     </div>
 
-    <div class="w-full lg:w-2/3 min-h-[50vh]">
+    <div class="w-full lg:w-2/3">
       <ImageSlider
         images={successStories}
         visibleCount={4}

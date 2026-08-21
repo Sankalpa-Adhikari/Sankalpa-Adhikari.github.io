@@ -76,7 +76,6 @@ const loopImages = hasImages
                 class="gallery-img size-full object-cover"
               />
 
-              {/* Text Overlay: Hidden by default, visible on hover, z-30 ensures it stays above the dim layer */}
               <div class="absolute inset-0 z-30 flex flex-col justify-between p-[1.25em] pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <div class="flex w-full justify-between items-start">
                   <span class="text-white font-mono text-[1em] drop-shadow-md">
@@ -105,7 +104,6 @@ const loopImages = hasImages
                 )}
               </div>
 
-              {/* Hover Overlay */}
               {dimOnHover && (
                 <div class="absolute inset-0 z-20 bg-black/30 opacity-0 transition-opacity duration-300 pointer-events-none group-hover:opacity-100" />
               )}
@@ -202,7 +200,7 @@ const loopImages = hasImages
             width: pct(widths[N - 1]),
             height: pct(heights[N - 1]),
             zIndex: String(10 * (N + 1)),
-            opacity: "0",
+            opacity: "1",
             transform: "translateY(-50%)",
           });
           img.style.transform = "scale(1.5)";
