@@ -120,7 +120,7 @@ const data = eventsEntries.map((entry) => ({
 
   let mm: gsap.MatchMedia;
 
-  function initGallery() {
+  function initEventsAnimation() {
     mm = gsap.matchMedia();
     const items = document.querySelectorAll(".item-wrapper");
 
@@ -331,7 +331,7 @@ const data = eventsEntries.map((entry) => ({
     });
   }
 
-  document.addEventListener("astro:page-load", initGallery);
+  document.addEventListener("astro:page-load", initEventsAnimation);
 
   document.addEventListener("astro:before-swap", () => {
     mm && mm.revert();
