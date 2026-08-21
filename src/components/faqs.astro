@@ -50,7 +50,7 @@ const faqItems = [
       <div class="space-y-2">
         {faqItems.map((faq, index) => (
           <details
-            class="group py-4 [&_summary::-webkit-details-marker]:hidden overflow-hidden opacity-0 translate-y-8 border-t last:border-b border-black/20"
+            class="group py-4 [&_summary::-webkit-details-marker]:hidden overflow-hidden border-t last:border-b border-black/20"
             name="faq-accordion"
           >
             <summary class="faq-summary flex cursor-pointer items-center justify-between gap-4 text-lg md:text-xl font-sans marker:content-none select-none relative z-10">
@@ -87,31 +87,6 @@ const faqItems = [
   function initFAQ() {
     ctx = gsap.context(() => {
       if (typeof window !== "undefined") {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: "#faq-section",
-            start: "top 80%",
-          },
-        });
-
-        tl.to("#faq-section .header-content > *", {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          stagger: 0.1,
-          ease: "power3.out",
-        }).to(
-          "#faq-section details",
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.05,
-            ease: "power2.out",
-          },
-          "-=0.6",
-        );
-
         const detailsElements = document.querySelectorAll(
           "#faq-section details",
         );
