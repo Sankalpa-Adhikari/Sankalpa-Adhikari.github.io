@@ -1,0 +1,219 @@
+---
+import { Icon } from "astro-icon/components";
+
+const faqItems = [
+  {
+    question: "What is your core research process?",
+    answer:
+      "We start by identifying real-world bottlenecks, formulating hypotheses, and validating them through rapid prototyping. Every iteration is backed by quantitative benchmark data and user feedback.",
+  },
+  {
+    question: "How do you handle data privacy and security?",
+    answer:
+      "Security is integrated into every phase of our architecture. We employ end-to-end encryption, strict access controls, and regular independent audits to ensure all research data remains protected.",
+  },
+  {
+    question: "Can we integrate your tools into our existing stack?",
+    answer:
+      "Yes. All of our models and frameworks expose clean, RESTful APIs and SDKs for JavaScript, Python, and Rust, allowing seamless integration with your existing infrastructure.",
+  },
+  {
+    question: "Are your research findings and code open source?",
+    answer:
+      "Whenever possible, we publish our core papers and release non-proprietary utilities under permissive open-source licenses like MIT and Apache 2.0 to support the broader community.",
+  },
+  {
+    question: "What hardware requirements are needed to run your models?",
+    answer:
+      "Our lightweight edge models run on standard consumer hardware, while our high-throughput enterprise systems are optimized for cloud GPU environments (CUDA, WebGPU).",
+  },
+  {
+    question: "How frequently do you push platform updates?",
+    answer:
+      "We operate on a bi-weekly deployment cycle for stable builds, while our experimental research branch receives daily continuous integration updates.",
+  },
+];
+---
+
+<section id="faq-section" class="w-full my-16 px-4 overflow-hidden relative">
+  <div class="header-content mb-8 space-y-2">
+    <h2 class="text-3xl md:text-6xl capitalize tracking-wide">FAQ</h2>
+    <p
+      class="text-xs md:text-sm text-black/80 max-w-md normal-case leading-relaxed"
+    >
+      Insights, experiments, and ongoing thoughts from our research process.
+    </p>
+  </div>
+
+  {
+    faqItems.length > 0 && (
+      <div class="space-y-2">
+        {faqItems.map((faq, index) => (
+          <details
+            class="group py-4 [&_summary::-webkit-details-marker]:hidden overflow-hidden opacity-0 translate-y-8 border-t last:border-b border-black/20"
+            name="faq-accordion"
+          >
+            <summary class="faq-summary flex cursor-pointer items-center justify-between gap-4 text-lg md:text-xl font-sans marker:content-none select-none relative z-10">
+              <span class="question-text transition-colors duration-300">
+                {faq.question}
+              </span>
+
+              <span class="relative flex size-6 shrink-0 items-center justify-center text-black/40 transition-colors duration-300 group-hover:text-black">
+                <div class="icon-container relative size-5">
+                  <Icon
+                    name="heroicons:plus"
+                    class="absolute inset-0 size-5 transition-all duration-300"
+                  />
+                </div>
+              </span>
+            </summary>
+
+            <div class="faq-content-wrapper overflow-hidden h-0 opacity-0">
+              <div class="faq-inner-content font-sans text-black/70 leading-relaxed pt-3 pr-8">
+                {faq.answer}
+              </div>
+            </div>
+          </details>
+        ))}
+      </div>
+    )
+  }
+</section>
+
+<script>
+  import { gsap } from "@/utils/gsap-init";
+  let ctx: gsap.Context | undefined;
+
+  function initFAQ() {
+    ctx = gsap.context(() => {
+      if (typeof window !== "undefined") {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#faq-section",
+            start: "top 80%",
+          },
+        });
+
+        tl.to("#faq-section .header-content > *", {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.1,
+          ease: "power3.out",
+        }).to(
+          "#faq-section details",
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.05,
+            ease: "power2.out",
+          },
+          "-=0.6",
+        );
+
+        const detailsElements = document.querySelectorAll(
+          "#faq-section details",
+        );
+
+        detailsElements.forEach((detail) => {
+          const summary = detail.querySelector("summary");
+          const contentWrapper = detail.querySelector(".faq-content-wrapper");
+          const innerContent = detail.querySelector(".faq-inner-content");
+          const iconContainer = detail.querySelector(".icon-container");
+
+          if (!summary || !contentWrapper || !innerContent || !iconContainer) {
+            return;
+          }
+          summary.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            if (gsap.isTweening(contentWrapper)) return;
+
+            const isOpen = detail.hasAttribute("open");
+
+            if (!isOpen) {
+              detailsElements.forEach((otherDetail) => {
+                if (
+                  otherDetail !== detail &&
+                  otherDetail.hasAttribute("open")
+                ) {
+                  const otherWrapper = otherDetail.querySelector(
+                    ".faq-content-wrapper",
+                  );
+                  const otherIcon =
+                    otherDetail.querySelector(".icon-container");
+
+                  gsap.to(otherWrapper, {
+                    height: 0,
+                    opacity: 0,
+                    duration: 0.4,
+                    ease: "power3.inOut",
+                    onComplete: () => otherDetail.removeAttribute("open"),
+                  });
+                  gsap.to(otherIcon, {
+                    rotation: 0,
+                    duration: 0.4,
+                    ease: "power3.inOut",
+                  });
+                }
+              });
+            }
+
+            if (isOpen) {
+              gsap.to(contentWrapper, {
+                height: 0,
+                opacity: 0,
+                duration: 0.4,
+                ease: "power3.inOut",
+                onComplete: () => detail.removeAttribute("open"),
+              });
+
+              gsap.to(iconContainer, {
+                rotation: 0,
+                duration: 0.4,
+                ease: "power3.inOut",
+              });
+            } else {
+              detail.setAttribute("open", "true");
+
+              gsap.fromTo(
+                contentWrapper,
+                { height: 0, opacity: 1 },
+                {
+                  height: "auto",
+                  opacity: 1,
+                  duration: 0.6,
+                  ease: "expo.out",
+                },
+              );
+
+              gsap.fromTo(
+                innerContent,
+                { y: 20, opacity: 0 },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.5,
+                  delay: 0.1,
+                  ease: "power3.out",
+                },
+              );
+
+              gsap.to(iconContainer, {
+                rotation: 45, // Turns the plus icon into a perfect X
+                duration: 0.4,
+                ease: "back.out(1.7)",
+              });
+            }
+          });
+        });
+      }
+    });
+  }
+  document.addEventListener("astro:page-load", initFAQ);
+
+  document.addEventListener("astro:before-swap", () => {
+    ctx?.revert();
+  });
+</script>
