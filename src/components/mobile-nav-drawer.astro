@@ -30,7 +30,6 @@ const navItems = [
 ];
 ---
 
-<!-- Removed translate-x-12 -->
 <aside
   id="mobile-drawer"
   class="fixed top-24 left-4 right-4 sm:left-auto sm:w-140 bg-background text-foreground overflow-hidden h-[calc(100vh-7rem)] rounded-2xl p-4 invisible opacity-0 pointer-events-none"
@@ -73,7 +72,6 @@ const navItems = [
 
       if (!drawer) return;
 
-      // Set the origin point for the scale animation and initial scale size
       gsap.set(drawer, { transformOrigin: "top right", scale: 0.8 });
 
       navItems.forEach((item) => {
@@ -100,15 +98,15 @@ const navItems = [
         if (isOpen) {
           gsap.to(drawer, {
             autoAlpha: 1,
-            scale: 1, // Scale up to normal size
+            scale: 1,
             pointerEvents: "auto",
             duration: 0.6,
-            ease: "back.inOut(1.2)", // Gives a nice bouncy spring effect
+            ease: "back.inOut(1.2)",
           });
         } else {
           gsap.to(drawer, {
             autoAlpha: 0,
-            scale: 0.8, // Scale down towards the top right
+            scale: 0.8,
             pointerEvents: "none",
             duration: 0.5,
             ease: "back.inOut(1.2)",
