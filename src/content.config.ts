@@ -62,7 +62,33 @@ const successStoriesCollection = defineCollection({
 		subtitle: z.string(),
 	}),
 });
-
+const servicesCollection = defineCollection({
+	loader: file("src/content/services.json"),
+	schema: z.object({
+		index: z.string(),
+		tag: z.string(),
+		title: z.string(),
+		link: z.string(),
+		media: z.array(z.string()),
+		stats: z.array(
+			z.object({
+				label: z.string(),
+				value: z.string(),
+			}),
+		),
+		highlights: z.array(z.string()),
+	}),
+});
+const teamCollection = defineCollection({
+	loader: file("src/content/team.json"),
+	schema: z.object({
+		firstName: z.string(),
+		lastName: z.string(),
+		role: z.string(),
+		tag: z.string(),
+		src: z.string(),
+	}),
+});
 export const collections = {
 	faqs: faqsCollection,
 	fieldNotes: fieldNotesCollection,
@@ -70,4 +96,6 @@ export const collections = {
 	events: eventsCollection,
 	openings: openingsCollection,
 	"success-stories": successStoriesCollection,
+	services: servicesCollection,
+	team: teamCollection,
 };

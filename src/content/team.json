@@ -1,0 +1,66 @@
+[
+  {
+    "id": "1",
+    "firstName": "Julien",
+    "lastName": "Sister",
+    "role": "Creative Director",
+    "tag": "Co-Founder",
+    "src": "https://picsum.photos/id/1027/600/1000"
+  },
+  {
+    "id": "2",
+    "firstName": "Sarah",
+    "lastName": "Connor",
+    "role": "Lead Architect",
+    "tag": "Partner",
+    "src": "https://picsum.photos/id/64/600/1000"
+  },
+  {
+    "id": "3",
+    "firstName": "Marcus",
+    "lastName": "Vance",
+    "role": "Art Director",
+    "tag": "Senior",
+    "src": "https://picsum.photos/id/91/600/1000"
+  },
+  {
+    "id": "4",
+    "firstName": "Elena",
+    "lastName": "Rostova",
+    "role": "Head of Design",
+    "tag": "Partner",
+    "src": "https://picsum.photos/id/177/600/1000"
+  },
+  {
+    "id": "5",
+    "firstName": "David",
+    "lastName": "Kim",
+    "role": "Technical Director",
+    "tag": "Co-Founder",
+    "src": "https://picsum.photos/id/338/600/1000"
+  },
+  {
+    "id": "6",
+    "firstName": "Amara",
+    "lastName": "Diop",
+    "role": "Brand Strategist",
+    "tag": "Senior",
+    "src": "https://picsum.photos/id/342/600/1000"
+  },
+  {
+    "id": "7",
+    "firstName": "Liam",
+    "lastName": "O'Connor",
+    "role": "Motion Designer",
+    "tag": "Associate",
+    "src": "https://picsum.photos/id/334/600/1000"
+  },
+  {
+    "id": "8",
+    "firstName": "Sofia",
+    "lastName": "Chen",
+    "role": "Executive Producer",
+    "tag": "Managing Partner",
+    "src": "https://picsum.photos/id/433/600/1000"
+  }
+]

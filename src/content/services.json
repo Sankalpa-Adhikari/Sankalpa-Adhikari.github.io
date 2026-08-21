@@ -1,0 +1,130 @@
+[
+  {
+    "id": "storage",
+    "index": "01",
+    "tag": "Storage",
+    "title": "State-of-the-art cold storage and warehousing for preserving harvest quality",
+    "link": "/services/storage",
+    "media": [
+      "https://picsum.photos/seed/farm/1920/1080",
+      "https://picsum.photos/seed/farm2/400/300"
+    ],
+    "stats": [
+      { "label": "Capacity", "value": "25,000 MT" },
+      { "label": "Temp Control", "value": "-20°C to +4°C" }
+    ],
+    "highlights": ["Atmosphere Control", "24/7 IoT Monitoring"]
+  },
+  {
+    "id": "agri-input",
+    "index": "02",
+    "tag": "Agri Input",
+    "title": "Premium seeds, fertilizers, and equipment for optimal crop yields",
+    "link": "/services/agri-input",
+    "media": [
+      "https://picsum.photos/seed/dd/1920/1080",
+      "https://picsum.photos/seed/dd2/400/300"
+    ],
+    "stats": [
+      { "label": "Yield Boost", "value": "+35% Avg" },
+      { "label": "Purity", "value": "99.8%" }
+    ],
+    "highlights": ["Non-GMO Certified", "Custom Soil Blends"]
+  },
+  {
+    "id": "product-trade",
+    "index": "03",
+    "tag": "Trade",
+    "title": "Reliable trading, distribution, and market access for agricultural goods",
+    "link": "/services/trade",
+    "media": [
+      "https://picsum.photos/seed/architecture/1920/1080",
+      "https://picsum.photos/seed/arch2/400/300"
+    ],
+    "stats": [
+      { "label": "Global Reach", "value": "15+ Countries" },
+      { "label": "Annual Volume", "value": "100K+ Tons" }
+    ],
+    "highlights": ["Direct Producer Link", "Fair Price Guarantee"]
+  },
+  {
+    "id": "consulting",
+    "index": "04",
+    "tag": "Consulting",
+    "title": "Expert guidance, planning, and strategies for modern farming practices",
+    "link": "/services/consulting",
+    "media": [
+      "https://picsum.photos/seed/coastal/1920/1080",
+      "https://picsum.photos/seed/coastal2/400/300"
+    ],
+    "stats": [
+      { "label": "Farms Advised", "value": "1,200+" },
+      { "label": "ROI Growth", "value": "2.4x Target" }
+    ],
+    "highlights": ["Drone Soil Mapping", "Precision Agronomy"]
+  },
+  {
+    "id": "homestay",
+    "index": "05",
+    "tag": "Homestay",
+    "title": "Authentic rural experiences and welcoming accommodations in natural settings",
+    "link": "/services/homestay",
+    "media": [
+      "https://picsum.photos/seed/heritage/1920/1080",
+      "https://picsum.photos/seed/heritage2/400/300"
+    ],
+    "stats": [
+      { "label": "Guest Rating", "value": "4.9/5.0" },
+      { "label": "Villas", "value": "12 Units" }
+    ],
+    "highlights": ["Farm-to-Table Dining", "Guided Eco Trails"]
+  },
+  {
+    "id": "nursery",
+    "index": "06",
+    "tag": "Nursery",
+    "title": "High-quality saplings, plants, and botanical resources for diverse landscapes",
+    "link": "/services/nursery",
+    "media": [
+      "https://picsum.photos/seed/farm/1920/1080",
+      "https://picsum.photos/seed/plant2/400/300"
+    ],
+    "stats": [
+      { "label": "Varieties", "value": "350+ Species" },
+      { "label": "Survival Rate", "value": "98.5%" }
+    ],
+    "highlights": ["Disease-Free Culture", "Acclimatized Stock"]
+  },
+  {
+    "id": "kiwi-farm",
+    "index": "07",
+    "tag": "Kiwi Farm",
+    "title": "Sustainable cultivation and harvesting of premium organic kiwi fruits",
+    "link": "/services/kiwi",
+    "media": [
+      "https://picsum.photos/seed/dd/1920/1080",
+      "https://picsum.photos/seed/kiwi2/400/300"
+    ],
+    "stats": [
+      { "label": "Hectares", "value": "120 Acres" },
+      { "label": "Grade", "value": "A+ Export" }
+    ],
+    "highlights": ["100% Organic", "Hand-Picked Harvest"]
+  },
+  {
+    "id": "potato-farm",
+    "index": "08",
+    "tag": "Potato Farm",
+    "title": "Large-scale production and management of high-yield commercial potato crops",
+    "link": "/services/potato",
+    "media": [
+      "https://picsum.photos/seed/architecture/1920/1080",
+      "https://picsum.photos/seed/spud2/400/300"
+    ],
+    "stats": [
+      { "label": "Annual Yield", "value": "18,000 MT" },
+      { "label": "Seed Grade", "value": "G3 Certified" }
+    ],
+    "highlights": ["Mechanized Sorting", "Drip Irrigated"]
+  }
+]
