@@ -1,0 +1,64 @@
+---
+import { getCollection, render } from "astro:content";
+import BlogLayout from "@/layout/BlogLayout.astro";
+
+export async function getStaticPaths() {
+  const openingsEntries = await getCollection("openings");
+
+  return openingsEntries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BlogLayout
+  data={{
+    title: `${entry.data.title} | Careers`,
+    description: entry.data.description,
+  }}
+>
+  <section class="mx-auto px-4 pt-24 w-full">
+    <div class="typeset typeset-docs max-w-6xl">
+      <a
+        href="/openings"
+        class="inline-flex items-center text-sm font-medium text-black/70 hover:text-black transition-colors border-b border-transparent hover:border-black pb-0.5 mb-8"
+      >
+        &larr; Back to all openings
+      </a>
+
+      <header class="space-y-4">
+        <span
+          class="inline-flex items-center text-sm font-medium text-black/60 uppercase tracking-wider"
+        >
+          {entry.data.location}
+        </span>
+
+        <h1 class="text-4xl md:text-5xl lg:text-6xl tracking-wide capitalize">
+          {entry.data.title}
+        </h1>
+
+        <div class="flex flex-wrap items-center gap-2 pt-2">
+          {
+            entry.data.tags.map((tag) => (
+              <span class="font-mono inline-flex items-center rounded-full bg-primary/40 border border-primary/30 px-3 py-1 text-xs font-medium text-black whitespace-nowrap">
+                {tag}
+              </span>
+            ))
+          }
+        </div>
+      </header>
+    </div>
+
+    <hr class="border-t border-black/20 mb-12" />
+
+    <article
+      class="prose prose-stone lg:prose-lg max-w-none text-black/80 prose-headings:text-black prose-headings:font-medium prose-a:text-black prose-a:border-b-black/30 hover:prose-a:border-b-black"
+    >
+      <Content />
+    </article>
+  </section>
+</BlogLayout>

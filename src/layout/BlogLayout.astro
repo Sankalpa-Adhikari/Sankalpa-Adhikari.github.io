@@ -1,0 +1,10 @@
+---
+import PageLayout from "./PageLayout.astro";
+
+const { data } = Astro.props;
+const { title, description = "" } = data;
+---
+
+<PageLayout title={title} description={description}>
+  <slot />
+</PageLayout>
