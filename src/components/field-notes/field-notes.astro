@@ -6,222 +6,295 @@ import { Icon } from "astro-icon/components";
 import FieldNotesDialog from "@/components/field-notes/field-notes-dialog.astro";
 
 const fieldNotesEntries = await getCollection("fieldNotes");
-
 const slides = fieldNotesEntries.map((entry) => entry.data);
 ---
 
-<section class="w-full overflow-hidden px-4 mt-16">
-  <div class="flex flex-row flex-nowrap items-center justify-between mb-8">
-    <div class="space-y-1">
-      <h2 class="text-3xl md:text-6xl capitalize tracking-wide">Field Notes</h2>
-      <p
-        class="text-sm md:text-base text-black/80 lg:max-w-lg normal-case leading-relaxed"
-      >
-        Insights, experiments, and ongoing thoughts from our research process.
-      </p>
-    </div>
-    <a href="/events" class="capitalize hover:underline text-sm md:text-base">
-      view all (9)
-    </a>
-  </div>
-
-  <div
-    data-cursor="pointer"
-    data-cursor-drag
-    data-cursor-text="Drag"
-    id="field-notes-carousel"
-    class="grid auto-cols-[260px] md:auto-cols-[calc((100%_-_1.5rem)/2)] lg:auto-cols-[calc((100%_-_4.5rem)/4)] snap-x snap-mandatory grid-flow-col gap-3 w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] py-2"
-  >
-    {
-      slides.map((slide, index) => (
-        <article
-          data-blossom-slide
-          data-index={index}
-          data-title={slide.title}
-          data-date={slide.date}
-          data-desc={slide.desc}
-          data-embed={slide.embedUrl}
-          class="w-full snap-start group relative flex flex-col gap-4"
+<field-notes-carousel>
+  <section class="w-full overflow-hidden px-4 mt-16">
+    <div class="flex flex-row flex-nowrap items-center justify-between mb-8">
+      <div class="space-y-1">
+        <h2 class="text-3xl md:text-6xl capitalize tracking-wide">
+          Field Notes
+        </h2>
+        <p
+          class="text-sm md:text-base text-black/80 lg:max-w-lg normal-case leading-relaxed"
         >
-          <div class="relative w-full aspect-4/5 overflow-hidden rounded-md bg-background/5 transition-transform duration-500 ease-out group-hover:scale-[0.97]">
-            <Image
-              inferSize
-              referrerpolicy="no-referrer"
-              src={slide.image}
-              alt={slide.title}
-              class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              loading="lazy"
-            />
-
-            <div class="absolute bottom-4 left-4 flex size-8 items-center justify-center rounded-full bg-background/40 text-white transition-colors duration-300 group-hover:bg-primary group-hover:text-black z-10 shadow-sm">
-              <Icon name="heroicons:play-solid" class="size-4 ml-1" />
-            </div>
-          </div>
-
-          <div class="flex flex-col gap-2 px-1">
-            <div class="flex justify-between items-start uppercase tracking-widest text-xs">
-              <span class="text-black/50 font-mono">{slide.num}</span>
-              <span class="text-black/50 font-mono">{slide.date}</span>
-            </div>
-
-            <div class="space-y-1">
-              <h3 class="text-xl uppercase tracking-wide font-medium  leading-snug truncate">
-                {slide.title}
-              </h3>
-              <p class="text-xs text-black/60 normal-case leading-relaxed line-clamp-2">
-                {slide.desc}
-              </p>
-            </div>
-          </div>
-        </article>
-      ))
-    }
-  </div>
-
-  <div class="mt-8 flex items-center gap-6">
-    <div class="flex items-center gap-2">
-      <button
-        id="carousel-prev"
-        aria-label="Previous slide"
-        class="flex size-10 items-center justify-center rounded-full border border-foreground/20 transition-colors hover:bg-background hover:text-foreground disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-      >
-        <Icon name="heroicons:chevron-left" class="size-5" />
-      </button>
-      <button
-        id="carousel-next"
-        aria-label="Next slide"
-        class="flex size-10 items-center justify-center rounded-full border border-foreground/20 transition-colors hover:bg-background hover:text-foreground disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-      >
-        <Icon name="heroicons:chevron-right" class="size-5" />
-      </button>
+          Insights, experiments, and ongoing thoughts from our research process.
+        </p>
+      </div>
+      <a href="/events" class="capitalize hover:underline text-sm md:text-base">
+        view all (9)
+      </a>
     </div>
 
-    <div id="carousel-dots" class="flex items-center gap-2">
+    <div
+      data-cursor="pointer"
+      data-cursor-drag
+      data-cursor-text="Drag"
+      class="carousel-container grid auto-cols-[260px] md:auto-cols-[calc((100%_-_1.5rem)/2)] lg:auto-cols-[calc((100%_-_4.5rem)/4)] snap-x snap-mandatory grid-flow-col gap-3 w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] py-2"
+    >
       {
-        slides.map((_, index) => (
-          <button
-            data-dot={index}
-            aria-label={`Go to slide ${index + 1}`}
-            class="dot-btn h-1.5 rounded-full bg-background/20 transition-all duration-300 w-3 hover:bg-background/50 cursor-pointer"
-          />
+        slides.map((slide, index) => (
+          <article
+            data-blossom-slide
+            data-index={index}
+            data-title={slide.title}
+            data-date={slide.date}
+            data-desc={slide.desc}
+            data-embed={slide.embedUrl}
+            class="w-full min-h-0 min-w-0 snap-start group relative flex flex-col gap-4 cursor-pointer"
+          >
+            <div class="relative w-full aspect-4/5 overflow-hidden rounded-md bg-background/5 transition-transform duration-500 ease-out group-hover:scale-[0.97]">
+              <Image
+                inferSize
+                referrerpolicy="no-referrer"
+                src={slide.image}
+                alt={slide.title}
+                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                loading="lazy"
+              />
+
+              <div class="absolute bottom-4 left-4 flex size-8 items-center justify-center rounded-full bg-background/40 text-white transition-colors duration-300 group-hover:bg-primary group-hover:text-black z-10 shadow-sm">
+                <Icon name="heroicons:play-solid" class="size-4 ml-1" />
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2 px-1">
+              <div class="flex justify-between items-start uppercase tracking-widest text-xs">
+                <span class="text-black/50 font-mono">{slide.num}</span>
+                <span class="text-black/50 font-mono">{slide.date}</span>
+              </div>
+
+              <div class="space-y-1">
+                <h3 class="text-xl uppercase tracking-wide font-medium leading-snug truncate">
+                  {slide.title}
+                </h3>
+                <p class="text-xs text-black/60 normal-case leading-relaxed line-clamp-2">
+                  {slide.desc}
+                </p>
+              </div>
+            </div>
+          </article>
         ))
       }
     </div>
-  </div>
 
-  <FieldNotesDialog />
-</section>
+    <div class="mt-8 flex items-center gap-6">
+      <div class="flex items-center gap-2">
+        <button
+          class="carousel-prev flex size-10 items-center justify-center rounded-full border border-foreground/20 transition-colors hover:bg-background hover:text-foreground disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+          aria-label="Previous slide"
+        >
+          <Icon name="heroicons:chevron-left" class="size-5" />
+        </button>
+        <button
+          class="carousel-next flex size-10 items-center justify-center rounded-full border border-foreground/20 transition-colors hover:bg-background hover:text-foreground disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+          aria-label="Next slide"
+        >
+          <Icon name="heroicons:chevron-right" class="size-5" />
+        </button>
+      </div>
+
+      <div class="carousel-dots flex items-center gap-2">
+        {
+          slides.map((_, index) => (
+            <button
+              data-dot={index}
+              aria-label={`Go to slide ${index + 1}`}
+              class="dot-btn h-1.5 rounded-full bg-background/20 transition-all duration-300 w-3 hover:bg-background/50 cursor-pointer"
+            />
+          ))
+        }
+      </div>
+    </div>
+
+    <FieldNotesDialog />
+  </section>
+</field-notes-carousel>
 
 <script>
   import { Blossom } from "@blossom-carousel/core";
 
-  let blossomInstance: any;
+  class FieldNotesCarousel extends HTMLElement {
+    private carouselEl: HTMLElement | null = null;
+    private prevBtn: HTMLButtonElement | null = null;
+    private nextBtn: HTMLButtonElement | null = null;
+    private dots: NodeListOf<HTMLButtonElement> | null = null;
+    private slides: NodeListOf<HTMLElement> | null = null;
 
-  function initFieldNotesCarousel() {
-    const carouselEl = document.querySelector(
-      "#field-notes-carousel",
-    ) as HTMLElement;
-    const prevBtn = document.querySelector(
-      "#carousel-prev",
-    ) as HTMLButtonElement;
-    const nextBtn = document.querySelector(
-      "#carousel-next",
-    ) as HTMLButtonElement;
-    const dots = document.querySelectorAll("#carousel-dots [data-dot]");
+    private dialogEl: HTMLElement | null = null;
+    private dialogIframe: HTMLIFrameElement | null = null;
+    private dialogTitle: HTMLElement | null = null;
+    private dialogDate: HTMLElement | null = null;
+    private dialogDesc: HTMLElement | null = null;
+    private dialogClose: HTMLButtonElement | null = null;
+    private dialogBackdrop: HTMLElement | null = null;
 
-    const dialogEl = document.querySelector(
-      "#field-notes-dialog",
-    ) as HTMLElement;
-    const dialogIframe = document.querySelector(
-      "#dialog-iframe",
-    ) as HTMLIFrameElement;
-    const dialogTitle = document.querySelector("#dialog-title") as HTMLElement;
-    const dialogDate = document.querySelector("#dialog-date") as HTMLElement;
-    const dialogDesc = document.querySelector("#dialog-desc") as HTMLElement;
-    const dialogClose = document.querySelector(
-      "#dialog-close",
-    ) as HTMLButtonElement;
-    const dialogBackdrop = document.querySelector(
-      "#dialog-backdrop",
-    ) as HTMLElement;
+    private blossomInstance: any = null;
 
-    if (!carouselEl) return;
+    constructor() {
+      super();
+      this.handleKeydown = this.handleKeydown.bind(this);
+      this.handleScroll = this.handleScroll.bind(this);
+      this.handlePrev = this.handlePrev.bind(this);
+      this.handleNext = this.handleNext.bind(this);
+      this.closeDialog = this.closeDialog.bind(this);
+      this.handleDotClick = this.handleDotClick.bind(this);
+      this.handleSlideClick = this.handleSlideClick.bind(this);
+    }
 
-    blossomInstance = Blossom(carouselEl, {});
-    blossomInstance.init();
+    connectedCallback() {
+      this.carouselEl = this.querySelector<HTMLElement>(".carousel-container");
+      this.prevBtn = this.querySelector<HTMLButtonElement>(".carousel-prev");
+      this.nextBtn = this.querySelector<HTMLButtonElement>(".carousel-next");
+      this.dots = this.querySelectorAll<HTMLButtonElement>(
+        ".carousel-dots [data-dot]",
+      );
+      this.slides = this.querySelectorAll<HTMLElement>("[data-blossom-slide]");
 
-    function getSlideWidth() {
-      const firstSlide = carouselEl.querySelector(
+      this.dialogEl = this.querySelector<HTMLElement>("#field-notes-dialog");
+      this.dialogIframe =
+        this.querySelector<HTMLIFrameElement>("#dialog-iframe");
+      this.dialogTitle = this.querySelector<HTMLElement>("#dialog-title");
+      this.dialogDate = this.querySelector<HTMLElement>("#dialog-date");
+      this.dialogDesc = this.querySelector<HTMLElement>("#dialog-desc");
+      this.dialogClose = this.querySelector<HTMLButtonElement>("#dialog-close");
+      this.dialogBackdrop = this.querySelector<HTMLElement>("#dialog-backdrop");
+
+      if (!this.carouselEl) return;
+
+      this.dialogClose?.addEventListener("click", this.closeDialog);
+      this.dialogBackdrop?.addEventListener("click", this.closeDialog);
+      window.addEventListener("keydown", this.handleKeydown);
+      const carousel = this.carouselEl;
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (!this.isConnected) return;
+
+          this.blossomInstance = Blossom(carousel, {});
+          this.blossomInstance.init();
+
+          this.slides?.forEach((slide) =>
+            slide.addEventListener("click", this.handleSlideClick),
+          );
+
+          this.prevBtn?.addEventListener("click", this.handlePrev);
+          this.nextBtn?.addEventListener("click", this.handleNext);
+
+          this.dots?.forEach((dot) =>
+            dot.addEventListener("click", this.handleDotClick),
+          );
+
+          this.carouselEl?.addEventListener("scroll", this.handleScroll, {
+            passive: true,
+          });
+
+          this.updateActiveState();
+        });
+      });
+    }
+
+    disconnectedCallback() {
+      if (this.blossomInstance) {
+        this.blossomInstance.destroy();
+      }
+
+      this.slides?.forEach((slide) =>
+        slide.removeEventListener("click", this.handleSlideClick),
+      );
+      this.dialogClose?.removeEventListener("click", this.closeDialog);
+      this.dialogBackdrop?.removeEventListener("click", this.closeDialog);
+      window.removeEventListener("keydown", this.handleKeydown);
+
+      this.prevBtn?.removeEventListener("click", this.handlePrev);
+      this.nextBtn?.removeEventListener("click", this.handleNext);
+
+      this.dots?.forEach((dot) =>
+        dot.removeEventListener("click", this.handleDotClick),
+      );
+      this.carouselEl?.removeEventListener("scroll", this.handleScroll);
+    }
+
+    getSlideWidth(): number {
+      const firstSlide = this.querySelector<HTMLElement>(
         "[data-blossom-slide]",
-      ) as HTMLElement;
+      );
       return firstSlide ? firstSlide.offsetWidth + 24 : 300;
     }
 
-    function openDialog(slide: HTMLElement) {
+    handleSlideClick(e: MouseEvent) {
+      const slide = e.currentTarget as HTMLElement;
       const { title, date, desc, embed } = slide.dataset;
 
-      if (dialogIframe) dialogIframe.src = embed || "";
-      if (dialogTitle) dialogTitle.textContent = title || "";
-      if (dialogDate) dialogDate.textContent = date || "";
-      if (dialogDesc) dialogDesc.textContent = desc || "";
+      if (this.dialogIframe) this.dialogIframe.src = embed || "";
+      if (this.dialogTitle) this.dialogTitle.textContent = title || "";
+      if (this.dialogDate) this.dialogDate.textContent = date || "";
+      if (this.dialogDesc) this.dialogDesc.textContent = desc || "";
 
-      dialogEl?.classList.remove("hidden");
-      dialogEl?.classList.add("flex");
+      this.dialogEl?.classList.remove("hidden");
+      this.dialogEl?.classList.add("flex");
       document.body.style.overflow = "hidden";
     }
 
-    function closeDialog() {
-      dialogEl?.classList.add("hidden");
-      dialogEl?.classList.remove("flex");
-      if (dialogIframe) dialogIframe.src = "";
+    closeDialog() {
+      this.dialogEl?.classList.add("hidden");
+      this.dialogEl?.classList.remove("flex");
+      if (this.dialogIframe) this.dialogIframe.src = "";
       document.body.style.overflow = "";
     }
 
-    const slides = carouselEl.querySelectorAll("[data-blossom-slide]");
-    slides.forEach((slide) => {
-      slide.addEventListener("click", () => openDialog(slide as HTMLElement));
-    });
-
-    dialogClose?.addEventListener("click", closeDialog);
-    dialogBackdrop?.addEventListener("click", closeDialog);
-
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !dialogEl?.classList.contains("hidden")) {
-        closeDialog();
+    handleKeydown(e: KeyboardEvent) {
+      if (e.key === "Escape" && !this.dialogEl?.classList.contains("hidden")) {
+        this.closeDialog();
       }
-    });
+    }
 
-    prevBtn?.addEventListener("click", () => {
-      carouselEl.scrollBy({ left: -getSlideWidth(), behavior: "smooth" });
-    });
-
-    nextBtn?.addEventListener("click", () => {
-      carouselEl.scrollBy({ left: getSlideWidth(), behavior: "smooth" });
-    });
-
-    dots.forEach((dot) => {
-      dot.addEventListener("click", (e) => {
-        const targetIndex = Number(
-          (e.currentTarget as HTMLElement).dataset.dot,
-        );
-        const targetSlide = carouselEl.querySelector(
-          `[data-index="${targetIndex}"]`,
-        ) as HTMLElement;
-        if (targetSlide) {
-          carouselEl.scrollTo({
-            left: targetSlide.offsetLeft - carouselEl.offsetLeft,
-            behavior: "smooth",
-          });
-        }
+    handlePrev() {
+      if (!this.carouselEl) return;
+      this.carouselEl.scrollBy({
+        left: -this.getSlideWidth(),
+        behavior: "smooth",
       });
-    });
+    }
 
-    function updateActiveState() {
-      const scrollLeft = carouselEl.scrollLeft;
-      const slideWidth = getSlideWidth();
+    handleNext() {
+      if (!this.carouselEl) return;
+      this.carouselEl.scrollBy({
+        left: this.getSlideWidth(),
+        behavior: "smooth",
+      });
+    }
+
+    handleDotClick(e: MouseEvent) {
+      if (!this.carouselEl) return;
+
+      const target = e.currentTarget as HTMLButtonElement;
+      const targetIndex = Number(target.dataset.dot);
+      const targetSlide = this.querySelector<HTMLElement>(
+        `[data-index="${targetIndex}"]`,
+      );
+
+      if (targetSlide) {
+        this.carouselEl.scrollTo({
+          left: targetSlide.offsetLeft - this.carouselEl.offsetLeft,
+          behavior: "smooth",
+        });
+      }
+    }
+
+    handleScroll() {
+      this.updateActiveState();
+    }
+
+    updateActiveState() {
+      if (!this.carouselEl || !this.dots) return;
+
+      const scrollLeft = this.carouselEl.scrollLeft;
+      const slideWidth = this.getSlideWidth();
       const activeIndex = Math.round(scrollLeft / slideWidth);
 
-      dots.forEach((dot, idx) => {
+      this.dots.forEach((dot, idx) => {
         if (idx === activeIndex) {
           dot.classList.add("w-8", "bg-background");
           dot.classList.remove("w-3", "bg-background/20");
@@ -231,16 +304,7 @@ const slides = fieldNotesEntries.map((entry) => entry.data);
         }
       });
     }
-
-    carouselEl.addEventListener("scroll", updateActiveState, { passive: true });
-    updateActiveState();
   }
 
-  document.addEventListener("astro:page-load", initFieldNotesCarousel);
-
-  document.addEventListener("astro:before-swap", () => {
-    if (blossomInstance) {
-      blossomInstance.destroy();
-    }
-  });
+  customElements.define("field-notes-carousel", FieldNotesCarousel);
 </script>
