@@ -24,7 +24,10 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
       <Image src={Logo} alt="Logo" class="h-4 w-auto object-contain sm:h-5" />
     </a>
 
-    <div id="nav-links-container" class="overflow-hidden whitespace-nowrap">
+    <div
+      id="nav-links-container"
+      class="hidden sm:overflow-hidden sm:block whitespace-nowrap"
+    >
       <div class="group flex items-center gap-8 px-4">
         <a
           href="/#about"
@@ -97,7 +100,7 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
 
       <div
         id="menu-btn-container"
-        class="flex w-0 shrink-0 justify-end overflow-hidden opacity-0"
+        class="flex w-12 shrink-0 justify-end overflow-hidden sm:w-0 sm:opacity-0"
       >
         <div class="sm:pl-2">
           <button
@@ -224,14 +227,6 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
         tl.to(linksContainer, { width: 0, opacity: 0 }, 0)
           .to([menuContainer], { width: 48, opacity: 1 }, 0)
           .to(navBg, { width: targetBgWidth }, 0);
-      });
-
-      mm.add("(max-width: 768px)", () => {
-        gsap.set(linksContainer, { display: "none" });
-        gsap.set([menuContainer], { width: 48, opacity: 1 });
-
-        const mobileTargetWidth = rightContainer.getBoundingClientRect().width;
-        gsap.set(navBg, { width: mobileTargetWidth });
       });
 
       return () => unsubscribe();
