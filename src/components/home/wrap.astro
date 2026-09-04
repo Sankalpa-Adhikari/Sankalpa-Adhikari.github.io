@@ -72,10 +72,10 @@ const data = [
       data.map((item, index) => (
         <li
           data-event="click"
-          class="flex flex-col gap-4 cursor-pointer lg:flex-1"
+          class="flex flex-col gap-4 lg:cursor-pointer lg:flex-1"
         >
           <div
-            class={`top-wrap flex flex-col rounded-2xl ${item.bgColor} ${item.textColor} px-6 lg:px-[clamp(clamp(24px,0.938vw,18px),2.083vw,40px)] py-[35px]`}
+            class={`top-wrap flex flex-col rounded-2xl ${item.bgColor} ${item.textColor} px-6 lg:px-[clamp(clamp(24px,0.938vw,18px),2.083vw,40px)] py-8.75 h-full lg:h-auto`}
           >
             <div class="header-wrap flex items-center gap-3">
               <span class="number inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-current p-5 text-2xl">
@@ -87,7 +87,7 @@ const data = [
               </span>
             </div>
 
-            <div class="list-wrap h-0 overflow-hidden opacity-0">
+            <div class="list-wrap h-0 overflow-hidden opacity-0 lg:opacity-0">
               <ul class="flex flex-col pt-5">
                 {item.items.map((listItem) => (
                   <li class="border-b border-current/30 py-1 text-base lg:text-lg capitalize last:border-b-0">
@@ -98,7 +98,7 @@ const data = [
             </div>
           </div>
 
-          <div class="image-wrap grow overflow-hidden max-h-full min-h-[250px] lg:min-h-0">
+          <div class="image-wrap hidden lg:block grow overflow-hidden max-h-full min-h-62.5 lg:min-h-0">
             <Image
               src={item.imageUrl}
               alt={item.imageAlt}
@@ -121,68 +121,114 @@ const data = [
     'section.expandable-highlights ul.expandable-highlights-wrap > li[data-event="click"]',
   );
 
-  items.forEach((item) => {
-    const listWrap = item.querySelector(".list-wrap");
+  let mm = gsap.matchMedia();
 
-    if (item.classList.contains("open")) {
-      gsap.set(listWrap, { height: "auto", opacity: 1 });
-    } else {
-      gsap.set(listWrap, { height: 0, opacity: 0 });
-    }
-  });
+  mm.add("(min-width: 1024px)", () => {
+    items.forEach((item) => {
+      const listWrap = item.querySelector(".list-wrap");
+      if (item.classList.contains("open")) {
+        gsap.set(listWrap, { height: "auto", opacity: 1 });
+      } else {
+        gsap.set(listWrap, { height: 0, opacity: 0 });
+      }
+    });
 
-  function switchAccordion(targetItem: Element) {
-    if (targetItem.classList.contains("open")) return;
+    function switchAccordion(e: Event) {
+      const targetItem = e.currentTarget as HTMLElement;
+      if (targetItem.classList.contains("open")) return;
 
-    const currentOpenItem = document.querySelector(
-      "section.expandable-highlights ul.expandable-highlights-wrap > li.open",
-    );
+      const currentOpenItem = document.querySelector(
+        "section.expandable-highlights ul.expandable-highlights-wrap > li.open",
+      );
 
-    if (currentOpenItem) {
-      currentOpenItem.classList.remove("open");
+      if (currentOpenItem) {
+        currentOpenItem.classList.remove("open");
 
-      gsap.to(currentOpenItem.querySelector(".list-wrap"), {
-        height: 0,
-        opacity: 0,
-        duration: 0.5,
-        ease: "power2.inOut",
+        gsap.to(currentOpenItem.querySelector(".list-wrap"), {
+          height: 0,
+          opacity: 0,
+          duration: 0.5,
+          ease: "power2.inOut",
+          overwrite: "auto",
+        });
+
+        gsap.to(currentOpenItem.querySelector(".header-wrap .number"), {
+          backgroundColor: "transparent",
+          color: "currentColor",
+          duration: 0.4,
+        });
+      }
+
+      targetItem.classList.add("open");
+
+      gsap.to(targetItem.querySelector(".list-wrap"), {
+        height: "auto",
+        opacity: 1,
+        duration: 0.6,
+        ease: "power3.out",
         overwrite: "auto",
       });
 
-      gsap.to(currentOpenItem.querySelector(".header-wrap .number"), {
-        backgroundColor: "transparent",
-        color: "currentColor",
-        duration: 0.4,
-      });
+      const topWrap = targetItem.querySelector(".top-wrap");
+
+      if (topWrap) {
+        const computedStyle = getComputedStyle(topWrap);
+        const parentBgColor = computedStyle.backgroundColor;
+        const parentTextColor = computedStyle.color;
+
+        gsap.to(targetItem.querySelector(".header-wrap .number"), {
+          backgroundColor: parentTextColor,
+          color: parentBgColor,
+          duration: 0.4,
+        });
+      }
     }
 
-    targetItem.classList.add("open");
-
-    gsap.to(targetItem.querySelector(".list-wrap"), {
-      height: "auto",
-      opacity: 1,
-      duration: 0.6,
-      ease: "power3.out",
-      overwrite: "auto",
+    items.forEach((item) => {
+      item.addEventListener("click", switchAccordion);
+      item.addEventListener("mouseenter", switchAccordion);
     });
 
-    const topWrap = targetItem.querySelector(".top-wrap");
-
-    if (topWrap) {
-      const computedStyle = getComputedStyle(topWrap);
-      const parentBgColor = computedStyle.backgroundColor;
-      const parentTextColor = computedStyle.color;
-
-      gsap.to(targetItem.querySelector(".header-wrap .number"), {
-        backgroundColor: parentTextColor,
-        color: parentBgColor,
-        duration: 0.4,
+    return () => {
+      items.forEach((item) => {
+        item.removeEventListener("click", switchAccordion);
+        item.removeEventListener("mouseenter", switchAccordion);
+        item.classList.remove("open");
+        gsap.set(item.querySelector(".list-wrap"), { clearProps: "all" });
+        gsap.set(item.querySelector(".header-wrap .number"), {
+          clearProps: "all",
+        });
       });
-    }
-  }
+    };
+  });
 
-  items.forEach((item) => {
-    item.addEventListener("click", () => switchAccordion(item));
-    item.addEventListener("mouseenter", () => switchAccordion(item));
+  mm.add("(max-width: 1023px)", () => {
+    items.forEach((item) => {
+      gsap.set(item.querySelector(".list-wrap"), {
+        height: "auto",
+        opacity: 1,
+      });
+
+      const topWrap = item.querySelector(".top-wrap");
+      if (topWrap) {
+        const computedStyle = getComputedStyle(topWrap);
+        const parentBgColor = computedStyle.backgroundColor;
+        const parentTextColor = computedStyle.color;
+
+        gsap.set(item.querySelector(".header-wrap .number"), {
+          backgroundColor: parentTextColor,
+          color: parentBgColor,
+        });
+      }
+    });
+
+    return () => {
+      items.forEach((item) => {
+        gsap.set(item.querySelector(".list-wrap"), { clearProps: "all" });
+        gsap.set(item.querySelector(".header-wrap .number"), {
+          clearProps: "all",
+        });
+      });
+    };
   });
 </script>
