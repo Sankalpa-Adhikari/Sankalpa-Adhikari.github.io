@@ -61,7 +61,7 @@ const sortedCollections = [...collections].sort((a, b) =>
     {
       sortedCollections.map((item, i) => (
         <div
-          class="absolute inset-0 flex h-full w-full items-center justify-center overflow-hidden will-change-[clip-path]"
+          class="absolute inset-0 flex h-full w-full items-center justify-center overflow-hidden"
           data-collection-item
           style={{ zIndex: i + 1 }}
         >
@@ -71,7 +71,8 @@ const sortedCollections = [...collections].sort((a, b) =>
               alt={item.title}
               width={1920}
               height={1080}
-              class="h-full w-full object-cover will-change-transform"
+              decoding="async"
+              class="h-full w-full object-cover"
               data-media-inner
             />
             <div class="absolute inset-0 bg-black/50" />
@@ -170,6 +171,7 @@ const sortedCollections = [...collections].sort((a, b) =>
                 <Image
                   src={item.metricsImage}
                   alt={`${item.tag} gallery`}
+                  decoding="async"
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -189,6 +191,8 @@ const sortedCollections = [...collections].sort((a, b) =>
 <script>
   import { gsap, ScrollTrigger } from "@/utils/gsap-init";
 
+  gsap.config({ force3D: true });
+
   let ctx: gsap.Context | undefined;
 
   function initPinnedCollections() {
@@ -207,9 +211,35 @@ const sortedCollections = [...collections].sort((a, b) =>
 
     if (!pinWrapper || items.length < 2) return;
 
+    const mediaInners = items.map((item) =>
+      item.querySelector<HTMLElement>("[data-media-inner]"),
+    );
+
+    let lastActiveIndex = -1;
+
+    function updateActiveLayers(progress: number): void {
+      const totalSteps = Math.max(items.length - 1, 1);
+      const activeIndex = Math.min(
+        items.length - 1,
+        Math.round(progress * totalSteps),
+      );
+
+      if (activeIndex === lastActiveIndex) return;
+      lastActiveIndex = activeIndex;
+
+      items.forEach((item, i) => {
+        const isNear = Math.abs(i - activeIndex) <= 1;
+        item.style.visibility = isNear ? "visible" : "hidden";
+        item.style.willChange = isNear ? "clip-path" : "auto";
+
+        const media = mediaInners[i];
+        if (media) media.style.willChange = isNear ? "transform" : "auto";
+      });
+    }
+
     ctx = gsap.context(() => {
       items.forEach((item, i) => {
-        const mediaInner = item.querySelector("[data-media-inner]");
+        const mediaInner = mediaInners[i];
 
         if (i === 0) {
           gsap.set(item, { clipPath: "inset(0% 0% 0% 0%)" });
@@ -219,6 +249,8 @@ const sortedCollections = [...collections].sort((a, b) =>
           if (mediaInner) gsap.set(mediaInner, { scale: 1.15, yPercent: 8 });
         }
       });
+
+      updateActiveLayers(0);
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -230,13 +262,14 @@ const sortedCollections = [...collections].sort((a, b) =>
           anticipatePin: 1,
           scrub: 0.5,
           refreshPriority: 1,
+          onUpdate: (self) => updateActiveLayers(self.progress),
         },
       });
 
       items.forEach((item, i) => {
         if (i === 0) return;
 
-        const mediaInner = item.querySelector("[data-media-inner]");
+        const mediaInner = mediaInners[i];
 
         const positionOffset = i === 1 ? undefined : "-=0.25";
 
@@ -249,7 +282,13 @@ const sortedCollections = [...collections].sort((a, b) =>
         if (mediaInner) {
           tl.to(
             mediaInner,
-            { scale: 1, yPercent: 0, duration: 1, ease: "none" },
+            {
+              scale: 1,
+              yPercent: 0,
+              duration: 1,
+              ease: "none",
+              force3D: true,
+            },
             "<",
           );
         }
