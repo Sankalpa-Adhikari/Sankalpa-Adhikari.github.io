@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
+import type { ImageMetadata } from "astro";
 import { Icon } from "astro-icon/components";
 
 interface Stat {
@@ -14,7 +15,8 @@ interface CollectionItem {
   tag: string;
   title: string;
   link: string;
-  media: string[];
+  media: ImageMetadata[];
+  metricsImage: ImageMetadata;
   stats: Stat[];
   highlights: string[];
 }
@@ -25,13 +27,19 @@ interface Props {
 
 const servicesEntries = await getCollection("services");
 
-// Map entries down to plain objects including the id
 const defaultCollections: CollectionItem[] = servicesEntries.map((entry) => ({
   id: entry.id,
   ...entry.data,
 }));
 
 const { collections = defaultCollections } = Astro.props;
+
+const sortedCollections = [...collections].sort((a, b) =>
+  a.index.localeCompare(b.index, undefined, {
+    numeric: true,
+    sensitivity: "base",
+  }),
+);
 ---
 
 <section
@@ -51,7 +59,7 @@ const { collections = defaultCollections } = Astro.props;
     </div>
 
     {
-      collections.map((item, i) => (
+      sortedCollections.map((item, i) => (
         <div
           class="absolute inset-0 flex h-full w-full items-center justify-center overflow-hidden will-change-[clip-path]"
           data-collection-item
@@ -75,7 +83,7 @@ const { collections = defaultCollections } = Astro.props;
                 {item.index}
               </span>
               <span class="absolute top-3 left-0 whitespace-nowrap text-xs md:text-sm tracking-widest text-white uppercase">
-                Saptabhumi
+                blueberrylabs
               </span>
             </div>
 
@@ -126,7 +134,6 @@ const { collections = defaultCollections } = Astro.props;
               </span>
             </div>
 
-            {/* Metrics Grid */}
             <div class="grid grid-cols-2 gap-3 py-3" data-card-item>
               {item.stats.map((stat) => (
                 <div class="rounded-lg bg-white/5 p-2.5 border border-white/5">
@@ -140,7 +147,6 @@ const { collections = defaultCollections } = Astro.props;
               ))}
             </div>
 
-            {/* Highlights List */}
             <div
               class="space-y-1.5 border-t border-white/10 pt-3"
               data-card-item
@@ -156,14 +162,13 @@ const { collections = defaultCollections } = Astro.props;
               ))}
             </div>
 
-            {/* Secondary Media Preview Thumbnail */}
-            {item.media[1] && (
+            {item.metricsImage && (
               <div
                 class="mt-3 overflow-hidden rounded-lg border border-white/10 h-16 relative group cursor-pointer"
                 data-card-item
               >
-                <img
-                  src={item.media[1]}
+                <Image
+                  src={item.metricsImage}
                   alt={`${item.tag} gallery`}
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />

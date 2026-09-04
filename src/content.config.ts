@@ -12,14 +12,15 @@ const faqsCollection = defineCollection({
 
 const fieldNotesCollection = defineCollection({
 	loader: file("src/content/field-notes.json"),
-	schema: z.object({
-		num: z.string(),
-		date: z.string(),
-		title: z.string(),
-		desc: z.string(),
-		image: z.string(),
-		embedUrl: z.string(),
-	}),
+	schema: ({ image }) =>
+		z.object({
+			num: z.string(),
+			date: z.string(),
+			title: z.string(),
+			desc: z.string(),
+			image: image(),
+			embedUrl: z.string(),
+		}),
 });
 
 const publicationsCollection = defineCollection({
@@ -55,29 +56,32 @@ const openingsCollection = defineCollection({
 
 const successStoriesCollection = defineCollection({
 	loader: glob({ pattern: "**/*.md", base: "./src/content/success-stories" }),
-	schema: z.object({
-		src: z.string(),
-		date: z.string(),
-		title: z.string(),
-		subtitle: z.string(),
-	}),
+	schema: ({ image }) =>
+		z.object({
+			src: image(),
+			date: z.string(),
+			title: z.string(),
+			subtitle: z.string(),
+		}),
 });
 const servicesCollection = defineCollection({
 	loader: file("src/content/services.json"),
-	schema: z.object({
-		index: z.string(),
-		tag: z.string(),
-		title: z.string(),
-		link: z.string(),
-		media: z.array(z.string()),
-		stats: z.array(
-			z.object({
-				label: z.string(),
-				value: z.string(),
-			}),
-		),
-		highlights: z.array(z.string()),
-	}),
+	schema: ({ image }) =>
+		z.object({
+			index: z.string(),
+			tag: z.string(),
+			title: z.string(),
+			link: z.string(),
+			media: z.array(image()),
+			metricsImage: image(),
+			stats: z.array(
+				z.object({
+					label: z.string(),
+					value: z.string(),
+				}),
+			),
+			highlights: z.array(z.string()),
+		}),
 });
 const teamCollection = defineCollection({
 	loader: file("src/content/team.json"),

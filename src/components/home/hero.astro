@@ -1,6 +1,11 @@
 ---
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
+import img176 from "@/assets/images/hero/176-800x600.jpg";
+import img263 from "@/assets/images/hero/263-800x600.jpg";
+import img347 from "@/assets/images/hero/347-1920x1080.jpg";
+import img525 from "@/assets/images/hero/525-800x600.jpg";
+import img860 from "@/assets/images/hero/860-800x600.jpg";
 ---
 
 <section
@@ -18,7 +23,7 @@ import { Icon } from "astro-icon/components";
           class="grid-img-left opacity-0 overflow-hidden rounded-xl md:rounded-2xl shadow-2xl h-24 sm:h-40 md:h-56 border border-white/10 pointer-events-auto"
         >
           <Image
-            src="https://picsum.photos/seed/architecture/800/600"
+            src={img860}
             inferSize
             alt="Agricultural Research"
             class="w-full h-full object-cover"
@@ -28,7 +33,7 @@ import { Icon } from "astro-icon/components";
           class="grid-img-left opacity-0 overflow-hidden rounded-xl md:rounded-2xl shadow-2xl h-24 sm:h-40 md:h-56 border border-white/10 pointer-events-auto"
         >
           <Image
-            src="https://picsum.photos/seed/roadtrip/800/600"
+            src={img176}
             inferSize
             alt="Local Farmers"
             class="w-full h-full object-cover"
@@ -47,7 +52,7 @@ import { Icon } from "astro-icon/components";
           class="grid-img-right opacity-0 overflow-hidden rounded-xl md:rounded-2xl shadow-2xl h-20 sm:h-32 md:h-44 border border-white/10 pointer-events-auto"
         >
           <Image
-            src="https://picsum.photos/seed/coastal/800/600"
+            src={img263}
             inferSize
             alt="Crop Innovation"
             class="w-full h-full object-cover"
@@ -57,7 +62,7 @@ import { Icon } from "astro-icon/components";
           class="grid-img-right opacity-0 overflow-hidden rounded-xl md:rounded-2xl shadow-2xl h-20 sm:h-32 md:h-44 border border-white/10 pointer-events-auto"
         >
           <Image
-            src="https://picsum.photos/seed/forest/800/600"
+            src={img525}
             inferSize
             alt="Sustainable Practices"
             class="w-full h-full object-cover"
@@ -86,7 +91,7 @@ import { Icon } from "astro-icon/components";
     >
       <div class="relative w-full h-full flex items-center justify-center">
         <Image
-          src="https://picsum.photos/seed/nature/1920/1080"
+          src={img347}
           inferSize
           alt="Main Hero Image"
           class="w-full h-full object-cover"
@@ -125,8 +130,8 @@ import { Icon } from "astro-icon/components";
               class="max-w-[280px] md:max-w-sm text-right text-sm md:text-base font-light leading-relaxed"
             >
               <p>
-                Saptabhume Agro & Research Centre anchors research, technology,
-                and equity into Nepalese farming communities.
+                Blueberry Labs anchors research, technology, and equity into
+                Nepalese farming communities.
               </p>
             </div>
           </div>
