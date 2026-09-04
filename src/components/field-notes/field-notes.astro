@@ -31,7 +31,7 @@ const slides = fieldNotesEntries.map((entry) => entry.data);
       data-cursor="pointer"
       data-cursor-drag
       data-cursor-text="Drag"
-      class="carousel-container grid auto-cols-[260px] md:auto-cols-[calc((100%_-_1.5rem)/2)] lg:auto-cols-[calc((100%_-_4.5rem)/4)] snap-x snap-mandatory grid-flow-col gap-3 w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] py-2"
+      class="carousel-container select-none grid auto-cols-[260px] md:auto-cols-[calc((100%_-_1.5rem)/2)] lg:auto-cols-[calc((100%_-_4.5rem)/4)] snap-x snap-mandatory grid-flow-col gap-3 w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] py-2"
     >
       {
         slides.map((slide, index) => (
@@ -42,7 +42,7 @@ const slides = fieldNotesEntries.map((entry) => entry.data);
             data-date={slide.date}
             data-desc={slide.desc}
             data-embed={slide.embedUrl}
-            class="w-full min-h-0 min-w-0 snap-start group relative flex flex-col gap-4 cursor-pointer"
+            class="w-full min-h-0 min-w-0 snap-start group relative flex flex-col gap-4 cursor-pointer select-none"
           >
             <div class="relative w-full aspect-4/5 overflow-hidden rounded-md bg-background/5 transition-transform duration-500 ease-out group-hover:scale-[0.97]">
               <Image
@@ -50,16 +50,17 @@ const slides = fieldNotesEntries.map((entry) => entry.data);
                 referrerpolicy="no-referrer"
                 src={slide.image}
                 alt={slide.title}
-                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                draggable="false"
+                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none select-none"
                 loading="lazy"
               />
 
-              <div class="absolute bottom-4 left-4 flex size-8 items-center justify-center rounded-full bg-background/40 text-white transition-colors duration-300 group-hover:bg-primary group-hover:text-black z-10 shadow-sm">
+              <div class="absolute bottom-4 left-4 flex size-8 items-center justify-center rounded-full bg-background/40 text-white transition-colors duration-300 group-hover:bg-primary group-hover:text-black z-10 shadow-sm pointer-events-none">
                 <Icon name="heroicons:play-solid" class="size-4 ml-1" />
               </div>
             </div>
 
-            <div class="flex flex-col gap-2 px-1">
+            <div class="flex flex-col gap-2 px-1 pointer-events-none">
               <div class="flex justify-between items-start uppercase tracking-widest text-xs">
                 <span class="text-black/50 font-mono">{slide.num}</span>
                 <span class="text-black/50 font-mono">{slide.date}</span>
@@ -113,8 +114,6 @@ const slides = fieldNotesEntries.map((entry) => entry.data);
 </field-notes-carousel>
 
 <script>
-  import { Blossom } from "@blossom-carousel/core";
-
   class FieldNotesCarousel extends HTMLElement {
     private carouselEl: HTMLElement | null = null;
     private prevBtn: HTMLButtonElement | null = null;
@@ -130,7 +129,10 @@ const slides = fieldNotesEntries.map((entry) => entry.data);
     private dialogClose: HTMLButtonElement | null = null;
     private dialogBackdrop: HTMLElement | null = null;
 
-    private blossomInstance: any = null;
+    private isDown = false;
+    private startX = 0;
+    private startScrollLeft = 0;
+    private hasDragged = false;
 
     constructor() {
       super();
@@ -141,6 +143,11 @@ const slides = fieldNotesEntries.map((entry) => entry.data);
       this.closeDialog = this.closeDialog.bind(this);
       this.handleDotClick = this.handleDotClick.bind(this);
       this.handleSlideClick = this.handleSlideClick.bind(this);
+
+      this.handleMouseDown = this.handleMouseDown.bind(this);
+      this.handleMouseLeave = this.handleMouseLeave.bind(this);
+      this.handleMouseUp = this.handleMouseUp.bind(this);
+      this.handleMouseMove = this.handleMouseMove.bind(this);
     }
 
     connectedCallback() {
@@ -166,64 +173,104 @@ const slides = fieldNotesEntries.map((entry) => entry.data);
       this.dialogClose?.addEventListener("click", this.closeDialog);
       this.dialogBackdrop?.addEventListener("click", this.closeDialog);
       window.addEventListener("keydown", this.handleKeydown);
-      const carousel = this.carouselEl;
 
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          if (!this.isConnected) return;
-
-          this.blossomInstance = Blossom(carousel, {});
-          this.blossomInstance.init();
-
-          this.slides?.forEach((slide) =>
-            slide.addEventListener("click", this.handleSlideClick),
-          );
-
-          this.prevBtn?.addEventListener("click", this.handlePrev);
-          this.nextBtn?.addEventListener("click", this.handleNext);
-
-          this.dots?.forEach((dot) =>
-            dot.addEventListener("click", this.handleDotClick),
-          );
-
-          this.carouselEl?.addEventListener("scroll", this.handleScroll, {
-            passive: true,
-          });
-
-          this.updateActiveState();
-        });
+      this.slides?.forEach((slide) =>
+        slide.addEventListener("click", this.handleSlideClick),
+      );
+      this.prevBtn?.addEventListener("click", this.handlePrev);
+      this.nextBtn?.addEventListener("click", this.handleNext);
+      this.dots?.forEach((dot) =>
+        dot.addEventListener("click", this.handleDotClick),
+      );
+      this.carouselEl.addEventListener("scroll", this.handleScroll, {
+        passive: true,
       });
+
+      this.carouselEl.addEventListener("mousedown", this.handleMouseDown);
+      this.carouselEl.addEventListener("mouseleave", this.handleMouseLeave);
+      this.carouselEl.addEventListener("mouseup", this.handleMouseUp);
+      this.carouselEl.addEventListener("mousemove", this.handleMouseMove);
+
+      this.updateActiveState();
     }
 
     disconnectedCallback() {
-      if (this.blossomInstance) {
-        this.blossomInstance.destroy();
-      }
-
-      this.slides?.forEach((slide) =>
-        slide.removeEventListener("click", this.handleSlideClick),
-      );
       this.dialogClose?.removeEventListener("click", this.closeDialog);
       this.dialogBackdrop?.removeEventListener("click", this.closeDialog);
       window.removeEventListener("keydown", this.handleKeydown);
 
+      this.slides?.forEach((slide) =>
+        slide.removeEventListener("click", this.handleSlideClick),
+      );
       this.prevBtn?.removeEventListener("click", this.handlePrev);
       this.nextBtn?.removeEventListener("click", this.handleNext);
-
       this.dots?.forEach((dot) =>
         dot.removeEventListener("click", this.handleDotClick),
       );
       this.carouselEl?.removeEventListener("scroll", this.handleScroll);
+
+      this.carouselEl?.removeEventListener("mousedown", this.handleMouseDown);
+      this.carouselEl?.removeEventListener("mouseleave", this.handleMouseLeave);
+      this.carouselEl?.removeEventListener("mouseup", this.handleMouseUp);
+      this.carouselEl?.removeEventListener("mousemove", this.handleMouseMove);
+    }
+
+    handleMouseDown(e: MouseEvent) {
+      if (!this.carouselEl) return;
+      this.isDown = true;
+      this.hasDragged = false;
+      this.carouselEl.classList.add("cursor-grabbing");
+      this.carouselEl.classList.remove("snap-x", "snap-mandatory");
+      this.startX = e.pageX - this.carouselEl.offsetLeft;
+
+      this.startScrollLeft = this.carouselEl.scrollLeft;
+    }
+
+    handleMouseLeave() {
+      if (!this.isDown) return;
+      this.isDown = false;
+      this.carouselEl?.classList.remove("cursor-grabbing");
+      this.carouselEl?.classList.add("snap-x", "snap-mandatory");
+    }
+
+    handleMouseUp() {
+      if (!this.isDown) return;
+      this.isDown = false;
+      this.carouselEl?.classList.remove("cursor-grabbing");
+      this.carouselEl?.classList.add("snap-x", "snap-mandatory");
+    }
+
+    handleMouseMove(e: MouseEvent) {
+      if (!this.isDown || !this.carouselEl) return;
+
+      const x = e.pageX - this.carouselEl.offsetLeft;
+      const distance = Math.abs(x - this.startX);
+
+      if (distance > 5) {
+        this.hasDragged = true;
+      }
+
+      if (this.hasDragged) {
+        e.preventDefault();
+        const walk = (x - this.startX) * 1.5;
+
+        this.carouselEl.scrollLeft = this.startScrollLeft - walk;
+      }
     }
 
     getSlideWidth(): number {
       const firstSlide = this.querySelector<HTMLElement>(
         "[data-blossom-slide]",
       );
-      return firstSlide ? firstSlide.offsetWidth + 24 : 300;
+      return firstSlide ? firstSlide.offsetWidth + 12 : 300;
     }
 
     handleSlideClick(e: MouseEvent) {
+      if (this.hasDragged) {
+        this.hasDragged = false;
+        return;
+      }
+
       const slide = e.currentTarget as HTMLElement;
       const { title, date, desc, embed } = slide.dataset;
 
@@ -268,7 +315,6 @@ const slides = fieldNotesEntries.map((entry) => entry.data);
 
     handleDotClick(e: MouseEvent) {
       if (!this.carouselEl) return;
-
       const target = e.currentTarget as HTMLButtonElement;
       const targetIndex = Number(target.dataset.dot);
       const targetSlide = this.querySelector<HTMLElement>(
