@@ -3,17 +3,17 @@
     "id": "1",
     "num": "01",
     "date": "Aug 2026",
-    "title": "Typography in Motion",
-    "desc": "Exploring cubic-bezier curves in kinetic text. Exploring cubic-bezier curves in kinetic text. Exploring cubic-bezier curves in kinetic text. Exploring cubic-bezier curves in kinetic text.",
+    "title": "Field Testing Edge AI Vision",
+    "desc": "Benchmarking our lightweight object detection model under direct sunlight. Spotting early leaf rust spores with zero cloud latency.",
     "image": "../assets/images/field-notes/384-600x800.jpg",
-    "embedUrl": "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0"
+    "embedUrl": "https://www.youtube.com/embed/Oextk-If8HQ"
   },
   {
     "id": "2",
     "num": "02",
     "date": "Jul 2026",
-    "title": "Grid Systems Unbound",
-    "desc": "Breaking constraints with fluid masonry layouts.",
+    "title": "Sub-Meter Canopy Mapping",
+    "desc": "Fusing satellite imagery with low-altitude drone multispectral scans to flag hidden drip-irrigation leaks before stress shows.",
     "image": "../assets/images/field-notes/1063-600x800.jpg",
     "embedUrl": "https://www.youtube.com/embed/Oextk-If8HQ"
   },
@@ -21,36 +21,36 @@
     "id": "3",
     "num": "03",
     "date": "Jun 2026",
-    "title": "Spatial Interfaces",
-    "desc": "Preparing 2D web architectures for spatial AR.",
+    "title": "Targeted Robotic Weeding",
+    "desc": "Testing our vision-guided nozzle array at 10 mph—pinpoint herbicide micro-dosing that bypasses crops completely.",
     "image": "../assets/images/field-notes/38-600x800.jpg",
-    "embedUrl": "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0"
+    "embedUrl": "https://www.youtube.com/embed/Oextk-If8HQ"
   },
   {
     "id": "4",
     "num": "04",
     "date": "May 2026",
-    "title": "Return to Texture",
-    "desc": "Subtle grain and tactile digital surfaces.",
+    "title": "3D LiDAR Canopy Reconstruction",
+    "desc": "Building automated digital twins of trial plots to track daily growth rates and leaf surface metrics for plant breeders.",
     "image": "../assets/images/field-notes/449-600x800.jpg",
-    "embedUrl": "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0"
+    "embedUrl": "https://www.youtube.com/embed/Oextk-If8HQ"
   },
   {
     "id": "5",
     "num": "05",
     "date": "Apr 2026",
-    "title": "Micro-Animations",
-    "desc": "Enhancing user feedback through low-latency state changes.",
+    "title": "Automating Smart Valve Control",
+    "desc": "Connecting subterranean moisture arrays directly to solenoid valves to stop over-watering and cut runoff by 35%.",
     "image": "../assets/images/field-notes/244-600x800.jpg",
-    "embedUrl": "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0"
+    "embedUrl": "https://www.youtube.com/embed/Oextk-If8HQ"
   },
   {
     "id": "6",
     "num": "06",
     "date": "Mar 2026",
-    "title": "System Design 2026",
-    "desc": "Scaling component tokens across multi-brand setups.",
+    "title": "Tractor-to-Cloud Telemetry",
+    "desc": "Interfacing mixed-fleet ISOBUS feeds directly into our GIS pipeline for real-time fuel efficiency and yield rate heatmaps.",
     "image": "../assets/images/field-notes/558-600x800.jpg",
-    "embedUrl": "https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3096609200528894%2F&show_text=false&width=267&t=0"
+    "embedUrl": "https://www.youtube.com/embed/Oextk-If8HQ"
   }
 ]

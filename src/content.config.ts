@@ -54,8 +54,8 @@ const openingsCollection = defineCollection({
 	}),
 });
 
-const successStoriesCollection = defineCollection({
-	loader: glob({ pattern: "**/*.md", base: "./src/content/success-stories" }),
+const caseStudiesCollection = defineCollection({
+	loader: glob({ pattern: "**/*.md", base: "./src/content/case-studies" }),
 	schema: ({ image }) =>
 		z.object({
 			src: image(),
@@ -99,7 +99,7 @@ export const collections = {
 	publications: publicationsCollection,
 	events: eventsCollection,
 	openings: openingsCollection,
-	"success-stories": successStoriesCollection,
+	"case-studies": caseStudiesCollection,
 	services: servicesCollection,
 	team: teamCollection,
 };

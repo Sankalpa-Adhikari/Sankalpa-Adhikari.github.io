@@ -3,9 +3,9 @@ import { getCollection } from "astro:content";
 import { Icon } from "astro-icon/components";
 import ImageSlider from "./image-slider.astro";
 
-const successStoriesEntries = await getCollection("success-stories");
+const caseStudiesEntries = await getCollection("case-studies");
 
-const successStories = successStoriesEntries.map((entry) => ({
+const caseStudies = caseStudiesEntries.map((entry) => ({
   ...entry.data,
   href: `/case-studies/${entry.id}`,
 }));
@@ -15,77 +15,77 @@ const successStories = successStoriesEntries.map((entry) => ({
   <div class="flex flex-row flex-nowrap items-center justify-between mb-8">
     <div class="space-y-1">
       <h2 class="text-3xl md:text-6xl capitalize tracking-wide">
-        Success Stories
+        Case Studies
       </h2>
       <p
         class="text-sm md:text-base text-black/80 lg:max-w-lg normal-case leading-relaxed"
       >
-        Real-world agricultural impact, empowered farming communities, and
-        sustainable yield growth.
+        Documenting nationwide AgTech adoption, field-level technology
+        implementations, and real-world performance benchmarks.
       </p>
     </div>
     <a
-      href="/success-stories"
+      href="/case-studies"
       class="capitalize hover:underline text-sm md:text-base"
     >
-      view all ({successStories.length})
+      view all ({caseStudies.length})
     </a>
   </div>
   <div class="flex flex-col lg:flex-row items-start gap-8">
     <div class="w-full lg:w-1/3 shrink-0 space-y-8 pr-4">
       <p class="text-base normal-case text-black/60 leading-relaxed">
-        We collaborate with farmers, cooperatives, and agricultural partners to
-        transition traditional farms into sustainable, high-yielding ecosystems.
-        Explore how precision farming and hands-on training scale rural
-        prosperity.
+        Our research lab tracks and analyzes modern agricultural technology
+        deployments across the country. Explore detailed case studies evaluating
+        how farms and agricultural enterprises are implementing computer vision,
+        GIS analytics, and farm mechanization.
       </p>
 
       <div class="grid grid-cols-2 gap-6 border-t border-black/10 pt-6">
         <div class="space-y-1">
           <p class="text-2xl md:text-4xl font-mono font-medium tracking-tight">
-            50K+
+            150+
           </p>
           <p
             class="text-[10px] md:text-xs text-black/60 uppercase tracking-widest font-mono"
           >
-            Farmers Reached
+            Studies Documented
           </p>
         </div>
         <div class="space-y-1">
           <p class="text-2xl md:text-4xl font-mono font-medium tracking-tight">
-            1,200+
+            45+
           </p>
           <p
             class="text-[10px] md:text-xs text-black/60 uppercase tracking-widest font-mono"
           >
-            Trainings Provided
+            Technologies Analyzed
           </p>
         </div>
         <div class="space-y-1">
           <p class="text-2xl md:text-4xl font-mono font-medium tracking-tight">
-            120K
+            12
           </p>
           <p
             class="text-[10px] md:text-xs text-black/60 uppercase tracking-widest font-mono"
           >
-            Acres Farmed
+            Crop Sectors Covered
           </p>
         </div>
         <div class="space-y-1">
           <p class="text-2xl md:text-4xl font-mono font-medium tracking-tight">
-            $35M+
+            National
           </p>
           <p
             class="text-[10px] md:text-xs text-black/60 uppercase tracking-widest font-mono"
           >
-            Farmer Revenue
+            Field Reach
           </p>
         </div>
         <a
-          href="#stories"
+          href="/case-studies"
           class="group inline-flex items-center gap-3 rounded-full bg-primary py-1.5 pl-5 pr-1.5 text-base text-black w-fit col-span-2"
         >
-          <span>View Stories</span>
+          <span>Explore All Studies</span>
           <span
             class="flex size-8 items-center justify-center rounded-full bg-white text-black"
           >
@@ -97,7 +97,7 @@ const successStories = successStoriesEntries.map((entry) => ({
 
     <div class="w-full lg:w-2/3">
       <ImageSlider
-        images={successStories}
+        images={caseStudies}
         visibleCount={4}
         spanFraction={1}
         dimOnHover

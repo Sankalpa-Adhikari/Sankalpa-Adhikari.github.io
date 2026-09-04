@@ -4,9 +4,9 @@ import { Icon } from "astro-icon/components";
 import BlogLayout from "@/layout/BlogLayout.astro";
 
 export async function getStaticPaths() {
-  const openingsEntries = await getCollection("openings");
+  const caseStudiesEntries = await getCollection("case-studies");
 
-  return openingsEntries.map((entry) => ({
+  return caseStudiesEntries.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
   }));
@@ -18,39 +18,26 @@ const { Content } = await render(entry);
 
 <BlogLayout
   data={{
-    title: `${entry.data.title} | Careers`,
-    description: entry.data.description,
+    title: `${entry.data.title} | Case Studies`,
+    description: entry.data.subtitle,
   }}
 >
   <section class="mx-auto px-4 pt-24 w-full">
     <a
-      href="/careers"
+      href="/case-studies"
       class="inline-flex items-center text-sm font-medium text-black/70 hover:text-black transition-colors border-b border-transparent hover:border-black pb-0.5 mb-4 gap-2"
     >
       <Icon name={"heroicons:arrow-left-circle-solid"} />
-      <span> View all openings </span>
+      <span> View all case-studies </span>
     </a>
     <div class="typeset typeset-docs">
       <header class="space-y-2 pb-4">
-        <span
-          class="inline-flex items-center text-sm font-medium text-black/60 uppercase tracking-wider"
-        >
-          {entry.data.location}
-        </span>
-
         <h1 class="text-4xl md:text-5xl lg:text-6xl tracking-wide capitalize">
           {entry.data.title}
         </h1>
-
-        <div class="flex flex-wrap items-center gap-2 pt-2">
-          {
-            entry.data.tags.map((tag) => (
-              <span class="font-mono inline-flex items-center rounded-full bg-primary/40 border border-primary/30 px-3 py-1 text-xs font-medium text-black whitespace-nowrap">
-                {tag}
-              </span>
-            ))
-          }
-        </div>
+        <h3 class="text-black/60">
+          {entry.data.subtitle}
+        </h3>
       </header>
     </div>
 

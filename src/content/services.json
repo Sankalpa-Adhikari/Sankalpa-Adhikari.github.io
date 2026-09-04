@@ -1,70 +1,66 @@
 [
   {
-    "id": "storage",
+    "id": "computer-vision",
     "index": "01",
-    "tag": "Storage",
-    "title": "State-of-the-art cold storage and warehousing for preserving harvest quality",
-    "link": "/services/storage",
+    "tag": "Computer Vision",
+    "title": "AI-powered optical inspection, real-time crop disease detection, and autonomous yield estimation",
+    "link": "/services/computer-vision",
     "media": [
       "../assets/images/services/28-1920x1080.jpg"
-      
     ],
-    "metricsImage":"../assets/images/services/101-400x300.jpg",
+    "metricsImage": "../assets/images/services/101-400x300.jpg",
     "stats": [
-      { "label": "Capacity", "value": "25,000 MT" },
-      { "label": "Temp Control", "value": "-20°C to +4°C" }
+      { "label": "Model Accuracy", "value": "98.5%" },
+      { "label": "Inference Latency", "value": "<20ms" }
     ],
-    "highlights": ["Atmosphere Control", "24/7 IoT Monitoring"]
+    "highlights": ["Edge AI Cameras", "Multi-Crop Disease Detection"]
   },
   {
-    "id": "agri-input",
+    "id": "gis-spatial",
     "index": "02",
-    "tag": "Agri Input",
-    "title": "Premium seeds, fertilizers, and equipment for optimal crop yields",
-    "link": "/services/agri-input",
+    "tag": "GIS & Telemetry",
+    "title": "Multispectral satellite analytics, geospatial soil profiling, and precision zoning services",
+    "link": "/services/gis-spatial",
     "media": [
       "../assets/images/services/75-1920x1080.jpg"
-    
     ],
-    "metricsImage":  "../assets/images/services/1055-400x300.jpg",
+    "metricsImage": "../assets/images/services/1055-400x300.jpg",
     "stats": [
-      { "label": "Yield Boost", "value": "+35% Avg" },
-      { "label": "Purity", "value": "99.8%" }
+      { "label": "Spatial Resolution", "value": "0.5m/px" },
+      { "label": "Mapped Area", "value": "500K+ Ha" }
     ],
-    "highlights": ["Non-GMO Certified", "Custom Soil Blends"]
+    "highlights": ["Multispectral Telemetry", "Variable Rate Application"]
   },
   {
-    "id": "product-trade",
+    "id": "farm-mechanization",
     "index": "03",
-    "tag": "Trade",
-    "title": "Reliable trading, distribution, and market access for agricultural goods",
-    "link": "/services/trade",
+    "tag": "Mechanization",
+    "title": "Vision-guided equipment, autonomous machinery retrofitting, and smart weeding robotics",
+    "link": "/services/mechanization",
     "media": [
       "../assets/images/services/860-1920x1080.jpg"
-      
     ],
-    "metricsImage":"../assets/images/services/218-400x300.jpg",
+    "metricsImage": "../assets/images/services/218-400x300.jpg",
     "stats": [
-      { "label": "Global Reach", "value": "15+ Countries" },
-      { "label": "Annual Volume", "value": "100K+ Tons" }
+      { "label": "Labor Reduction", "value": "45%" },
+      { "label": "RTK Guidance", "value": "±2 cm" }
     ],
-    "highlights": ["Direct Producer Link", "Fair Price Guarantee"]
+    "highlights": ["Auto-Steer Systems", "Targeted Herbicide Spraying"]
   },
   {
-    "id": "consulting",
+    "id": "agri-engineering",
     "index": "04",
-    "tag": "Consulting",
-    "title": "Expert guidance, planning, and strategies for modern farming practices",
-    "link": "/services/consulting",
+    "tag": "Engineering",
+    "title": "Smart irrigation design, IoT sensor array deployment, and AgTech infrastructure consulting",
+    "link": "/services/engineering",
     "media": [
       "../assets/images/services/525-1920x1080.jpg"
-      
     ],
-    "metricsImage":"../assets/images/services/63-400x300.jpg",
+    "metricsImage": "../assets/images/services/63-400x300.jpg",
     "stats": [
-      { "label": "Farms Advised", "value": "1,200+" },
-      { "label": "ROI Growth", "value": "2.4x Target" }
+      { "label": "Projects Delivered", "value": "150+" },
+      { "label": "Water Savings", "value": "+40%" }
     ],
-    "highlights": ["Drone Soil Mapping", "Precision Agronomy"]
+    "highlights": ["Closed-Loop Hydraulics", "Custom Hardware R&D"]
   }
 ]

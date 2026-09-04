@@ -1,11 +1,11 @@
 ---
-title: "Echoes of the deep ocean"
-year: "3 September 2026"
-description: "Descending into the abyss, discovering life forms that thrive in the dark and crushing pressure. So if it's beyond us then it's beyond us. And we will still be here stargazing. So if it's beyond us then it's beyond us. And we will still be here stargazing. So if it's beyond us then it's beyond us. And we will still be here stargazing."
+title: "Annual AgVision Summit: AI in the Field"
+year: "15 October 2026"
+description: "Showcasing live field demonstrations of edge AI computer vision systems, autonomous crop inspection models, and high-throughput phenotyping tools to key industry partners and researchers. Demonstrating real-time detection of crop stresses directly on local farm testbeds."
 tags:
-    - "ocean"
-    - "exploration"
-    - "nature"
+- "computer-vision"
+- "agtech"
+- "field-demo"
 images:
     - "https://picsum.photos/id/28/1200/800"
     - "https://picsum.photos/id/130/1200/800"
