@@ -6,7 +6,7 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://www.example.com",
+	site: "https://sankalpa-adhikari.github.io",
 	image: {
 		domains: ["picsum.photos"],
 		remotePatterns: [{ protocol: "https", hostname: "**.picsum.photos" }],

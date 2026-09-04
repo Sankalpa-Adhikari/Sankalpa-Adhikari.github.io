@@ -17,8 +17,11 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
       </div>
     </div>
 
-    <a href="/" class="relative flex h-full shrink-0 items-center pl-4 pr-2">
-      <Image src={Logo} alt="Logo" class="h-8 w-auto object-contain" />
+    <a
+      href="/"
+      class="relative flex h-full shrink-0 items-center pl-3 pr-1 sm:pl-4 sm:pr-2"
+    >
+      <Image src={Logo} alt="Logo" class="h-4 w-auto object-contain sm:h-8" />
     </a>
 
     <div id="nav-links-container" class="overflow-hidden whitespace-nowrap">
@@ -73,22 +76,6 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
             Careers
           </span>
         </a>
-
-        <div
-          class="nav-link group/link relative inline-flex overflow-hidden transition-all duration-300 group-has-[a:hover]:opacity-40 hover:!opacity-100"
-        >
-          <span
-            class="block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full"
-          >
-            Cart
-          </span>
-          <span
-            aria-hidden="true"
-            class="absolute left-0 top-full block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover/link:-translate-y-full"
-          >
-            Cart
-          </span>
-        </div>
       </div>
     </div>
 
@@ -98,7 +85,7 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
     >
       <a
         href="/contacts"
-        class="group inline-flex items-center gap-3 rounded-full bg-primary py-1.5 pl-5 pr-1.5 text-sm font-semibold text-black transition-all hover:brightness-110"
+        class="group hidden sm:inline-flex items-center gap-3 rounded-full bg-primary py-1.5 pl-5 pr-1.5 text-sm font-semibold text-black transition-all hover:brightness-110"
       >
         <span>Contact</span>
         <span
@@ -109,24 +96,10 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
       </a>
 
       <div
-        id="cart-btn-container"
-        class="flex w-0 shrink-0 justify-end overflow-hidden opacity-0"
-      >
-        <div class="pl-2">
-          <button
-            aria-label="Open cart"
-            class="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-foreground/20 transition-colors hover:bg-foreground/5"
-          >
-            <Icon class="size-5" name="heroicons:shopping-bag-solid" />
-          </button>
-        </div>
-      </div>
-
-      <div
         id="menu-btn-container"
         class="flex w-0 shrink-0 justify-end overflow-hidden opacity-0"
       >
-        <div class="pl-2">
+        <div class="sm:pl-2">
           <button
             id="menu-toggle-btn"
             aria-label="Toggle menu"
@@ -155,7 +128,6 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
   function initHeaderAnimation() {
     const linksContainer = document.querySelector("#nav-links-container");
     const menuContainer = document.querySelector("#menu-btn-container");
-    const cartContainer = document.querySelector("#cart-btn-container");
     const navBg = document.querySelector("#nav-bg");
     const rightContainer = document.querySelector("#right-container");
     const menuBtn = document.querySelector("#menu-toggle-btn");
@@ -166,7 +138,6 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
     if (
       !linksContainer ||
       !menuContainer ||
-      !cartContainer ||
       !navBg ||
       !rightContainer ||
       !menuBtn
@@ -228,14 +199,14 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
 
       let mm = gsap.matchMedia();
 
-      mm.add("(min-width: 769px)", () => {
+      mm.add("(min-width: 641px)", () => {
         gsap.set(linksContainer, { width: 0 });
-        gsap.set([menuContainer, cartContainer], { width: 48 });
+        gsap.set([menuContainer], { width: 48 });
 
         const targetBgWidth = rightContainer.getBoundingClientRect().width;
 
         gsap.set(linksContainer, { width: "auto", opacity: 1 });
-        gsap.set([menuContainer, cartContainer], { width: 0, opacity: 0 });
+        gsap.set([menuContainer], { width: 0, opacity: 0 });
         gsap.set(navBg, { width: "100%" });
 
         const tl = gsap.timeline({
@@ -251,13 +222,13 @@ import MobileNavDrawer from "./mobile-nav-drawer.astro";
         });
 
         tl.to(linksContainer, { width: 0, opacity: 0 }, 0)
-          .to([menuContainer, cartContainer], { width: 48, opacity: 1 }, 0)
+          .to([menuContainer], { width: 48, opacity: 1 }, 0)
           .to(navBg, { width: targetBgWidth }, 0);
       });
 
       mm.add("(max-width: 768px)", () => {
         gsap.set(linksContainer, { display: "none" });
-        gsap.set([menuContainer, cartContainer], { width: 48, opacity: 1 });
+        gsap.set([menuContainer], { width: 48, opacity: 1 });
 
         const mobileTargetWidth = rightContainer.getBoundingClientRect().width;
         gsap.set(navBg, { width: mobileTargetWidth });
