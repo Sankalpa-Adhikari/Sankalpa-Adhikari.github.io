@@ -17,6 +17,7 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 	},
 	redirects: {
+		"/field-notes": "/field-notes/page/1",
 		"/publications": "/publications/page/1",
 		"/openings": "/openings/page/1",
 		"/events": "/events/page/1",
