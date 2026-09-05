@@ -16,6 +16,12 @@ export default defineConfig({
 	vite: {
 		plugins: [tailwindcss()],
 	},
+	redirects: {
+		"/publications": "/publications/page/1",
+		"/openings": "/openings/page/1",
+		"/events": "/events/page/1",
+		"/case-studies": "/case-studies/page/1",
+	},
 	fonts: [
 		{
 			provider: fontProviders.local(),

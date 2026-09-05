@@ -1,0 +1,64 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+import { Icon } from "astro-icon/components";
+import PageLayout from "@/layout/PageLayout.astro";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const publicationsEntries = await getCollection("publications");
+
+  return paginate(publicationsEntries, {
+    pageSize: 10,
+  });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<CollectionEntry<"publications">>;
+}
+
+const { page } = Astro.props;
+---
+
+<PageLayout
+  title="blueberrylabs | Publications"
+  description={"Description"}
+  dataPagefindIgnore="all"
+>
+  <div class="flex flex-col gap-4 relative mt-20">
+    {
+      page.data.map((pub) => (
+        <article class="group relative border-b border-black/20 pb-4">
+          <a href={`/publications/${pub.id}`} class="flex flex-col gap-4 pr-14">
+            <span class="absolute -translate-y-1/2 top-1/2 right-4 flex size-8 items-center justify-center rounded-full bg-black/90 text-white transition-all duration-300 group-hover:scale-110 group-hover:bg-black group-hover:shadow-md">
+              <Icon
+                class="size-5 -rotate-45 group-hover:rotate-0 transition-transform duration-300"
+                name="heroicons:arrow-small-right-20-solid"
+              />
+            </span>
+            <div class="flex flex-wrap items-center gap-1.5">
+              {pub.data.tags.map((tag) => (
+                <span class="font-mono inline-flex items-center rounded-full bg-primary/40 border-primary/30 px-3 py-1 text-xs font-medium text-black">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="inline-flex items-center text-sm font-medium text-black/60">
+                {pub.data.publisher} {pub.data.publishedYear}
+              </span>
+              <span class="text-xl md:text-2xl lg:text-3xl group-hover:translate-x-2 transition-transform duration-300">
+                {pub.data.title}
+              </span>
+            </div>
+            <div class="text-sm">{pub.data.authors}</div>
+          </a>
+        </article>
+      ))
+    }
+  </div>
+
+  <nav aria-label="Pagination">
+    {page.url.prev && <a href={page.url.prev}>← Previous</a>}
+    {page.url.next && <a href={page.url.next}>Next →</a>}
+  </nav>
+</PageLayout>
