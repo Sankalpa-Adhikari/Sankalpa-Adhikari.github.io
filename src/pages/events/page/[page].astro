@@ -1,121 +1,174 @@
 ---
 import { Image } from "astro:assets";
+import { type CollectionEntry, getCollection } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+import { Icon } from "astro-icon/components";
+import PageLayout from "@/layout/PageLayout.astro";
 import "@blossom-carousel/core/style.css";
-import { getCollection } from "astro:content";
 
-const eventsEntries = await getCollection("events");
+export const getStaticPaths = (async ({ paginate }) => {
+  const eventsEntries = await getCollection("events");
 
-const data = eventsEntries.map((entry) => ({
-  ...entry.data,
-  href: `/events/${entry.id}`,
-}));
+  return paginate(eventsEntries, {
+    pageSize: 4,
+  });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<CollectionEntry<"events">>;
+}
+
+const { page } = Astro.props;
 ---
 
-<section class="w-full overflow-hidden px-4 mt-16">
-  <div class="flex flex-row flex-nowrap items-center justify-between mb-8">
-    <div class="space-y-1">
-      <h2 class="text-3xl md:text-6xl capitalize tracking-wide">Events</h2>
-      <p
-        class="text-sm md:text-base text-black/80 lg:max-w-lg normal-case leading-relaxed"
-      >
-        Insights, experiments, and ongoing thoughts from our research process.
-      </p>
-    </div>
-    <a href="/events" class="capitalize hover:underline text-sm md:text-base">
-      view all ({data.length})
-    </a>
-  </div>
-  <div class="flex flex-col w-full border-t border-black/20">
-    {
-      data.map((item) => (
-        <div
-          role="button"
-          tabindex="0"
-          class="item-wrapper group relative text-left focus:outline-none w-full py-6 lg:py-8 border-b border-black/20 transition-colors duration-300 hover:bg-gray-50/50 cursor-pointer lg:cursor-pointer cursor-default"
+<PageLayout
+  title="blueberrylabs | Events"
+  description={"Description"}
+  dataPagefindIgnore="all"
+>
+  <section class="w-full overflow-hidden px-4 mt-28">
+    <div class="flex flex-row flex-nowrap items-center justify-between">
+      <div class="space-y-1">
+        <h2 class="text-3xl md:text-6xl capitalize tracking-wide">Events</h2>
+        <p
+          class="text-sm md:text-base text-black/80 lg:max-w-lg normal-case leading-relaxed"
         >
-          <div class="relative flex flex-col lg:flex-row gap-6 lg:gap-12">
-            <div class="flex flex-col lg:flex-row gap-6 lg:w-5/12 justify-between z-20 relative bg-transparent">
-              <div class="relative flex flex-col gap-y-6 lg:w-1/2">
-                <h2 class="text-xl md:text-2xl lg:text-3xl tracking-tight">
-                  {item.title}
-                </h2>
+          Insights, experiments, and ongoing thoughts from our research process.
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-col w-full border-t border-black/20">
+      {
+        page.data.map((item) => (
+          <div
+            role="button"
+            tabindex="0"
+            class="item-wrapper group relative text-left focus:outline-none w-full py-6 lg:py-8 border-b border-black/20 transition-colors duration-300 hover:bg-gray-50/50 cursor-pointer lg:cursor-pointer cursor-default"
+          >
+            <div class="relative flex flex-col lg:flex-row gap-6 lg:gap-12">
+              <div class="flex flex-col lg:flex-row gap-6 lg:w-5/12 justify-between z-20 relative bg-transparent">
+                <div class="relative flex flex-col gap-y-6 lg:w-1/2">
+                  <h2 class="text-xl md:text-2xl lg:text-3xl  tracking-tight">
+                    {item.data.title}
+                  </h2>
 
-                <div class="hidden lg:flex gap-x-4 opacity-0 group-[.is-active]:opacity-100 transition-opacity duration-300">
-                  <a
-                    href={item.href}
-                    class="flex items-center justify-center rounded px-4 py-2 border border-black/20 hover:bg-black hover:text-white transition-colors text-sm"
-                  >
-                    View Details
-                  </a>
+                  <div class="hidden lg:flex gap-x-4 opacity-0 group-[.is-active]:opacity-100 transition-opacity duration-300">
+                    <a
+                      href={`/events/${item.id}`}
+                      class="flex items-center justify-center rounded px-4 py-2 border border-black/20 hover:bg-black hover:text-white transition-colors text-sm"
+                    >
+                      View Details
+                    </a>
+                  </div>
+                </div>
+
+                <div class="flex flex-row lg:flex-col  gap-2 lg:w-1/2 content-start">
+                  <div class="text-black flex items-center w-max px-2 py-1 text-xs font-mono uppercase">
+                    {item.data.year}
+                  </div>
+                  <div class="flex flex-row flex-wrap gap-2 items-center">
+                    {item.data.tags.map((tag) => (
+                      <span class="bg-primary/40 border border-primary/30 text-black flex items-center w-max px-3 py-1 rounded-full text-xs font-mono  whitespace-nowrap">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div class="flex flex-row lg:flex-col  gap-2 lg:w-1/2 content-start">
-                <div class="text-black flex items-center w-max px-2 py-1 text-xs font-mono uppercase">
-                  {item.year}
+              <div class="hidden lg:flex justify-start relative w-full lg:w-7/12 min-h-[6.25rem]">
+                <div class="text-container absolute right-0 h-[calc(120/16*1rem)] hidden group-[.is-active]:lg:block lg:ml-auto lg:min-h-[calc(120/16*1rem)] mr-18">
+                  <p class="description-text text-sm leading-relaxed max-w-[60ch] text-left">
+                    {item.data.description}
+                  </p>
                 </div>
-                <div class="flex flex-row flex-wrap gap-2 items-center">
-                  {item.tags.map((tag) => (
-                    <span class="bg-primary/40 border border-primary/30 text-black flex items-center w-max px-3 py-1 rounded-full text-xs font-mono  whitespace-nowrap">
-                      {tag}
-                    </span>
+
+                <div class="thumbnail-container hidden lg:flex justify-start relative w-full lg:w-6/12 gap-x-2 shrink-0 h-full">
+                  {item.data.images.map((img, i) => (
+                    <div class="thumb-slot relative h-full shrink-0 w-40 ">
+                      <Image
+                        src={img}
+                        alt={`${item.data.title} image ${i + 1}`}
+                        inferSize
+                        class="gallery-img absolute inset-0 h-full w-full object-cover rounded-lg pointer-events-none"
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
+
+              <div class="absolute right-4 top-0 hidden lg:flex items-center text-2xl font-light z-20">
+                <span class="group-[.is-active]:hidden">+</span>
+                <span class="hidden group-[.is-active]:block">-</span>
+              </div>
             </div>
 
-            <div class="hidden lg:flex justify-start relative w-full lg:w-7/12 min-h-[6.25rem]">
-              <div class="text-container absolute right-0 h-[calc(120/16*1rem)] hidden group-[.is-active]:lg:block lg:ml-auto lg:min-h-[calc(120/16*1rem)] mr-18">
-                <p class="description-text text-sm leading-relaxed max-w-[60ch] text-left">
-                  {item.description}
-                </p>
-              </div>
-
-              <div class="thumbnail-container hidden lg:flex justify-start relative w-full lg:w-6/12 gap-x-2 shrink-0 h-full">
-                {item.images.map((img, i) => (
-                  <div class="thumb-slot relative h-full shrink-0 w-40 ">
+            <div class="item-details w-full overflow-visible lg:h-0 relative z-10 pointer-events-auto lg:pointer-events-none group-[.is-active]:pointer-events-auto">
+              <div class="large-image-container flex flex-row gap-4 pt-10 pb-4 overflow-x-auto w-full scrollbar-hide flex-shrink-0 !opacity-100 cursor-grab active:cursor-grabbing">
+                {item.data.images.map((img, i) => (
+                  <div
+                    data-cursor="pointer"
+                    data-cursor-drag
+                    data-cursor-text="Drag"
+                    data-blossom-slide
+                    class="target-slot relative shrink-0 aspect-[3/2] !opacity-100 h-[calc(160/16*1rem)] lg:h-[calc(400/16*1rem)]"
+                  >
                     <Image
                       src={img}
-                      alt={`${item.title} image ${i + 1}`}
+                      alt={`${item.data.title} image ${i + 1} mobile`}
                       inferSize
-                      class="gallery-img absolute inset-0 h-full w-full object-cover rounded-lg pointer-events-none"
+                      class="lg:hidden absolute inset-0 h-full w-full object-cover rounded-lg pointer-events-none"
                     />
                   </div>
                 ))}
               </div>
             </div>
-
-            <div class="absolute right-4 top-0 hidden lg:flex items-center text-2xl font-light z-20">
-              <span class="group-[.is-active]:hidden">+</span>
-              <span class="hidden group-[.is-active]:block">-</span>
-            </div>
           </div>
+        ))
+      }
+    </div>
+  </section>
 
-          <div class="item-details w-full overflow-visible lg:h-0 relative z-10 pointer-events-auto lg:pointer-events-none group-[.is-active]:pointer-events-auto">
-            <div class="large-image-container flex flex-row gap-4 pt-10 pb-4 overflow-x-auto w-full scrollbar-hide flex-shrink-0 !opacity-100 cursor-grab active:cursor-grabbing">
-              {item.images.map((img, i) => (
-                <div
-                  data-cursor="pointer"
-                  data-cursor-drag
-                  data-cursor-text="Drag"
-                  data-blossom-slide
-                  class="target-slot relative shrink-0 aspect-[3/2] !opacity-100 h-[calc(160/16*1rem)] lg:h-[calc(400/16*1rem)]"
-                >
-                  <Image
-                    src={img}
-                    alt={`${item.title} image ${i + 1} mobile`}
-                    inferSize
-                    class="lg:hidden absolute inset-0 h-full w-full object-cover rounded-lg pointer-events-none"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ))
-    }
-  </div>
-</section>
+  <nav
+    aria-label="Pagination"
+    class="mt-12 px-4 flex items-center justify-between"
+  >
+    <div class="flex w-0 flex-1">
+      {
+        page.url.prev && (
+          <a
+            href={page.url.prev}
+            class="group inline-flex items-center gap-2 rounded-full border border-black/20 bg-transparent px-5 py-2.5 text-sm font-medium text-black transition-all hover:bg-black hover:text-white"
+          >
+            <Icon
+              name="heroicons:arrow-small-left-20-solid"
+              class="size-5 transition-transform group-hover:-translate-x-1"
+            />
+            Previous
+          </a>
+        )
+      }
+    </div>
+
+    <div class="flex w-0 flex-1 justify-end">
+      {
+        page.url.next && (
+          <a
+            href={page.url.next}
+            class="group inline-flex items-center gap-2 rounded-full border border-black/20 bg-transparent px-5 py-2.5 text-sm font-medium text-black transition-all hover:bg-black hover:text-white"
+          >
+            Next
+            <Icon
+              name="heroicons:arrow-small-right-20-solid"
+              class="size-5 transition-transform group-hover:translate-x-1"
+            />
+          </a>
+        )
+      }
+    </div>
+  </nav>
+</PageLayout>
+
 <script>
   import { gsap, Flip, SplitText } from "@/utils/gsap-init";
   import { Blossom } from "@blossom-carousel/core";

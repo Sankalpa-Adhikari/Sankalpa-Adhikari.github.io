@@ -8,7 +8,7 @@ export const getStaticPaths = (async ({ paginate }) => {
   const publicationsEntries = await getCollection("publications");
 
   return paginate(publicationsEntries, {
-    pageSize: 10,
+    pageSize: 4,
   });
 }) satisfies GetStaticPaths;
 
@@ -24,41 +24,92 @@ const { page } = Astro.props;
   description={"Description"}
   dataPagefindIgnore="all"
 >
-  <div class="flex flex-col gap-4 relative mt-20">
-    {
-      page.data.map((pub) => (
-        <article class="group relative border-b border-black/20 pb-4">
-          <a href={`/publications/${pub.id}`} class="flex flex-col gap-4 pr-14">
-            <span class="absolute -translate-y-1/2 top-1/2 right-4 flex size-8 items-center justify-center rounded-full bg-black/90 text-white transition-all duration-300 group-hover:scale-110 group-hover:bg-black group-hover:shadow-md">
-              <Icon
-                class="size-5 -rotate-45 group-hover:rotate-0 transition-transform duration-300"
-                name="heroicons:arrow-small-right-20-solid"
-              />
-            </span>
-            <div class="flex flex-wrap items-center gap-1.5">
-              {pub.data.tags.map((tag) => (
-                <span class="font-mono inline-flex items-center rounded-full bg-primary/40 border-primary/30 px-3 py-1 text-xs font-medium text-black">
-                  {tag}
+  <section class="w-full overflow-hidden px-4 mt-28">
+    <div class="flex flex-row flex-nowrap items-center justify-between">
+      <div class="space-y-1">
+        <h2 class="text-3xl md:text-6xl capitalize tracking-wide">
+          Our Research
+        </h2>
+        <p
+          class="text-sm md:text-base text-black/80 lg:max-w-lg normal-case leading-relaxed"
+        >
+          Insights, experiments, and ongoing thoughts from our research process.
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-col gap-4 relative">
+      {
+        page.data.map((pub) => (
+          <article class="group relative border-b border-black/20 pb-4">
+            <a
+              href={`/publications/${pub.id}`}
+              class="flex flex-col gap-4 pr-14"
+            >
+              <span class="absolute -translate-y-1/2 top-1/2 right-4 flex size-8 items-center justify-center rounded-full bg-black/90 text-white transition-all duration-300 group-hover:scale-110 group-hover:bg-black group-hover:shadow-md">
+                <Icon
+                  class="size-5 -rotate-45 group-hover:rotate-0 transition-transform duration-300"
+                  name="heroicons:arrow-small-right-20-solid"
+                />
+              </span>
+              <div class="flex flex-wrap items-center gap-1.5">
+                {pub.data.tags.map((tag) => (
+                  <span class="font-mono inline-flex items-center rounded-full bg-primary/40 border-primary/30 px-3 py-1 text-xs font-medium text-black">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div class="flex flex-col gap-1">
+                <span class="inline-flex items-center text-sm font-medium text-black/60">
+                  {pub.data.publisher} {pub.data.publishedYear}
                 </span>
-              ))}
-            </div>
-            <div class="flex flex-col gap-1">
-              <span class="inline-flex items-center text-sm font-medium text-black/60">
-                {pub.data.publisher} {pub.data.publishedYear}
-              </span>
-              <span class="text-xl md:text-2xl lg:text-3xl group-hover:translate-x-2 transition-transform duration-300">
-                {pub.data.title}
-              </span>
-            </div>
-            <div class="text-sm">{pub.data.authors}</div>
-          </a>
-        </article>
-      ))
-    }
-  </div>
+                <span class="text-xl md:text-2xl lg:text-3xl group-hover:translate-x-2 transition-transform duration-300">
+                  {pub.data.title}
+                </span>
+              </div>
+              <div class="text-sm">{pub.data.authors}</div>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
 
-  <nav aria-label="Pagination">
-    {page.url.prev && <a href={page.url.prev}>← Previous</a>}
-    {page.url.next && <a href={page.url.next}>Next →</a>}
+  <nav
+    aria-label="Pagination"
+    class="mt-12 px-4 flex items-center justify-between"
+  >
+    <div class="flex w-0 flex-1">
+      {
+        page.url.prev && (
+          <a
+            href={page.url.prev}
+            class="group inline-flex items-center gap-2 rounded-full border border-black/20 bg-transparent px-5 py-2.5 text-sm font-medium text-black transition-all hover:bg-black hover:text-white"
+          >
+            <Icon
+              name="heroicons:arrow-small-left-20-solid"
+              class="size-5 transition-transform group-hover:-translate-x-1"
+            />
+            Previous
+          </a>
+        )
+      }
+    </div>
+
+    <div class="flex w-0 flex-1 justify-end">
+      {
+        page.url.next && (
+          <a
+            href={page.url.next}
+            class="group inline-flex items-center gap-2 rounded-full border border-black/20 bg-transparent px-5 py-2.5 text-sm font-medium text-black transition-all hover:bg-black hover:text-white"
+          >
+            Next
+            <Icon
+              name="heroicons:arrow-small-right-20-solid"
+              class="size-5 transition-transform group-hover:translate-x-1"
+            />
+          </a>
+        )
+      }
+    </div>
   </nav>
 </PageLayout>
