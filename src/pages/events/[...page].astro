@@ -9,7 +9,7 @@ export const getStaticPaths = (async ({ paginate }) => {
   const eventsEntries = await getCollection("events");
 
   return paginate(eventsEntries, {
-    pageSize: 2,
+    pageSize: 10,
   });
 }) satisfies GetStaticPaths;
 
