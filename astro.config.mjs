@@ -20,7 +20,6 @@ export default defineConfig({
 		"/field-notes": "/field-notes/page/1",
 		"/publications": "/publications/page/1",
 		"/openings": "/openings/page/1",
-		"/events": "/events/page/1",
 		"/case-studies": "/case-studies/page/1",
 	},
 	fonts: [
