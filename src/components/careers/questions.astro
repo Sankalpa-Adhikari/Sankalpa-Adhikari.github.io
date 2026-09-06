@@ -51,7 +51,7 @@ const qaStyles = [
 ];
 ---
 
-<section class="min-h-screen border-black/20 relative">
+<section class="min-h-screen divide-y divide-black/20 relative">
   {
     data.map((items, index) => {
       const isOdd = index % 2 !== 0;
@@ -60,7 +60,7 @@ const qaStyles = [
       return (
         <div
           style={`z-index: ${index === data.length - 1 ? 90 : index + 1};`}
-          class="qa-row relative grid grid-cols-1 lg:grid-cols-2 w-full border-b border-black/20 items-center p-4 bg-white"
+          class="qa-row relative grid grid-cols-1 lg:grid-cols-2 w-full   items-center p-4 bg-white"
         >
           <div
             class={`hidden lg:flex items-center justify-center uppercase font-mono text-[150px] text-center ${

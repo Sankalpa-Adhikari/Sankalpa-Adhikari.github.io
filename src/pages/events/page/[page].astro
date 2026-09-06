@@ -27,7 +27,7 @@ const { page } = Astro.props;
   dataPagefindIgnore="all"
 >
   <section class="w-full overflow-hidden px-4 mt-28">
-    <div class="flex flex-row flex-nowrap items-center justify-between">
+    <div class="flex flex-row flex-nowrap items-center justify-between mb-6">
       <div class="space-y-1">
         <h2 class="text-3xl md:text-6xl capitalize tracking-wide">Events</h2>
         <p
@@ -43,12 +43,13 @@ const { page } = Astro.props;
           <div
             role="button"
             tabindex="0"
-            class="item-wrapper group relative text-left focus:outline-none w-full py-6 lg:py-8 border-b border-black/20 transition-colors duration-300 hover:bg-gray-50/50 cursor-pointer lg:cursor-pointer cursor-default"
+            aria-expanded="false"
+            class="item-wrapper group relative text-left focus:outline-none w-full py-6 lg:py-8 border-b border-black/20 transition-colors duration-300 hover:bg-gray-50/50 cursor-pointer"
           >
             <div class="relative flex flex-col lg:flex-row gap-6 lg:gap-12">
               <div class="flex flex-col lg:flex-row gap-6 lg:w-5/12 justify-between z-20 relative bg-transparent">
                 <div class="relative flex flex-col gap-y-6 lg:w-1/2">
-                  <h2 class="text-xl md:text-2xl lg:text-3xl  tracking-tight">
+                  <h2 class="text-xl md:text-2xl lg:text-3xl tracking-tight">
                     {item.data.title}
                   </h2>
 
@@ -85,11 +86,16 @@ const { page } = Astro.props;
 
                 <div class="thumbnail-container hidden lg:flex justify-start relative w-full lg:w-6/12 gap-x-2 shrink-0 h-full">
                   {item.data.images.map((img, i) => (
-                    <div class="thumb-slot relative h-full shrink-0 w-40 ">
+                    <div
+                      class="thumb-slot relative h-full shrink-0 w-40"
+                      data-slot-index={i}
+                    >
                       <Image
                         src={img}
-                        alt={`${item.data.title} image ${i + 1}`}
+                        alt={`item.data.titleimage{item.title} imageitem.titleimage{i + 1}`}
                         inferSize
+                        loading="lazy"
+                        data-image-index={i}
                         class="gallery-img absolute inset-0 h-full w-full object-cover rounded-lg pointer-events-none"
                       />
                     </div>
@@ -111,12 +117,14 @@ const { page } = Astro.props;
                     data-cursor-drag
                     data-cursor-text="Drag"
                     data-blossom-slide
+                    data-slot-index={i}
                     class="target-slot relative shrink-0 aspect-[3/2] !opacity-100 h-[calc(160/16*1rem)] lg:h-[calc(400/16*1rem)]"
                   >
                     <Image
                       src={img}
-                      alt={`${item.data.title} image ${i + 1} mobile`}
+                      alt={`item.titleimage{item.title} imageitem.titleimage{i + 1} large`}
                       inferSize
+                      loading="lazy"
                       class="lg:hidden absolute inset-0 h-full w-full object-cover rounded-lg pointer-events-none"
                     />
                   </div>
@@ -173,11 +181,36 @@ const { page } = Astro.props;
   import { gsap, Flip, SplitText } from "@/utils/gsap-init";
   import { Blossom } from "@blossom-carousel/core";
 
-  let mm: gsap.MatchMedia;
+  let mm: gsap.MatchMedia | undefined;
 
   function initEventsAnimation() {
+    mm?.revert();
     mm = gsap.matchMedia();
-    const items = document.querySelectorAll(".item-wrapper");
+
+    const items = document.querySelectorAll<HTMLElement>(".item-wrapper");
+
+    const slotFor = (img: Element, item: HTMLElement) => {
+      const index = (img as HTMLElement).dataset.imageIndex;
+      if (!index) return null;
+      return item.querySelector<HTMLElement>(
+        `.thumb-slot[data-slot-index="${index}"]`,
+      );
+    };
+
+    const targetSlotFor = (img: Element, item: HTMLElement) => {
+      const index = (img as HTMLElement).dataset.imageIndex;
+      if (!index) return null;
+      return item.querySelector<HTMLElement>(
+        `.target-slot[data-slot-index="${index}"]`,
+      );
+    };
+
+    const returnImagesToThumbs = (item: HTMLElement) => {
+      item.querySelectorAll(".gallery-img").forEach((img) => {
+        const slot = slotFor(img, item);
+        if (slot && img.parentElement !== slot) slot.appendChild(img);
+      });
+    };
 
     mm.add("(min-width: 1024px)", () => {
       const cleanups: (() => void)[] = [];
@@ -185,20 +218,24 @@ const { page } = Astro.props;
       items.forEach((item) => {
         let blossomInstance: any = null;
         let splitInstance: SplitText | null = null;
+        let isAnimating = false;
 
         const carouselEl = item.querySelector(
           ".large-image-container",
-        ) as HTMLElement;
+        ) as HTMLElement | null;
         const details = item.querySelector(".item-details");
         const images = item.querySelectorAll(".gallery-img");
-        const thumbSlots = item.querySelectorAll(".thumb-slot");
-        const targetSlots = item.querySelectorAll(".target-slot");
         const textContainer = item.querySelector(
           ".text-container",
-        ) as HTMLElement;
+        ) as HTMLElement | null;
         const descriptionEl = item.querySelector(
           ".description-text",
-        ) as HTMLElement;
+        ) as HTMLElement | null;
+
+        const setActive = (active: boolean) => {
+          item.classList.toggle("is-active", active);
+          item.setAttribute("aria-expanded", String(active));
+        };
 
         const clearSplit = () => {
           if (splitInstance) {
@@ -206,7 +243,7 @@ const { page } = Astro.props;
             splitInstance.revert();
             splitInstance = null;
           }
-          if (textContainer && !item.classList.contains("is-active")) {
+          if (textContainer) {
             gsap.set(textContainer, { clearProps: "display" });
           }
         };
@@ -234,7 +271,12 @@ const { page } = Astro.props;
         };
 
         const playLinesOut = () => {
-          if (!splitInstance) return;
+          if (!splitInstance) {
+            if (textContainer) {
+              gsap.set(textContainer, { clearProps: "display" });
+            }
+            return;
+          }
           const outgoing = splitInstance;
 
           if (textContainer) gsap.set(textContainer, { display: "block" });
@@ -258,7 +300,12 @@ const { page } = Astro.props;
         };
 
         const handleClick = (e: Event) => {
-          if ((e.target as HTMLElement)?.closest(".item-details")) return;
+          const target = e.target as HTMLElement | null;
+          if (target?.closest("a")) return;
+          if (target?.closest(".item-details")) return;
+
+          if (isAnimating) return;
+
           const isActive = item.classList.contains("is-active");
 
           if (isActive && blossomInstance) {
@@ -269,15 +316,16 @@ const { page } = Astro.props;
           }
 
           const state = Flip.getState(images);
+          isAnimating = true;
 
           if (!isActive) {
-            item.classList.add("is-active");
+            setActive(true);
 
-            images.forEach((img, i) => {
-              if (targetSlots[i]) targetSlots[i].appendChild(img);
+            images.forEach((img) => {
+              const target = targetSlotFor(img, item);
+              if (target) target.appendChild(img);
             });
-
-            gsap.set(details, { height: "auto" });
+            gsap.set(details, { height: "auto", overflow: "visible" });
 
             Flip.from(state, {
               duration: 0.8,
@@ -296,9 +344,14 @@ const { page } = Astro.props;
                   overflowX: "auto",
                   overflowY: "hidden",
                 });
+                gsap.set(details, { overflow: "hidden" });
+                isAnimating = false;
                 if (carouselEl) {
-                  blossomInstance = Blossom(carouselEl, {});
-                  blossomInstance.init();
+                  requestAnimationFrame(() => {
+                    if (!item.classList.contains("is-active")) return;
+                    blossomInstance = Blossom(carouselEl, {});
+                    blossomInstance.init();
+                  });
                 }
               },
             });
@@ -311,10 +364,11 @@ const { page } = Astro.props;
 
             playLinesIn();
           } else {
-            item.classList.remove("is-active");
+            setActive(false);
 
-            images.forEach((img, i) => {
-              if (thumbSlots[i]) thumbSlots[i].appendChild(img);
+            images.forEach((img) => {
+              const slot = slotFor(img, item);
+              if (slot) slot.appendChild(img);
             });
 
             Flip.from(state, {
@@ -328,35 +382,52 @@ const { page } = Astro.props;
                   overflowY: "visible",
                 });
               },
+              onComplete: () => {
+                isAnimating = false;
+              },
             });
 
             gsap.to(details, {
               height: 0,
               duration: 0.8,
               ease: "power3.inOut",
+              onComplete: () => {
+                gsap.set(details, { clearProps: "height,overflow" });
+              },
             });
 
             playLinesOut();
           }
         };
 
+        const handleKey = (e: KeyboardEvent) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleClick(e);
+          }
+        };
+
         item.addEventListener("click", handleClick);
+        item.addEventListener("keydown", handleKey);
 
         cleanups.push(() => {
           item.removeEventListener("click", handleClick);
+          item.removeEventListener("keydown", handleKey);
           if (
             blossomInstance &&
             typeof blossomInstance.destroy === "function"
           ) {
             blossomInstance.destroy();
           }
+          blossomInstance = null;
           clearSplit();
-          item.classList.remove("is-active");
-          if (textContainer) gsap.set(textContainer, { clearProps: "display" });
+          setActive(false);
+          if (details) gsap.set(details, { clearProps: "height,overflow" });
+          if (textContainer) {
+            gsap.set(textContainer, { clearProps: "display" });
+          }
 
-          images.forEach((img, i) => {
-            if (thumbSlots[i]) thumbSlots[i].appendChild(img);
-          });
+          returnImagesToThumbs(item);
         });
       });
 
@@ -369,7 +440,7 @@ const { page } = Astro.props;
       items.forEach((item) => {
         const carouselEl = item.querySelector(
           ".large-image-container",
-        ) as HTMLElement;
+        ) as HTMLElement | null;
         if (carouselEl) {
           gsap.set(carouselEl, { overflowX: "auto", overflowY: "hidden" });
           const instance = Blossom(carouselEl, {});
@@ -385,10 +456,15 @@ const { page } = Astro.props;
       };
     });
   }
+  const w = window as any;
+  if (!w.__eventsAnimationsBound) {
+    w.__eventsAnimationsBound = true;
 
-  document.addEventListener("astro:page-load", initEventsAnimation);
+    document.addEventListener("astro:page-load", initEventsAnimation);
 
-  document.addEventListener("astro:before-swap", () => {
-    mm && mm.revert();
-  });
+    document.addEventListener("astro:before-swap", () => {
+      mm?.revert();
+      mm = undefined;
+    });
+  }
 </script>
