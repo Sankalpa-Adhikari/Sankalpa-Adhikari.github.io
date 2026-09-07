@@ -1,0 +1,123 @@
+---
+import { Image } from "astro:assets";
+import { type CollectionEntry, getCollection } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+import { Icon } from "astro-icon/components";
+import PageLayout from "@/layout/PageLayout.astro";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const caseStudies = await getCollection("case-studies");
+
+  return paginate(caseStudies, {
+    pageSize: 6,
+  });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<CollectionEntry<"case-studies">>;
+}
+
+const { page } = Astro.props;
+---
+
+<PageLayout
+  title="Case Studies | blueberrylabs"
+  description="Documenting nationwide AgTech adoption and real-world performance benchmarks."
+  dataPagefindIgnore="all"
+>
+  <section class="w-full overflow-hidden px-4 mt-28 max-w-7xl mx-auto">
+    <div class="flex flex-row flex-nowrap items-center justify-between mb-12">
+      <div class="space-y-4">
+        <h2 class="text-3xl md:text-6xl capitalize tracking-wide">
+          Case Studies
+        </h2>
+        <p
+          class="text-sm md:text-base text-black/80 lg:max-w-2xl normal-case leading-relaxed"
+        >
+          Documenting nationwide AgTech adoption, field-level technology
+          implementations, and real-world performance benchmarks.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {
+        page.data.map((item) => (
+          <a
+            href={`/case-studies/${item.id}`}
+            class="group flex flex-col gap-4 focus:outline-none"
+          >
+            <div class="relative w-full aspect-[4/3] overflow-hidden rounded-[12px] bg-gray-100">
+              {item.data.src && (
+                <Image
+                  src={item.data.src}
+                  alt={item.data.title || "Case study image"}
+                  width={800}
+                  height={600}
+                  class="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              )}
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                {item.data.date && (
+                  <span class="text-xs font-mono uppercase text-black/60 tracking-wider">
+                    {item.data.date}
+                  </span>
+                )}
+              </div>
+              <h3 class="text-xl md:text-2xl tracking-tight group-hover:underline">
+                {item.data.title}
+              </h3>
+              {item.data.subtitle && (
+                <p class="text-sm text-black/80 line-clamp-2">
+                  {item.data.subtitle}
+                </p>
+              )}
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <nav
+    aria-label="Pagination"
+    class="mt-16 mb-12 px-4 flex items-center justify-between max-w-7xl mx-auto"
+  >
+    <div class="flex w-0 flex-1">
+      {
+        page.url.prev && (
+          <a
+            href={page.url.prev}
+            class="group inline-flex items-center gap-2 rounded-full border border-black/20 bg-transparent px-5 py-2.5 text-sm font-medium text-black transition-all hover:bg-black hover:text-white"
+          >
+            <Icon
+              name="heroicons:arrow-small-left-20-solid"
+              class="size-5 transition-transform group-hover:-translate-x-1"
+            />
+            Previous
+          </a>
+        )
+      }
+    </div>
+
+    <div class="flex w-0 flex-1 justify-end">
+      {
+        page.url.next && (
+          <a
+            href={page.url.next}
+            class="group inline-flex items-center gap-2 rounded-full border border-black/20 bg-transparent px-5 py-2.5 text-sm font-medium text-black transition-all hover:bg-black hover:text-white"
+          >
+            Next
+            <Icon
+              name="heroicons:arrow-small-right-20-solid"
+              class="size-5 transition-transform group-hover:translate-x-1"
+            />
+          </a>
+        )
+      }
+    </div>
+  </nav>
+</PageLayout>
