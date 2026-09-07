@@ -1,10 +1,11 @@
 ---
 import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 
 export type ImageItem =
   | string
   | {
-      src: string;
+      src: string | ImageMetadata;
       href?: string;
       date?: string;
       title?: string;
@@ -69,7 +70,7 @@ const loopImages = hasImages
               data-cursor-text="View"
             >
               <Image
-                src={item.src}
+                src={item.src as any}
                 alt={item.title || `Slide ${index}`}
                 width={1200}
                 height={800}
